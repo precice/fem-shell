@@ -2,6 +2,8 @@
  * todo
  *
  * GMSH als mesh input testen
+ * MPI testen
+ * Konvergenz der verschiedenen Orientierungen testen
  *
  * ***********************************************************/
 
