@@ -51,6 +51,7 @@ Real nu;
 Real em;
 Real force;
 std::vector<DenseVector<Real> > forces;
+bool debug = false;
 
 // Begin the main program.
 int main (int argc, char** argv)
@@ -85,7 +86,7 @@ int main (int argc, char** argv)
         mesh.prepare_for_use(true, false);// skip renumbering, skip find neighbors (depricated)
 
     // Print information about the mesh to the screen.
-    mesh.print_info();
+    if (debug) mesh.print_info();
 
     // Load file with forces
     std::filebuf fb;
@@ -108,11 +109,12 @@ int main (int argc, char** argv)
         }
     }
     // DEBUG
+    if (debug) {
     std::cout << "Forces-vector has " << forces.size() << " entries: [\n";
     for (unsigned int i = 0; i < forces.size(); i++)
         std::cout << "(" << forces[i](0) << "," << forces[i](1) << "," << forces[i](2) << ")\n";
     std::cout << "]\n";
-
+    }
     // Create an equation systems object.
     EquationSystems equation_systems (mesh);
 
@@ -155,112 +157,116 @@ int main (int argc, char** argv)
     // we call equation_systems.init()
     system.get_dof_map().add_dirichlet_boundary(dirichlet_bc);
 
-    std::cout << "before systems.init\n";
+    if (debug) std::cout << "before systems.init\n";
 
     // Initialize the data structures for the equation system.
     equation_systems.init();
 
-    std::cout << "after systems.init\n";
+    if (debug) std::cout << "after systems.init\n";
 
     // mesh-export object:
     VTKIO vtkio(mesh);
 
-    //int counter = 0;
-    //for (float x = 0.0f; x < 3.14f; x+= 3.14f/1.0f)
-    //{//BEGIN TIMESTEP FOR-LOOP
-    //force = sinf(2.0f*x)*0.02f;
-    //std::cout << counter << ": x=" << x << ", force=" << force << "\n";
+    int counter = 0;
+    for (float x = 0.0f; x < 10.0f; x += 0.05f)
+    {//BEGIN TIMESTEP FOR-LOOP
+        std::cout << counter << ": x=" << x << "/10.0\n";
 
-    //equation_systems.reinit();
+        equation_systems.reinit();
 
-    std::cout << "after systems.reinit\n";
+        if (debug) std::cout << "after systems.reinit\n";
 
-    // Print information about the system to the screen.
-    //equation_systems.print_info();
+        // Print information about the system to the screen.
+        //equation_systems.print_info();
 
-    /**
-     *
-     *
-     * Solve the system
-     *
-     *
-     **/
-    equation_systems.solve();
+        /**
+         *
+         *
+         * Solve the system
+         *
+         *
+         **/
+        equation_systems.solve();
 
-    std::cout << "after solve\n";
+        if (debug) std::cout << "after solve\n";
 
-    std::vector<Number> sols;
-    equation_systems.build_solution_vector(sols);
+        std::vector<Number> sols;
+        equation_systems.build_solution_vector(sols);
 
-    std::cout << "after build solution vector\n";
+        if (debug) std::cout << "after build solution vector\n";
 
-    system.matrix->print(std::cout);
-    system.rhs->print(std::cout);
-
-    MeshBase::const_node_iterator no = mesh.local_nodes_begin();
-    const MeshBase::const_node_iterator end_no = mesh.local_nodes_end();
-
-    // DEBUG
-    std::cout << "Solution: x=[";
-    for (int i = 0 ; no != end_no; ++no,++i)
-        std::cout << "uvw_" << i << " = " << sols[6*i] << ", " << sols[6*i+1] << ", " << sols[6*i+2] << "\n";
-    std::cout << "]\n" << std::endl;
-
-    unsigned int ln = mesh.n_local_nodes();
-    DenseVector<Real> displacements;
-    displacements.resize(ln*3);
-    std::vector<short> processedNodes(ln,0);
-
-
-    // iterator for iterating through the elements of the mesh:
-    MeshBase::const_element_iterator       el     = mesh.active_local_elements_begin();
-    const MeshBase::const_element_iterator end_el = mesh.active_local_elements_end();
-
-    std::vector<dof_id_type> dof_indices_w;
-
-    const DofMap& dof_map = system.get_dof_map();
-
-    // do the actual displacing of the mesh's nodes
-    // for all elements elem in mesh do:
-    for ( ; el != end_el; ++el)
-    {
-        const Elem* elem = *el;
-
-        dof_map.dof_indices (elem, dof_indices_w, u_var);
-
-        for (unsigned int i = 0; i < elem->n_nodes(); i++)
-        {
-            dof_id_type id = dof_indices_w[i]; // 2,8,14,...,2+i*6
-            std::cout << "elem-node-id: " << id << ", uvw = (" << sols[id] << "," << sols[id+1] << "," << sols[id+2] << ")\n";
-            displacements(3*id/6)   += sols[id];
-            displacements(3*id/6+1) += sols[id+1];
-            displacements(3*id/6+2) += sols[id+2];
-            processedNodes[id/6]++;
+        if (debug) {
+            system.matrix->print(std::cout);
+            system.rhs->print(std::cout);
         }
-    }
 
-    no = mesh.local_nodes_begin();
-    for (int i = 0 ; no != end_no; ++no,++i)
-    {
-        Node *nd = (*no);
-        if (processedNodes[i] > 0)
+        MeshBase::const_node_iterator no = mesh.local_nodes_begin();
+        const MeshBase::const_node_iterator end_no = mesh.local_nodes_end();
+
+        //if (debug) {
+            std::cout << "Solution: x=[";
+            for (int i = 0 ; no != end_no; ++no,++i)
+                std::cout << "uvw_" << i << " = " << sols[6*i] << ", " << sols[6*i+1] << ", " << sols[6*i+2] << "\n";
+            std::cout << "]\n" << std::endl;
+        //}
+
+        unsigned int ln = mesh.n_local_nodes();
+        DenseVector<Real> displacements;
+        displacements.resize(ln*3);
+        std::vector<short> processedNodes(ln,0);
+
+        // iterator for iterating through the elements of the mesh:
+        MeshBase::const_element_iterator       el     = mesh.active_local_elements_begin();
+        const MeshBase::const_element_iterator end_el = mesh.active_local_elements_end();
+
+        std::vector<dof_id_type> dof_indices_w;
+
+        const DofMap& dof_map = system.get_dof_map();
+
+        // do the actual displacing of the mesh's nodes
+        // for all elements elem in mesh do:
+        for ( ; el != end_el; ++el)
         {
-            (*nd)(0) += displacements(3*i)  /(float)processedNodes[i];
-            (*nd)(1) += displacements(3*i+1)/(float)processedNodes[i];
-            (*nd)(2) += displacements(3*i+2)/(float)processedNodes[i];
+            const Elem* elem = *el;
+
+            dof_map.dof_indices (elem, dof_indices_w, u_var);
+
+            for (unsigned int i = 0; i < elem->n_nodes(); i++)
+            {
+                dof_id_type id = dof_indices_w[i]; // 2,8,14,...,2+i*6
+                if (debug) std::cout << "elem-node-id: " << id << ", uvw = (" << sols[id] << "," << sols[id+1] << "," << sols[id+2] << ")\n";
+                displacements(3*id/6)   += sols[id];
+                displacements(3*id/6+1) += sols[id+1];
+                displacements(3*id/6+2) += sols[id+2];
+                processedNodes[id/6]++;
+            }
         }
+
+        no = mesh.local_nodes_begin();
+        for (int i = 0 ; no != end_no; ++no,++i)
+        {
+            Node *nd = (*no);
+            if (processedNodes[i] > 0)
+            {
+                (*nd)(0) += displacements(3*i)  /(float)processedNodes[i];
+                (*nd)(1) += displacements(3*i+1)/(float)processedNodes[i];
+                (*nd)(2) += displacements(3*i+2)/(float)processedNodes[i];
+            }
+        }
+
+        // Plot the solution
+        std::ostringstream file_name;
+        file_name << "out/out_"
+                  << std::setw(3)
+                  << std::setfill('0')
+                  << std::right
+                  << counter
+                  << ".vtu";
+
+        vtkio.write_equation_systems(file_name.str(), equation_systems);
+
+        counter++;
     }
-
-    // Plot the solution
-    std::ostringstream file_name;
-    file_name << "out/out_"
-              << std::setw(3)
-              << std::setfill('0')
-              << std::right
-              << 0//<< counter
-              << ".vtu";
-
-    vtkio.write_equation_systems(file_name.str(), equation_systems);
 
     std::cout << "All done\n";
 
@@ -311,7 +317,7 @@ void assemble_elasticity(EquationSystems& es,
     DenseMatrix<Real> Hcoeffs; // ak, ..., ek
     Real A_tri;
 
-    Real t = 1.0; // shell thickness
+    Real t = 0.01; // shell thickness
 
     DenseMatrix<Real> AA;
     DenseMatrix<Real> CC;
@@ -321,11 +327,21 @@ void assemble_elasticity(EquationSystems& es,
     Dp(0,0) = 1.0; Dp(0,1) = nu;
     Dp(1,0) = nu;  Dp(1,1) = 1.0;
     Dp(2,2) = (1.0-nu)/2.0;
-    Dm = Dp;
+    //Dm = Dp;
     Dp *= em*pow(t,3.0)/(12.0*(1.0-nu*nu)); // material matrix for plate part
-    Dm *= em/(1.0-nu*nu); // material matrix for membrane part
+    //Dm *= em/(1.0-nu*nu); // material matrix for membrane part
+    Dm.resize(3,3);
+    Dm(0,0) = 1.0-nu;
+    Dm(0,1) = nu;
+    Dm(1,0) = nu;
+    Dm(1,1) = 1.0-nu;
+    Dm(2,2) = (1.0-2.0*nu)/2.0;
+    Dm *= em/((1.0+nu)*(1.0-2.0*nu));
 
     std::vector<std::vector<Real> > qps;
+
+    unsigned int ln = mesh.n_local_nodes();
+    std::vector<bool> processedNodes(ln,false);
 
     // for all elements elem in mesh do:
     for ( ; el != end_el; ++el)
@@ -384,10 +400,11 @@ void assemble_elasticity(EquationSystems& es,
         // transform B and C to local coordinates and store results in the same place
         transUV.left_multiply(transTri);
 
+        if (debug) {
 std::cout << "trafo:\n";
 transTri.print(std::cout);
 std::cout << std::endl;
-
+        }
 /*****************************************
  * BEGIN OF PLATE COMPUTATION            *
  *****************************************/
@@ -421,7 +438,15 @@ std::cout << std::endl;
         sidelen[0] = pow(dphi_p(0,0), 2.0); // side AB, x12^2 + y12^2 (=0) -> x12^2 = x2^2
         sidelen[1] = pow(dphi_p(1,0), 2.0) + pow(dphi_p(1,1), 2.0); // side AC, x31^2 + y31^2
         sidelen[2] = pow(dphi_p(2,0), 2.0) + pow(dphi_p(2,1), 2.0); // side BC, x23^2 + y23^2
-
+/*
+        Hcoeffs.resize(4,3); // p,r,r,t -> 4, 4,5,6 -> 3
+        for (unsigned int k = 0; k < 3; k++) // k=0 <-> 23, k=1 <-> 31, k=2 <-> 12
+        {
+            Hcoeffs(0,k) = -6.0 * dphi_p(2-k,0)                 / sidelen[2-k];
+            Hcoeffs(1,k) =  3.0 * dphi_p(2-k,0) * dphi_p(2-k,1) / sidelen[2-k];
+            Hcoeffs(2,k) =  3.0 * pow(dphi_p(2-k,1),2.0)        / sidelen[2-k];
+            Hcoeffs(3,k) = -6.0 * dphi_p(2-k,1)                 / sidelen[2-k];
+        }*/
         Hcoeffs.resize(3,5); // 4,5,6 -> 3, a-e -> 5
         for (unsigned int k = 0; k < 3; k++) // k=0 <-> 23, k=1 <-> 31, k=2 <-> 12
         {
@@ -451,17 +476,17 @@ std::cout << std::endl;
         for (unsigned int i = 0; i < qps.size(); i++)
         {
             eval_CC(Hcoeffs, qps[i][0], qps[i][1], dphi_p, CC);
-            //CC.right_multiply_transpose(AA);
+            CC.right_multiply_transpose(AA);
             CC *= 1.0/(2.0*A_tri); // CC entspricht nun B
 
             DenseMatrix<Real> temp;
             temp = Dp; // temp = 3x3
-            temp.right_multiply(CC); // temp = 9x3
-            temp.left_multiply_transpose(CC); // temp = 9x9
-            temp *= 2.0*A_tri/3.0;
+            temp.right_multiply_transpose(CC); // temp = 9x3
+            temp.left_multiply(CC); // temp = 9x9
 
-            Ke_p = temp;
+            Ke_p += temp;
         }
+        Ke_p *= 2.0*A_tri/3.0;
 /*****************************************
  * END OF PLATE COMPUTATION            *
  *****************************************/
@@ -533,12 +558,14 @@ std::cout << std::endl;
             }
         }
 
+        if (debug) {
 std::cout << "K_m:\n";
 Ke_m.print(std::cout);
 std::cout << std::endl;
 std::cout << "K_p:\n";
 Ke_p.print(std::cout);
 std::cout << std::endl;
+        }
 
         Fe.resize(18);
 
@@ -547,21 +574,25 @@ std::cout << std::endl;
         {
             if (!binfo.has_boundary_id(elem,side,0)) // only process non-sticky nodes
             {
-                DenseVector<Real> arg;//, f;
+                DenseVector<Real> arg;
                 dof_id_type id = dof_indices_u[side];
-                std::cout << "id_u = " << id << ", id_v = " << dof_indices_v[side] << ", id_w = " << dof_indices_w[side] << "\n";
+                if (debug) std::cout << "id_u = " << id << ", id_v = " << dof_indices_v[side] << ", id_w = " << dof_indices_w[side] << "\n";
                 arg = forces[id/6];
+                if (!processedNodes[id/6])
                 {
-                    std::cout << "force = " << arg(0) << "," << arg(1) << "," << arg(2) << "\n";
+                    if (debug) std::cout << "force = " << arg(0) << "," << arg(1) << "," << arg(2) << "\n";
                     // forces don't need to be transformed since we bring the local stiffness matrix back to global co-sys
                     // directly in libmesh-format:
                     Fe(side)   += arg(0); // u_i
                     Fe(side+3) += arg(1); // v_i
                     Fe(side+6) += arg(2); // w_i
+
+                    processedNodes[id/6] = true;
                 }
             }
         }
 
+        if (debug) {
 std::cout << "Fe:\n";
 Fe.print(std::cout);
 std::cout << std::endl;
@@ -569,6 +600,7 @@ std::cout << std::endl;
 std::cout << "Ke local:\n";
 Ke.print(std::cout);
 std::cout << std::endl;
+        }
 
         // transform Ke from local back to global with transformation matrix T:
         DenseMatrix<Real> KeSub(6,6);
@@ -579,9 +611,11 @@ std::cout << std::endl;
                 for (int j = 0; j < 3; j++)
                     TSub(3*k+i,3*k+j) = transTri(i,j);
 
+        if (debug) {
         std::cout << "TSub:\n";
         TSub.print(std::cout);
         std::cout << std::endl;
+        }
 
         for (int i = 0; i < 3; i++)
         {
@@ -591,16 +625,20 @@ std::cout << std::endl;
                     for (int l = 0; l < 6; l++)
                         KeSub(k,l) = Ke(i*6+k,j*6+l);
 
+                if (debug) {
                 std::cout << "KeSub(" << i << "," << j << "):\n";
                 KeSub.print(std::cout);
                 std::cout << std::endl;
+                }
 
                 KeSub.right_multiply(TSub);
                 KeSub.left_multiply_transpose(TSub);
 
+                if (debug) {
                 std::cout << "Transformed:\n";
                 KeSub.print(std::cout);
                 std::cout << std::endl;
+                }
 
                 for (int k = 0; k < 6; k++)
                     for (int l = 0; l < 6; l++)
@@ -608,9 +646,11 @@ std::cout << std::endl;
             }
         }
 
+        if (debug) {
         std::cout << "Ke global:\n";
         KeNew.print(std::cout);
         std::cout << std::endl;
+        }
 
         for (int alpha = 0; alpha < 6; alpha++)
         {
@@ -626,9 +666,11 @@ std::cout << std::endl;
             }
         }
 
+        if (debug) {
         std::cout << "Ke global in libmesh-format:\n";
         Ke.print(std::cout);
         std::cout << std::endl;
+        }
 
         dof_map.constrain_element_matrix_and_vector (Ke, Fe, dof_indices);
 
@@ -640,11 +682,52 @@ std::cout << std::endl;
 void eval_CC(DenseMatrix<Real>& C, Real x, Real y, DenseMatrix<Real>& dphi, DenseMatrix<Real> &out)
 {// a = C(,0 b=C(,1 c=C(,2 d=C(,3 e=C(,4
  // 4 = C(0, 5=C(1, 6=C(2,
-    out.resize(3,9);
+    out.resize(9,4);
 
     Real z = 1.0 - x - y;
-
+/*
     DenseVector<Real> Hx_xhi(9), Hx_eta(9), Hy_xhi(9), Hy_eta(9);
+    Hx_xhi(0) = C(0,2)*(1-2*x)+(C(0,1)-C(0,2))*y;
+    Hx_xhi(1) = C(1,2)*(1-2*x)-(C(1,1)+C(1,2))*y;
+    Hx_xhi(2) = -4+6*(x+y)+C(2,2)*(1-2*x)-y*(C(2,1)+C(2,2));
+    Hx_xhi(3) = -C(0,2)*(1-2*x)+y*(C(0,0)+C(0,2));
+    Hx_xhi(4) = C(1,2)*(1-2*x)-y*(C(1,2)-C(1,0));
+    Hx_xhi(5) = -2+6*x+C(2,2)*(1-2*x)+y*(C(2,0)-C(2,2));
+    Hx_xhi(6) = -y*(C(0,1)+C(0,0));
+    Hx_xhi(7) =  y*(C(1,0)-C(1,1));
+    Hx_xhi(8) = -y*(C(2,1)-C(2,0));
+
+    Hy_xhi(0) = C(3,2)*(1-2*x)+y*(C(3,1)-C(3,2));
+    Hy_xhi(1) = 1+C(2,2)*(1-2*x)-y*(C(2,1)+C(2,2));
+    Hy_xhi(2) = -C(1,2)*(1-2*x)+y*(C(1,1)+C(1,2));
+    Hy_xhi(3) = -C(3,2)*(1-2*x)+y*(C(3,0)+C(3,2));
+    Hy_xhi(4) = -1+C(2,2)*(1-2*x)+y*(C(2,0)-C(2,2));
+    Hy_xhi(5) = -C(1,2)*(1-2*x)-y*(C(1,0)-C(1,2));
+    Hy_xhi(6) = -y*(C(3,0)+C(3,1));
+    Hy_xhi(7) =  y*(C(2,0)-C(2,1));
+    Hy_xhi(8) = -y*(C(1,0)-C(1,1));
+
+    Hx_eta(0) = -C(0,1)*(1-2*y)-x*(C(0,2)-C(0,1));
+    Hx_eta(1) =  C(1,1)*(1-2*y)-y*(C(1,1)+C(1,2));
+    Hx_eta(2) = -4+6*(x+y)+C(2,1)*(1-2*y)-x*(C(2,1)+C(2,2));
+    Hx_eta(3) =  x*(C(0,0)+C(0,2));
+    Hx_eta(4) =  x*(C(1,0)-C(1,2));
+    Hx_eta(5) = -x*(C(2,2)-C(2,0));
+    Hx_eta(6) = C(0,1)*(1-2*y)-x*(C(0,0)+C(0,1));
+    Hx_eta(7) = C(1,1)*(1-2*y)+x*(C(1,0)-C(1,1));
+    Hx_eta(8) = -2+6*y+C(2,1)*(1-2*y)+x*(C(2,0)-C(2,1));
+
+    Hy_eta(0) = -C(3,1)*(1-2*y)-x*(C(3,2)-C(3,1));
+    Hy_eta(1) = 1+C(2,1)*(1-2*y)-x*(C(2,1)+C(2,2));
+    Hy_eta(2) = -C(1,1)*(1-2*y)+x*(C(1,1)+C(1,2));
+    Hy_eta(3) = x*(C(3,0)+C(3,2));
+    Hy_eta(4) = x*(C(2,0)-C(3,2));
+    Hy_eta(5) = -x*(C(1,0)-C(1,2));
+    Hy_eta(6) = C(3,1)*(1-2*y)-x*(C(3,0)+C(3,1));
+    Hy_eta(7) = -1+C(2,1)*(1-2*y)+x*(C(2,0)-C(2,1));
+    Hy_eta(8) = -C(1,1)*(1-2*y)-x*(C(1,0)-C(1,1));
+*/
+/*
     Hx_xhi(0) = 6.0*(C(2,0)*z-C(2,0)*x+C(1,0)*y);
     Hx_xhi(1) = 4.0*(C(2,1)*z-C(1,1)*y-C(2,1)*x);
     Hx_xhi(2) = -3.0+4.0*(x+y+C(1,2)*y-C(2,2)*z+C(2,2)*x);
@@ -684,15 +767,16 @@ void eval_CC(DenseMatrix<Real>& C, Real x, Real y, DenseMatrix<Real>& dphi, Dens
     Hy_eta(6) = 6*(C(1,3)*z-C(1,3)*y-C(0,3)*x);
     Hy_eta(7) = 1+4*(C(0,4)*x-y+C(1,4)*z-C(1,4)*y);
     Hy_eta(8) = 4*(C(1,1)*y-C(0,1)*x-C(1,1)*z);
-
+*/
+/*
     for (int i = 0; i < 9; i++)
     {
         out(0,i) =  dphi(1,1)*Hx_xhi(i) + dphi(0,1)*Hx_eta(i);
         out(1,i) = -dphi(1,0)*Hy_xhi(i) - dphi(0,0)*Hy_eta(i);
         out(2,i) = -dphi(1,0)*Hx_xhi(i) - dphi(0,0)*Hx_eta(i) + dphi(1,1)*Hy_xhi(i) + dphi(0,1)*Hy_eta(i);
     }
+*/
 
-    /*
     out(0,0) = 6.0*C(2,0)*z - 6.0*C(2,0)*x + 6.0*C(1,0)*y;
     out(0,1) =-6.0*C(2,0)*x - 6.0*C(1,0)*z + 6.0*C(1,0)*y;
     out(0,2) = 6.0*C(2,3)*z - 6.0*C(2,3)*x + 6.0*C(1,3)*y;
@@ -737,5 +821,4 @@ void eval_CC(DenseMatrix<Real>& C, Real x, Real y, DenseMatrix<Real>& dphi, Dens
     out(8,1) =-4.0*C(0,2)*y + 4.0*C(1,2)*y;
     out(8,2) =-4.0*C(0,1)*y + 4.0*C(1,1)*y;
     out(8,3) =-4.0*C(0,1)*x - 4.0*C(1,1)*z + 4.0*C(1,1)*y;
-    */
 }
