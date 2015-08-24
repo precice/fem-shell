@@ -45,13 +45,13 @@ using namespace libMesh;
 void assemble_elasticity(EquationSystems& es,
                          const std::string& system_name);
 
-void eval_CC(DenseMatrix<Real>& Hcoeffs, Real x, Real y, DenseMatrix<Real> &dphi, DenseMatrix<Real> &out);
+void eval_B(DenseMatrix<Real>& Hcoeffs, Real x, Real y, DenseMatrix<Real> &dphi, DenseMatrix<Real> &out);
 
-Real nu;
-Real em;
-Real force;
-std::vector<DenseVector<Real> > forces;
 bool debug = false;
+Real nu = 0.4;
+Real em = 100000.0;
+int iter = 1;
+std::vector<DenseVector<Real> > forces;
 
 // Begin the main program.
 int main (int argc, char** argv)
@@ -62,18 +62,46 @@ int main (int argc, char** argv)
     // Initialize the cantilever mesh
     const unsigned int dim = 2;
 
+    if (argc < 7)
+    {
+        if (init.comm().rank() == 0)
+        {
+            libMesh::err << "Usage: " << argv[0] << " -d 0|1 -nu Real -e Real -mesh inFile -out outFile\n"
+                         << "-d: Debug-Mode (1=on, 0=off (default))\n"
+                         << "-nu: Possion-Number nu (0.4 default)\n"
+                         << "-e: Elasticity Modulus E (1000000.0 default)\n"
+                         << "-mesh: Input mesh file (*.xda or *.msh)\n"
+                         << "-out: Output file name (without extension)\n"
+                         << "-iter: Number of simulation steps (1 default)\n";
+        }
+
+        libmesh_error_msg("Error, must choose valid parameters.");
+    }
+
+    // Parse command line
+    GetPot command_line (argc, argv);
+
+    debug = false;
+    if ( command_line.search(1, "-d") )
+        debug = command_line.next(0) == 1? true : false;
     nu = 0.4;
-    em = 10.0;
-    force = 0.07;
-    std::string filename = "1_tri.xda";
-    if (argc > 1)
-        nu = atof(argv[1]);
-    if (argc > 2)
-        em = atof(argv[2]);
-    if (argc > 3)
-        force = atof(argv[3]);
-    if (argc > 4)
-        filename = std::string(argv[4]);
+    if ( command_line.search(1, "-nu") )
+        nu = command_line.next(nu);
+    em = 1000000.0;
+    if ( command_line.search(1, "-e") )
+        em = command_line.next(em);
+
+    std::string filename;
+    if ( command_line.search(1, "-mesh") )
+        filename = command_line.next("1_tri.xda");
+
+    std::string outfile;
+    if ( command_line.search(1, "-out") )
+        outfile = command_line.next("out");
+
+    if ( command_line.search(1, "-iter") )
+        iter = command_line.next(1);
+
     // Skip this 2D example if libMesh was compiled as 1D-only.
     libmesh_example_requires(dim <= LIBMESH_DIM, "2D support");
 
@@ -86,12 +114,16 @@ int main (int argc, char** argv)
         mesh.prepare_for_use(true, false);// skip renumbering, skip find neighbors (depricated)
 
     // Print information about the mesh to the screen.
-    if (debug) mesh.print_info();
+    if (debug)
+        mesh.print_info();
 
-    // Load file with forces
+    // Load file with forces (only needed for stand-alone version)
     std::filebuf fb;
-    filename.resize(filename.size()-4);
+    if (filename.find(".xda") != std::string::npos ||
+        filename.find(".msh") != std::string::npos)
+        filename.resize(filename.size()-4);
     filename += "_f";
+
     if (fb.open (filename.c_str(),std::ios::in))
     {
         std::istream input(&fb);
@@ -108,12 +140,13 @@ int main (int argc, char** argv)
             forces.push_back(p);
         }
     }
-    // DEBUG
-    if (debug) {
-    std::cout << "Forces-vector has " << forces.size() << " entries: [\n";
-    for (unsigned int i = 0; i < forces.size(); i++)
-        std::cout << "(" << forces[i](0) << "," << forces[i](1) << "," << forces[i](2) << ")\n";
-    std::cout << "]\n";
+
+    if (debug)
+    {
+        std::cout << "Forces-vector has " << forces.size() << " entries: [\n";
+        for (unsigned int i = 0; i < forces.size(); i++)
+            std::cout << "(" << forces[i](0) << "," << forces[i](1) << "," << forces[i](2) << ")\n";
+        std::cout << "]\n";
     }
     // Create an equation systems object.
     EquationSystems equation_systems (mesh);
@@ -167,35 +200,34 @@ int main (int argc, char** argv)
     // mesh-export object:
     VTKIO vtkio(mesh);
 
-    int counter = 0;
-    for (float x = 0.0f; x < 10.0f; x += 0.05f)
+    for (int x = 0; x < iter; x++)
     {//BEGIN TIMESTEP FOR-LOOP
-        std::cout << counter << ": x=" << x << "/10.0\n";
+        std::cout << "progress =" << x << "/" << iter << " (" << (x/(float)iter) << "%)\n";
 
         equation_systems.reinit();
 
-        if (debug) std::cout << "after systems.reinit\n";
+        if (debug)
+            std::cout << "after systems.reinit\n";
 
         // Print information about the system to the screen.
         //equation_systems.print_info();
 
         /**
-         *
-         *
          * Solve the system
-         *
-         *
          **/
         equation_systems.solve();
 
-        if (debug) std::cout << "after solve\n";
+        if (debug)
+            std::cout << "after solve\n";
 
         std::vector<Number> sols;
         equation_systems.build_solution_vector(sols);
 
-        if (debug) std::cout << "after build solution vector\n";
+        if (debug)
+            std::cout << "after build solution vector\n";
 
-        if (debug) {
+        if (debug)
+        {
             system.matrix->print(std::cout);
             system.rhs->print(std::cout);
         }
@@ -234,7 +266,8 @@ int main (int argc, char** argv)
             for (unsigned int i = 0; i < elem->n_nodes(); i++)
             {
                 dof_id_type id = dof_indices_w[i]; // 2,8,14,...,2+i*6
-                if (debug) std::cout << "elem-node-id: " << id << ", uvw = (" << sols[id] << "," << sols[id+1] << "," << sols[id+2] << ")\n";
+                if (debug)
+                    std::cout << "elem-node-id: " << id << ", uvw = (" << sols[id] << "," << sols[id+1] << "," << sols[id+2] << ")\n";
                 displacements(3*id/6)   += sols[id];
                 displacements(3*id/6+1) += sols[id+1];
                 displacements(3*id/6+2) += sols[id+2];
@@ -256,16 +289,14 @@ int main (int argc, char** argv)
 
         // Plot the solution
         std::ostringstream file_name;
-        file_name << "out/out_"
+        file_name << "out/" << outfile << "_"
                   << std::setw(3)
                   << std::setfill('0')
                   << std::right
-                  << counter
+                  << x
                   << ".vtu";
 
         vtkio.write_equation_systems(file_name.str(), equation_systems);
-
-        counter++;
     }
 
     std::cout << "All done\n";
@@ -438,7 +469,8 @@ std::cout << std::endl;
         sidelen[0] = pow(dphi_p(0,0), 2.0); // side AB, x12^2 + y12^2 (=0) -> x12^2 = x2^2
         sidelen[1] = pow(dphi_p(1,0), 2.0) + pow(dphi_p(1,1), 2.0); // side AC, x31^2 + y31^2
         sidelen[2] = pow(dphi_p(2,0), 2.0) + pow(dphi_p(2,1), 2.0); // side BC, x23^2 + y23^2
-/*
+
+        /* // Koeffizienten für alternative Lösung (siehe eval_func)
         Hcoeffs.resize(4,3); // p,r,r,t -> 4, 4,5,6 -> 3
         for (unsigned int k = 0; k < 3; k++) // k=0 <-> 23, k=1 <-> 31, k=2 <-> 12
         {
@@ -446,7 +478,8 @@ std::cout << std::endl;
             Hcoeffs(1,k) =  3.0 * dphi_p(2-k,0) * dphi_p(2-k,1) / sidelen[2-k];
             Hcoeffs(2,k) =  3.0 * pow(dphi_p(2-k,1),2.0)        / sidelen[2-k];
             Hcoeffs(3,k) = -6.0 * dphi_p(2-k,1)                 / sidelen[2-k];
-        }*/
+        }
+        */
         Hcoeffs.resize(3,5); // 4,5,6 -> 3, a-e -> 5
         for (unsigned int k = 0; k < 3; k++) // k=0 <-> 23, k=1 <-> 31, k=2 <-> 12
         {
@@ -457,11 +490,12 @@ std::cout << std::endl;
             Hcoeffs(k,4) = (0.25*pow(dphi_p(2-k,1),2.0) - 0.5*pow(dphi_p(2-k,0),2.0)) / sidelen[2-k];
         }
 
-        AA.resize(3,4);
+        // für alte (erste) Lösung, wird nicht mehr gebraucht
+        //AA.resize(3,4);
         /**  AA = [ y31, y12,   0,   0]
                   [   0,   0,-x31,-x12]
                   [-x31,-x12, y31, y12] **/
-        AA(0,0) =  dphi_p(1,1);
+        /*AA(0,0) =  dphi_p(1,1);
         AA(0,1) =  0;//dphi(0,1); // it's always 0
         AA(1,2) = -dphi_p(1,0);
         AA(1,3) = -dphi_p(0,0);
@@ -469,20 +503,20 @@ std::cout << std::endl;
         AA(2,1) = -dphi_p(0,0);
         AA(2,2) =  dphi_p(1,1);
         AA(2,3) =  0;//dphi(0,1); // it's always 0
-
+        */
         // resize the current element matrix and vector to an appropriate size
         Ke_p.resize(9, 9);
 
         for (unsigned int i = 0; i < qps.size(); i++)
         {
-            eval_CC(Hcoeffs, qps[i][0], qps[i][1], dphi_p, CC);
-            CC.right_multiply_transpose(AA);
+            eval_B(Hcoeffs, qps[i][0], qps[i][1], dphi_p, CC);
+            //CC.right_multiply_transpose(AA);
             CC *= 1.0/(2.0*A_tri); // CC entspricht nun B
 
             DenseMatrix<Real> temp;
             temp = Dp; // temp = 3x3
-            temp.right_multiply_transpose(CC); // temp = 9x3
-            temp.left_multiply(CC); // temp = 9x9
+            temp.right_multiply(CC); // temp = 9x3
+            temp.left_multiply_transpose(CC); // temp = 9x9
 
             Ke_p += temp;
         }
@@ -679,55 +713,13 @@ std::cout << std::endl;
     }
 }
 
-void eval_CC(DenseMatrix<Real>& C, Real x, Real y, DenseMatrix<Real>& dphi, DenseMatrix<Real> &out)
-{// a = C(,0 b=C(,1 c=C(,2 d=C(,3 e=C(,4
- // 4 = C(0, 5=C(1, 6=C(2,
-    out.resize(9,4);
-
+void eval_B(DenseMatrix<Real>& C, Real x, Real y, DenseMatrix<Real>& dphi, DenseMatrix<Real> &out)
+{
+    // a = C(,0 b=C(,1 c=C(,2 d=C(,3 e=C(,4
+    // 4 = C(0, 5=C(1, 6=C(2,
+    out.resize(3,9);
     Real z = 1.0 - x - y;
-/*
     DenseVector<Real> Hx_xhi(9), Hx_eta(9), Hy_xhi(9), Hy_eta(9);
-    Hx_xhi(0) = C(0,2)*(1-2*x)+(C(0,1)-C(0,2))*y;
-    Hx_xhi(1) = C(1,2)*(1-2*x)-(C(1,1)+C(1,2))*y;
-    Hx_xhi(2) = -4+6*(x+y)+C(2,2)*(1-2*x)-y*(C(2,1)+C(2,2));
-    Hx_xhi(3) = -C(0,2)*(1-2*x)+y*(C(0,0)+C(0,2));
-    Hx_xhi(4) = C(1,2)*(1-2*x)-y*(C(1,2)-C(1,0));
-    Hx_xhi(5) = -2+6*x+C(2,2)*(1-2*x)+y*(C(2,0)-C(2,2));
-    Hx_xhi(6) = -y*(C(0,1)+C(0,0));
-    Hx_xhi(7) =  y*(C(1,0)-C(1,1));
-    Hx_xhi(8) = -y*(C(2,1)-C(2,0));
-
-    Hy_xhi(0) = C(3,2)*(1-2*x)+y*(C(3,1)-C(3,2));
-    Hy_xhi(1) = 1+C(2,2)*(1-2*x)-y*(C(2,1)+C(2,2));
-    Hy_xhi(2) = -C(1,2)*(1-2*x)+y*(C(1,1)+C(1,2));
-    Hy_xhi(3) = -C(3,2)*(1-2*x)+y*(C(3,0)+C(3,2));
-    Hy_xhi(4) = -1+C(2,2)*(1-2*x)+y*(C(2,0)-C(2,2));
-    Hy_xhi(5) = -C(1,2)*(1-2*x)-y*(C(1,0)-C(1,2));
-    Hy_xhi(6) = -y*(C(3,0)+C(3,1));
-    Hy_xhi(7) =  y*(C(2,0)-C(2,1));
-    Hy_xhi(8) = -y*(C(1,0)-C(1,1));
-
-    Hx_eta(0) = -C(0,1)*(1-2*y)-x*(C(0,2)-C(0,1));
-    Hx_eta(1) =  C(1,1)*(1-2*y)-y*(C(1,1)+C(1,2));
-    Hx_eta(2) = -4+6*(x+y)+C(2,1)*(1-2*y)-x*(C(2,1)+C(2,2));
-    Hx_eta(3) =  x*(C(0,0)+C(0,2));
-    Hx_eta(4) =  x*(C(1,0)-C(1,2));
-    Hx_eta(5) = -x*(C(2,2)-C(2,0));
-    Hx_eta(6) = C(0,1)*(1-2*y)-x*(C(0,0)+C(0,1));
-    Hx_eta(7) = C(1,1)*(1-2*y)+x*(C(1,0)-C(1,1));
-    Hx_eta(8) = -2+6*y+C(2,1)*(1-2*y)+x*(C(2,0)-C(2,1));
-
-    Hy_eta(0) = -C(3,1)*(1-2*y)-x*(C(3,2)-C(3,1));
-    Hy_eta(1) = 1+C(2,1)*(1-2*y)-x*(C(2,1)+C(2,2));
-    Hy_eta(2) = -C(1,1)*(1-2*y)+x*(C(1,1)+C(1,2));
-    Hy_eta(3) = x*(C(3,0)+C(3,2));
-    Hy_eta(4) = x*(C(2,0)-C(3,2));
-    Hy_eta(5) = -x*(C(1,0)-C(1,2));
-    Hy_eta(6) = C(3,1)*(1-2*y)-x*(C(3,0)+C(3,1));
-    Hy_eta(7) = -1+C(2,1)*(1-2*y)+x*(C(2,0)-C(2,1));
-    Hy_eta(8) = -C(1,1)*(1-2*y)-x*(C(1,0)-C(1,1));
-*/
-/*
     Hx_xhi(0) = 6.0*(C(2,0)*z-C(2,0)*x+C(1,0)*y);
     Hx_xhi(1) = 4.0*(C(2,1)*z-C(1,1)*y-C(2,1)*x);
     Hx_xhi(2) = -3.0+4.0*(x+y+C(1,2)*y-C(2,2)*z+C(2,2)*x);
@@ -767,16 +759,73 @@ void eval_CC(DenseMatrix<Real>& C, Real x, Real y, DenseMatrix<Real>& dphi, Dens
     Hy_eta(6) = 6*(C(1,3)*z-C(1,3)*y-C(0,3)*x);
     Hy_eta(7) = 1+4*(C(0,4)*x-y+C(1,4)*z-C(1,4)*y);
     Hy_eta(8) = 4*(C(1,1)*y-C(0,1)*x-C(1,1)*z);
-*/
-/*
+
     for (int i = 0; i < 9; i++)
     {
         out(0,i) =  dphi(1,1)*Hx_xhi(i) + dphi(0,1)*Hx_eta(i);
         out(1,i) = -dphi(1,0)*Hy_xhi(i) - dphi(0,0)*Hy_eta(i);
         out(2,i) = -dphi(1,0)*Hx_xhi(i) - dphi(0,0)*Hx_eta(i) + dphi(1,1)*Hy_xhi(i) + dphi(0,1)*Hy_eta(i);
     }
-*/
 
+    /*
+    // eigentlich alternative Lösung, klappt aber nicht
+    // a = C(,0 b=C(,1 c=C(,2 d=C(,3 e=C(,4
+    // 4 = C(0, 5=C(1, 6=C(2,
+    out.resize(3,9);
+    Hx_xhi(0) = C(0,2)*(1-2*x)+(C(0,1)-C(0,2))*y;
+    Hx_xhi(1) = C(1,2)*(1-2*x)-(C(1,1)+C(1,2))*y;
+    Hx_xhi(2) = -4+6*(x+y)+C(2,2)*(1-2*x)-y*(C(2,1)+C(2,2));
+    Hx_xhi(3) = -C(0,2)*(1-2*x)+y*(C(0,0)+C(0,2));
+    Hx_xhi(4) = C(1,2)*(1-2*x)-y*(C(1,2)-C(1,0));
+    Hx_xhi(5) = -2+6*x+C(2,2)*(1-2*x)+y*(C(2,0)-C(2,2));
+    Hx_xhi(6) = -y*(C(0,1)+C(0,0));
+    Hx_xhi(7) =  y*(C(1,0)-C(1,1));
+    Hx_xhi(8) = -y*(C(2,1)-C(2,0));
+
+    Hy_xhi(0) = C(3,2)*(1-2*x)+y*(C(3,1)-C(3,2));
+    Hy_xhi(1) = 1+C(2,2)*(1-2*x)-y*(C(2,1)+C(2,2));
+    Hy_xhi(2) = -C(1,2)*(1-2*x)+y*(C(1,1)+C(1,2));
+    Hy_xhi(3) = -C(3,2)*(1-2*x)+y*(C(3,0)+C(3,2));
+    Hy_xhi(4) = -1+C(2,2)*(1-2*x)+y*(C(2,0)-C(2,2));
+    Hy_xhi(5) = -C(1,2)*(1-2*x)-y*(C(1,0)-C(1,2));
+    Hy_xhi(6) = -y*(C(3,0)+C(3,1));
+    Hy_xhi(7) =  y*(C(2,0)-C(2,1));
+    Hy_xhi(8) = -y*(C(1,0)-C(1,1));
+
+    Hx_eta(0) = -C(0,1)*(1-2*y)-x*(C(0,2)-C(0,1));
+    Hx_eta(1) =  C(1,1)*(1-2*y)-y*(C(1,1)+C(1,2));
+    Hx_eta(2) = -4+6*(x+y)+C(2,1)*(1-2*y)-x*(C(2,1)+C(2,2));
+    Hx_eta(3) =  x*(C(0,0)+C(0,2));
+    Hx_eta(4) =  x*(C(1,0)-C(1,2));
+    Hx_eta(5) = -x*(C(2,2)-C(2,0));
+    Hx_eta(6) = C(0,1)*(1-2*y)-x*(C(0,0)+C(0,1));
+    Hx_eta(7) = C(1,1)*(1-2*y)+x*(C(1,0)-C(1,1));
+    Hx_eta(8) = -2+6*y+C(2,1)*(1-2*y)+x*(C(2,0)-C(2,1));
+
+    Hy_eta(0) = -C(3,1)*(1-2*y)-x*(C(3,2)-C(3,1));
+    Hy_eta(1) = 1+C(2,1)*(1-2*y)-x*(C(2,1)+C(2,2));
+    Hy_eta(2) = -C(1,1)*(1-2*y)+x*(C(1,1)+C(1,2));
+    Hy_eta(3) = x*(C(3,0)+C(3,2));
+    Hy_eta(4) = x*(C(2,0)-C(3,2));
+    Hy_eta(5) = -x*(C(1,0)-C(1,2));
+    Hy_eta(6) = C(3,1)*(1-2*y)-x*(C(3,0)+C(3,1));
+    Hy_eta(7) = -1+C(2,1)*(1-2*y)+x*(C(2,0)-C(2,1));
+    Hy_eta(8) = -C(1,1)*(1-2*y)-x*(C(1,0)-C(1,1));
+
+    for (int i = 0; i < 9; i++)
+    {
+        out(0,i) =  dphi(1,1)*Hx_xhi(i) + dphi(0,1)*Hx_eta(i);
+        out(1,i) = -dphi(1,0)*Hy_xhi(i) - dphi(0,0)*Hy_eta(i);
+        out(2,i) = -dphi(1,0)*Hx_xhi(i) - dphi(0,0)*Hx_eta(i) + dphi(1,1)*Hy_xhi(i) + dphi(0,1)*Hy_eta(i);
+    }
+    */
+
+    /*
+    // ehemalige Lösung. Klappt, es sind aber andere Werte; könnte also korrekt oder eben falsch sein
+    // a = C(0, b=C(1, c=C(2, d=C(3, e=C(4,
+    // 4 = C(,0 5=C(,1 6=C(,2
+    out.resize(9,3);
+    Real z = 1.0 - x - y;
     out(0,0) = 6.0*C(2,0)*z - 6.0*C(2,0)*x + 6.0*C(1,0)*y;
     out(0,1) =-6.0*C(2,0)*x - 6.0*C(1,0)*z + 6.0*C(1,0)*y;
     out(0,2) = 6.0*C(2,3)*z - 6.0*C(2,3)*x + 6.0*C(1,3)*y;
@@ -821,4 +870,5 @@ void eval_CC(DenseMatrix<Real>& C, Real x, Real y, DenseMatrix<Real>& dphi, Dens
     out(8,1) =-4.0*C(0,2)*y + 4.0*C(1,2)*y;
     out(8,2) =-4.0*C(0,1)*y + 4.0*C(1,1)*y;
     out(8,3) =-4.0*C(0,1)*x - 4.0*C(1,1)*z + 4.0*C(1,1)*y;
+    */
 }
