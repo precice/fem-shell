@@ -50,6 +50,7 @@ void eval_B(DenseMatrix<Real>& Hcoeffs, Real x, Real y, DenseMatrix<Real> &dphi,
 bool debug = false;
 Real nu = 0.4;
 Real em = 100000.0;
+Real thickness = 1.0;
 int iter = 1;
 std::vector<DenseVector<Real> > forces;
 
@@ -70,6 +71,7 @@ int main (int argc, char** argv)
                          << "-d: Debug-Mode (1=on, 0=off (default))\n"
                          << "-nu: Possion-Number nu (0.4 default)\n"
                          << "-e: Elasticity Modulus E (1000000.0 default)\n"
+                         << "-t: Thickness (1.0 default)\n"
                          << "-mesh: Input mesh file (*.xda or *.msh)\n"
                          << "-out: Output file name (without extension)\n"
                          << "-iter: Number of simulation steps (1 default)\n";
@@ -90,15 +92,15 @@ int main (int argc, char** argv)
     em = 1000000.0;
     if ( command_line.search(1, "-e") )
         em = command_line.next(em);
-
+    thickness = 1.0;
+    if ( command_line.search(1, "-t") )
+        thickness = command_line.next(thickness);
     std::string filename;
     if ( command_line.search(1, "-mesh") )
         filename = command_line.next("1_tri.xda");
-
     std::string outfile;
     if ( command_line.search(1, "-out") )
         outfile = command_line.next("out");
-
     if ( command_line.search(1, "-iter") )
         iter = command_line.next(1);
 
@@ -108,10 +110,15 @@ int main (int argc, char** argv)
     // Create a 2D mesh distributed across the default MPI communicator.
     Mesh mesh(init.comm(), dim);
     mesh.allow_renumbering(false);
+    if (mesh.allow_renumbering())
+        std::cout << "mesh erlaubt renumbering\n";
     mesh.read(filename);
 
     if (filename.find(".msh") != std::string::npos) // if we load a GMSH mesh file, we need to execute a preparation step
-        mesh.prepare_for_use(true, false);// skip renumbering, skip find neighbors (depricated)
+    {
+        std::cout << "we use gmsh\n";
+        //mesh.prepare_for_use(true, false);// skip renumbering, skip find neighbors (depricated)
+    }
 
     // Print information about the mesh to the screen.
     if (debug)
@@ -204,7 +211,7 @@ int main (int argc, char** argv)
     {//BEGIN TIMESTEP FOR-LOOP
         std::cout << "progress =" << x << "/" << iter << " (" << (x/(float)iter) << "%)\n";
 
-        equation_systems.reinit();
+        //equation_systems.reinit();
 
         if (debug)
             std::cout << "after systems.reinit\n";
@@ -251,7 +258,7 @@ int main (int argc, char** argv)
         MeshBase::const_element_iterator       el     = mesh.active_local_elements_begin();
         const MeshBase::const_element_iterator end_el = mesh.active_local_elements_end();
 
-        std::vector<dof_id_type> dof_indices_w;
+        std::vector<dof_id_type> dof_indices_u;
 
         const DofMap& dof_map = system.get_dof_map();
 
@@ -261,11 +268,11 @@ int main (int argc, char** argv)
         {
             const Elem* elem = *el;
 
-            dof_map.dof_indices (elem, dof_indices_w, u_var);
+            dof_map.dof_indices (elem, dof_indices_u, u_var);
 
             for (unsigned int i = 0; i < elem->n_nodes(); i++)
             {
-                dof_id_type id = dof_indices_w[i]; // 2,8,14,...,2+i*6
+                dof_id_type id = dof_indices_u[i]; // 0,6,12,...,i*6
                 if (debug)
                     std::cout << "elem-node-id: " << id << ", uvw = (" << sols[id] << "," << sols[id+1] << "," << sols[id+2] << ")\n";
                 displacements(3*id/6)   += sols[id];
@@ -347,10 +354,7 @@ void assemble_elasticity(EquationSystems& es,
     std::vector<Real> sidelen; // lij^2
     DenseMatrix<Real> Hcoeffs; // ak, ..., ek
     Real A_tri;
-
-    Real t = 0.01; // shell thickness
-
-    DenseMatrix<Real> AA;
+    //DenseMatrix<Real> AA;
     DenseMatrix<Real> CC;
 
     DenseMatrix<Real> Dp, Dm;
@@ -358,17 +362,9 @@ void assemble_elasticity(EquationSystems& es,
     Dp(0,0) = 1.0; Dp(0,1) = nu;
     Dp(1,0) = nu;  Dp(1,1) = 1.0;
     Dp(2,2) = (1.0-nu)/2.0;
-    //Dm = Dp;
-    Dp *= em*pow(t,3.0)/(12.0*(1.0-nu*nu)); // material matrix for plate part
-    //Dm *= em/(1.0-nu*nu); // material matrix for membrane part
-    Dm.resize(3,3);
-    Dm(0,0) = 1.0-nu;
-    Dm(0,1) = nu;
-    Dm(1,0) = nu;
-    Dm(1,1) = 1.0-nu;
-    Dm(2,2) = (1.0-2.0*nu)/2.0;
-    Dm *= em/((1.0+nu)*(1.0-2.0*nu));
-
+    Dm = Dp;
+    Dp *= em*pow(thickness,3.0)/(12.0*(1.0-nu*nu)); // material matrix for plate part
+    Dm *= em/(1.0-nu*nu); // material matrix for membrane part
     std::vector<std::vector<Real> > qps;
 
     unsigned int ln = mesh.n_local_nodes();
@@ -546,7 +542,7 @@ std::cout << std::endl;
         Ke_m = Dm;
         Ke_m.right_multiply(B_m);
         Ke_m.left_multiply_transpose(B_m);
-        Ke_m *= t*A_tri;
+        Ke_m *= thickness*A_tri;
 
 /*************************************************
  * END OF PLANE COMPUTATION                      *
@@ -621,7 +617,7 @@ std::cout << std::endl;
                     Fe(side+3) += arg(1); // v_i
                     Fe(side+6) += arg(2); // w_i
 
-                    processedNodes[id/6] = true;
+                    //processedNodes[id/6] = true;
                 }
             }
         }
@@ -824,7 +820,7 @@ void eval_B(DenseMatrix<Real>& C, Real x, Real y, DenseMatrix<Real>& dphi, Dense
     // ehemalige Lösung. Klappt, es sind aber andere Werte; könnte also korrekt oder eben falsch sein
     // a = C(0, b=C(1, c=C(2, d=C(3, e=C(4,
     // 4 = C(,0 5=C(,1 6=C(,2
-    out.resize(9,3);
+    out.resize(9,4);
     Real z = 1.0 - x - y;
     out(0,0) = 6.0*C(2,0)*z - 6.0*C(2,0)*x + 6.0*C(1,0)*y;
     out(0,1) =-6.0*C(2,0)*x - 6.0*C(1,0)*z + 6.0*C(1,0)*y;
