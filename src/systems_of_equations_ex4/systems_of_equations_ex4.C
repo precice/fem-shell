@@ -617,7 +617,7 @@ std::cout << std::endl;
                     Fe(side+3) += arg(1); // v_i
                     Fe(side+6) += arg(2); // w_i
 
-                    //processedNodes[id/6] = true;
+                    processedNodes[id/6] = true;
                 }
             }
         }
