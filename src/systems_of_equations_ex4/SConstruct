@@ -1,0 +1,20 @@
+# Set environment variable LIBMESH_ROOT or execute scons like that: scons LIBMESH_ROOT=$HOME/software/libmesh scons  
+# Start resulting executable like that: LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/software/libmesh/.libs ./fem-shell [...]
+
+import os
+
+vars = Variables(None, ARGUMENTS)
+env = Environment(variables = vars, ENV = os.environ)
+conf = Configure(env)
+
+libmeshRoot = os.getenv('LIBMESH_ROOT')
+
+env.Append(CPPPATH = [os.path.join(libmeshRoot, 'include')])
+env.Append(LIBPATH = [os.path.join(libmeshRoot, ".libs")])
+
+conf.CheckLib("mesh_opt")
+
+env["CXX"] = 'mpicxx'
+env.Append(CCFLAGS = ["-g3", "-O0", "-Wall", "-std=c++11", '-fopenmp'])
+
+env.Program('fem-shell', ['systems_of_equations_ex4.cpp'])
