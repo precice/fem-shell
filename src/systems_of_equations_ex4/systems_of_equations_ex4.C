@@ -211,7 +211,7 @@ int main (int argc, char** argv)
     {//BEGIN TIMESTEP FOR-LOOP
         std::cout << "progress =" << x << "/" << iter << " (" << (x/(float)iter) << "%)\n";
 
-        //equation_systems.reinit();
+        equation_systems.reinit();
 
         if (debug)
             std::cout << "after systems.reinit\n";
