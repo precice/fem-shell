@@ -3,6 +3,7 @@
  *
  * MPI testen
  * Konvergenz der verschiedenen Orientierungen testen
+ * calc stresses and write into output (steinke 230 für membran,
  *
  * ***********************************************************/
 
@@ -129,6 +130,20 @@ int main (int argc, char** argv)
     if (filename.find(".xda") != std::string::npos ||
         filename.find(".msh") != std::string::npos)
         filename.resize(filename.size()-4);
+
+    /*
+     * load mesh file and create a map linking the real node IDs to the libmesh created Ids
+     * needed to get the force vectors to the right positions (nodes)
+     */
+    // open mesh file
+    // case .xda, .msh, etc
+    // look for elements definition
+    // go through all elements
+    //    go through all nodes n of element el
+    //       if (map.find(n) == map.end()) // node-id was not yet processed
+    //          map.insert(n,i);
+    //          i++;
+
     filename += "_f";
 
     if (fb.open (filename.c_str(),std::ios::in))
@@ -249,7 +264,7 @@ int main (int argc, char** argv)
             std::cout << "]\n" << std::endl;
         //}
 
-        unsigned int ln = mesh.n_local_nodes();
+/*        unsigned int ln = mesh.n_local_nodes();
         DenseVector<Real> displacements;
         displacements.resize(ln*3);
         std::vector<short> processedNodes(ln,0);
@@ -280,17 +295,17 @@ int main (int argc, char** argv)
                 displacements(3*id/6+2) += sols[id+2];
                 processedNodes[id/6]++;
             }
-        }
+        }*/
 
         no = mesh.local_nodes_begin();
         for (int i = 0 ; no != end_no; ++no,++i)
         {
             Node *nd = (*no);
-            if (processedNodes[i] > 0)
+            //if (processedNodes[i] > 0)
             {
-                (*nd)(0) += displacements(3*i)  /(float)processedNodes[i];
-                (*nd)(1) += displacements(3*i+1)/(float)processedNodes[i];
-                (*nd)(2) += displacements(3*i+2)/(float)processedNodes[i];
+                (*nd)(0) += sols[6*i];//displacements(3*i)  /(float)processedNodes[i];
+                (*nd)(1) += sols[6*i+1];//displacements(3*i+1)/(float)processedNodes[i];
+                (*nd)(2) += sols[6*i+2];//displacements(3*i+2)/(float)processedNodes[i];
             }
         }
 
@@ -466,47 +481,29 @@ std::cout << std::endl;
         sidelen[1] = pow(dphi_p(1,0), 2.0) + pow(dphi_p(1,1), 2.0); // side AC, x31^2 + y31^2
         sidelen[2] = pow(dphi_p(2,0), 2.0) + pow(dphi_p(2,1), 2.0); // side BC, x23^2 + y23^2
 
-        /* // Koeffizienten für alternative Lösung (siehe eval_func)
-        Hcoeffs.resize(4,3); // p,r,r,t -> 4, 4,5,6 -> 3
-        for (unsigned int k = 0; k < 3; k++) // k=0 <-> 23, k=1 <-> 31, k=2 <-> 12
-        {
-            Hcoeffs(0,k) = -6.0 * dphi_p(2-k,0)                 / sidelen[2-k];
-            Hcoeffs(1,k) =  3.0 * dphi_p(2-k,0) * dphi_p(2-k,1) / sidelen[2-k];
-            Hcoeffs(2,k) =  3.0 * pow(dphi_p(2-k,1),2.0)        / sidelen[2-k];
-            Hcoeffs(3,k) = -6.0 * dphi_p(2-k,1)                 / sidelen[2-k];
-        }
-        */
-        Hcoeffs.resize(3,5); // 4,5,6 -> 3, a-e -> 5
+        /*Hcoeffs.resize(3,5); // 4,5,6 -> 3, a-e -> 5
         for (unsigned int k = 0; k < 3; k++) // k=0 <-> 23, k=1 <-> 31, k=2 <-> 12
         {
             Hcoeffs(k,0) = -dphi_p(2-k,0)/sidelen[2-k];
             Hcoeffs(k,1) = 0.75 * dphi_p(2-k,0) * dphi_p(2-k,1) / sidelen[2-k];
             Hcoeffs(k,2) = (0.25*pow(dphi_p(2-k,0),2.0) - 0.5*pow(dphi_p(2-k,1),2.0)) / sidelen[2-k];
-            Hcoeffs(k,3) = -pow(dphi_p(2-k,1),2.0)/sidelen[2-k];
+            Hcoeffs(k,3) = -dphi_p(2-k,1)/sidelen[2-k];
             Hcoeffs(k,4) = (0.25*pow(dphi_p(2-k,1),2.0) - 0.5*pow(dphi_p(2-k,0),2.0)) / sidelen[2-k];
+        }*/
+        Hcoeffs.resize(3,4); // 4,5,6 -> 3, a-e -> 5
+        for (unsigned int k = 0; k < 3; k++) // k=0 <-> 23, k=1 <-> 31, k=2 <-> 12
+        {
+            Hcoeffs(k,0) = -6.0 * dphi_p(2-k,0)                 / sidelen[2-k];
+            Hcoeffs(k,1) =  3.0 * dphi_p(2-k,0) * dphi_p(2-k,1) / sidelen[2-k];
+            Hcoeffs(k,2) = -6.0 * dphi_p(2-k,1)                 / sidelen[2-k];
+            Hcoeffs(k,3) =  3.0 * pow(dphi_p(2-k,1),2.0)        / sidelen[2-k];
         }
 
-        // für alte (erste) Lösung, wird nicht mehr gebraucht
-        //AA.resize(3,4);
-        /**  AA = [ y31, y12,   0,   0]
-                  [   0,   0,-x31,-x12]
-                  [-x31,-x12, y31, y12] **/
-        /*AA(0,0) =  dphi_p(1,1);
-        AA(0,1) =  0;//dphi(0,1); // it's always 0
-        AA(1,2) = -dphi_p(1,0);
-        AA(1,3) = -dphi_p(0,0);
-        AA(2,0) = -dphi_p(1,0);
-        AA(2,1) = -dphi_p(0,0);
-        AA(2,2) =  dphi_p(1,1);
-        AA(2,3) =  0;//dphi(0,1); // it's always 0
-        */
         // resize the current element matrix and vector to an appropriate size
         Ke_p.resize(9, 9);
-
         for (unsigned int i = 0; i < qps.size(); i++)
         {
             eval_B(Hcoeffs, qps[i][0], qps[i][1], dphi_p, CC);
-            //CC.right_multiply_transpose(AA);
             CC *= 1.0/(2.0*A_tri); // CC entspricht nun B
 
             DenseMatrix<Real> temp;
@@ -613,11 +610,11 @@ std::cout << std::endl;
                     if (debug) std::cout << "force = " << arg(0) << "," << arg(1) << "," << arg(2) << "\n";
                     // forces don't need to be transformed since we bring the local stiffness matrix back to global co-sys
                     // directly in libmesh-format:
-                    Fe(side)   += arg(0); // u_i
-                    Fe(side+3) += arg(1); // v_i
-                    Fe(side+6) += arg(2); // w_i
+                    Fe(side)   += arg(0);//thickness*A_tri*arg(0)/3.0; // u_i
+                    Fe(side+3) += arg(1);//thickness*A_tri*arg(1)/3.0; // v_i
+                    Fe(side+6) += arg(2);//thickness*A_tri*arg(2)/3.0; // w_i
 
-                    processedNodes[id/6] = true;
+                    //processedNodes[id/6] = true;
                 }
             }
         }
@@ -711,50 +708,53 @@ std::cout << std::endl;
 
 void eval_B(DenseMatrix<Real>& C, Real x, Real y, DenseMatrix<Real>& dphi, DenseMatrix<Real> &out)
 {
-    // a = C(,0 b=C(,1 c=C(,2 d=C(,3 e=C(,4
+
+    // P = C(,0 q=C(,1 t=C(,2 r=C(,3
     // 4 = C(0, 5=C(1, 6=C(2,
     out.resize(3,9);
-    Real z = 1.0 - x - y;
+    Real z = 1.0 - 2.0*x;
+    Real w = 1.0 - 2.0*y;
     DenseVector<Real> Hx_xhi(9), Hx_eta(9), Hy_xhi(9), Hy_eta(9);
-    Hx_xhi(0) = 6.0*(C(2,0)*z-C(2,0)*x+C(1,0)*y);
-    Hx_xhi(1) = 4.0*(C(2,1)*z-C(1,1)*y-C(2,1)*x);
-    Hx_xhi(2) = -3.0+4.0*(x+y+C(1,2)*y-C(2,2)*z+C(2,2)*x);
-    Hx_xhi(3) = 6.0*(C(0,0)*y-C(2,0)*z+C(2,0)*x);
-    Hx_xhi(4) = 4.0*(C(2,1)*z-C(2,1)*x+C(0,1)*y);
-    Hx_xhi(5) = -1.0+4.0*(x-C(2,2)*z+C(2,2)*x-C(0,2)*y);
-    Hx_xhi(6) = 6.0*(-C(1,0)*y-C(0,0)*y);
-    Hx_xhi(7) = 4.0*(C(0,1)*y-C(1,1)*y);
-    Hx_xhi(8) = 4.0*(C(1,2)*y-C(0,2)*y);
 
-    Hx_eta(0) = 6.0*(C(1,0)*y-C(2,0)*x-C(1,0)*z);
-    Hx_eta(1) = 4*(C(1,1)*z-C(1,1)*y-C(2,1)*x);
-    Hx_eta(2) = -3+4*(x+y-C(1,2)*z+C(1,2)*y+C(2,2)*x);
-    Hx_eta(3) = 6*(C(0,0)*x+C(2,0)*x);
-    Hx_eta(4) = 4*(C(0,1)*x-C(2,1)*x);
-    Hx_eta(5) = 4*(C(2,2)*x-C(0,2)*x);
-    Hx_eta(6) = 6*(C(1,0)*z-C(1,0)*y-C(0,0)*x);
-    Hx_eta(7) = 4*(C(0,1)*x+C(1,1)*z-C(1,1)*y);
-    Hx_eta(8) = -1+4*(y-C(0,2)*x-C(1,2)*z+C(1,2)*y);
+    Hx_xhi(0) = C(2,0)*z + (C(1,0)-C(2,0))*y;
+    Hx_xhi(1) = C(2,1)*z - (C(1,1)+C(2,1))*y;
+    Hx_xhi(2) = -4.0+6.0*(x+y)+C(2,3)*z-(C(1,3)+C(2,3))*y;
+    Hx_xhi(3) = -C(2,0)*z + (C(0,0)+C(2,0))*y;
+    Hx_xhi(4) = C(2,1)*z-(C(2,1)-C(0,1))*y;
+    Hx_xhi(5) = -2.0+6.0*x+C(2,3)*z+(C(0,3)-C(2,3))*y;
+    Hx_xhi(6) = -(C(1,0)+C(0,0))*y;
+    Hx_xhi(7) = (C(0,1)-C(1,1))*y;
+    Hx_xhi(8) = (C(1,3)-C(0,3))*y;
 
-    Hy_xhi(0) = 6*(C(2,3)*z-C(2,3)*x+C(1,3)*y);
-    Hy_xhi(1) = 3-4*(x-y-C(1,4)*y+C(2,4)*z-C(2,4)*x);
-    Hy_xhi(2) = 4*(C(1,1)*y-C(2,1)*z+C(2,1)*x);
-    Hy_xhi(3) = 6*(C(0,3)*y-C(2,3)*z+C(2,3)*x);
-    Hy_xhi(4) = 1+4*(C(2,4)*z-x-C(2,4)*x+C(0,4)*y);
-    Hy_xhi(5) = 4*(C(2,1)*x-C(2,1)*z-C(0,1)*y);
-    Hy_xhi(6) = 6*(-C(1,3)*y-C(0,3)*y);
-    Hy_xhi(7) = 4*(C(0,4)*y-C(1,4)*y);
-    Hy_xhi(8) = 4*(C(1,1)*y-C(0,1)*y);
+    Hx_eta(0) = -C(1,0)*w - (C(2,0)-C(1,0))*x;
+    Hx_eta(1) = C(1,1)*w - (C(1,1)+C(2,1))*x;
+    Hx_eta(2) = -4.0+6.0*(x+y)+C(1,3)*w-(C(1,3)+C(2,3))*x;
+    Hx_eta(3) = x*(C(0,0)+C(2,0));
+    Hx_eta(4) = x*(C(0,1)-C(2,1));
+    Hx_eta(5) = -x*(C(2,3)-C(0,3));
+    Hx_eta(6) = C(1,0)*w-x*(C(0,0)+C(1,0));
+    Hx_eta(7) = C(1,1)*w+x*(C(0,1)-C(1,1));
+    Hx_eta(8) = -2.0+6.0*y+C(1,3)*w+x*(C(0,3)-C(1,3));
 
-    Hy_eta(0) = 6*(C(1,3)*y-C(2,3)*x-C(1,3)*z);
-    Hy_eta(1) = 3+4*(C(1,4)*z-x-y-C(1,4)*y-C(2,4)*x);
-    Hy_eta(2) = 4*(C(1,1)*y-C(1,1)*z+C(2,1)*x);
-    Hy_eta(3) = 6*(C(0,3)*x+C(2,3)*x);
-    Hy_eta(4) = 4*(C(0,4)*x-C(2,4)*x);
-    Hy_eta(5) = 4*(C(2,1)*x-C(0,1)*x);
-    Hy_eta(6) = 6*(C(1,3)*z-C(1,3)*y-C(0,3)*x);
-    Hy_eta(7) = 1+4*(C(0,4)*x-y+C(1,4)*z-C(1,4)*y);
-    Hy_eta(8) = 4*(C(1,1)*y-C(0,1)*x-C(1,1)*z);
+    Hy_xhi(0) = C(2,2)*z + (C(1,2)-C(2,2))*y;
+    Hy_xhi(1) = 1.0+C(2,3)*z-(C(1,3)+C(2,3))*y;
+    Hy_xhi(2) = -C(2,1)*z+(C(1,1)+C(2,1))*y;
+    Hy_xhi(3) = -C(2,2)*z+(C(0,2)+C(2,2))*y;
+    Hy_xhi(4) = -1.0+C(2,3)*z+(C(0,3)-C(2,3))*y;
+    Hy_xhi(5) = -C(2,1)*z-(C(0,1)-C(2,1))*y;
+    Hy_xhi(6) = -(C(0,2)+C(1,2))*y;
+    Hy_xhi(7) = (C(0,3)-C(1,3))*y;
+    Hy_xhi(8) = -(C(0,1)-C(1,1))*y;
+
+    Hy_eta(0) = -C(1,2)*w-x*(C(2,2)-C(1,2));
+    Hy_eta(1) = 1.0+C(1,3)*w-x*(C(1,3)+C(2,3));
+    Hy_eta(2) = -C(1,1)*w+x*(C(1,1)+C(2,1));
+    Hy_eta(3) = x*(C(0,2)+C(2,2));
+    Hy_eta(4) = x*(C(0,3)-C(2,3));
+    Hy_eta(5) = -x*(C(0,1)-C(2,1));
+    Hy_eta(6) = C(1,2)*w-x*(C(0,2)+C(1,2));
+    Hy_eta(7) = -1.0+C(1,3)*w+x*(C(0,3)-C(1,3));
+    Hy_eta(8) = -C(1,1)*w-x*(C(0,1)-C(1,1));
 
     for (int i = 0; i < 9; i++)
     {
@@ -767,46 +767,45 @@ void eval_B(DenseMatrix<Real>& C, Real x, Real y, DenseMatrix<Real>& dphi, Dense
     // eigentlich alternative Lösung, klappt aber nicht
     // a = C(,0 b=C(,1 c=C(,2 d=C(,3 e=C(,4
     // 4 = C(0, 5=C(1, 6=C(2,
-    out.resize(3,9);
-    Hx_xhi(0) = C(0,2)*(1-2*x)+(C(0,1)-C(0,2))*y;
-    Hx_xhi(1) = C(1,2)*(1-2*x)-(C(1,1)+C(1,2))*y;
-    Hx_xhi(2) = -4+6*(x+y)+C(2,2)*(1-2*x)-y*(C(2,1)+C(2,2));
-    Hx_xhi(3) = -C(0,2)*(1-2*x)+y*(C(0,0)+C(0,2));
-    Hx_xhi(4) = C(1,2)*(1-2*x)-y*(C(1,2)-C(1,0));
-    Hx_xhi(5) = -2+6*x+C(2,2)*(1-2*x)+y*(C(2,0)-C(2,2));
-    Hx_xhi(6) = -y*(C(0,1)+C(0,0));
-    Hx_xhi(7) =  y*(C(1,0)-C(1,1));
-    Hx_xhi(8) = -y*(C(2,1)-C(2,0));
+    Hx_xhi(0) =  6.0*C(2,0)*z-6.0*C(2,0)*x+6.0*C(1,0)*y;
+    Hx_xhi(1) = -4.0*C(1,1)*y+4.0*C(2,1)*z-4.0*C(2,1)*x;
+    Hx_xhi(2) = -3.0+4.0*x+4.0*y+4.0*C(1,2)*y-4.0*C(2,2)*z+4.0*C(2,2)*x;
+    Hx_xhi(3) =  6.0*C(0,0)*y-6.0*C(2,0)*z+6.0*C(2,0)*x;
+    Hx_xhi(4) =  4.0*C(2,1)*z-4.0*C(2,1)*x+4.0*C(0,1)*y;
+    Hx_xhi(5) =  4.0*x-1.0-4.0*C(2,2)*z+4.0*C(2,2)*x-4.0*C(0,2)*y;
+    Hx_xhi(6) = -6.0*C(1,0)*y-6.0*C(0,0)*y;
+    Hx_xhi(7) =  4.0*C(0,1)*y-4.0*C(1,1)*y;
+    Hx_xhi(8) = -4.0*C(0,2)*y+4.0*C(1,2)*y;
 
-    Hy_xhi(0) = C(3,2)*(1-2*x)+y*(C(3,1)-C(3,2));
-    Hy_xhi(1) = 1+C(2,2)*(1-2*x)-y*(C(2,1)+C(2,2));
-    Hy_xhi(2) = -C(1,2)*(1-2*x)+y*(C(1,1)+C(1,2));
-    Hy_xhi(3) = -C(3,2)*(1-2*x)+y*(C(3,0)+C(3,2));
-    Hy_xhi(4) = -1+C(2,2)*(1-2*x)+y*(C(2,0)-C(2,2));
-    Hy_xhi(5) = -C(1,2)*(1-2*x)-y*(C(1,0)-C(1,2));
-    Hy_xhi(6) = -y*(C(3,0)+C(3,1));
-    Hy_xhi(7) =  y*(C(2,0)-C(2,1));
-    Hy_xhi(8) = -y*(C(1,0)-C(1,1));
+    Hx_eta(0) = -6.0*C(2,0)*x-6.0*C(1,0)*z+6.0*C(1,0)*y;
+    Hx_eta(1) =  4.0*C(1,1)*z-4.0*C(1,1)*y-4.0*C(2,1)*x;
+    Hx_eta(2) = -3.0+4.0*x+4.0*y-4.0*C(1,2)*z+4.0*C(1,2)*y+4.0*C(2,2)*x;
+    Hx_eta(3) =  6.0*C(0,0)*x+6.0*C(2,0)*x;
+    Hx_eta(4) = -4.0*C(2,1)*x+4.0*C(0,1)*x;
+    Hx_eta(5) =  4.0*C(2,2)*x-4.0*C(0,2)*x;
+    Hx_eta(6) =  6.0*C(1,0)*z-6.0*C(1,0)*y-6.0*C(0,0)*x;
+    Hx_eta(7) =  4.0*C(0,1)*x+4.0*C(1,1)*z-4.0*C(1,1)*y;
+    Hx_eta(8) = -4.0*C(0,2)*x-4.0*C(1,2)*z+4.0*C(1,2)*y;
 
-    Hx_eta(0) = -C(0,1)*(1-2*y)-x*(C(0,2)-C(0,1));
-    Hx_eta(1) =  C(1,1)*(1-2*y)-y*(C(1,1)+C(1,2));
-    Hx_eta(2) = -4+6*(x+y)+C(2,1)*(1-2*y)-x*(C(2,1)+C(2,2));
-    Hx_eta(3) =  x*(C(0,0)+C(0,2));
-    Hx_eta(4) =  x*(C(1,0)-C(1,2));
-    Hx_eta(5) = -x*(C(2,2)-C(2,0));
-    Hx_eta(6) = C(0,1)*(1-2*y)-x*(C(0,0)+C(0,1));
-    Hx_eta(7) = C(1,1)*(1-2*y)+x*(C(1,0)-C(1,1));
-    Hx_eta(8) = -2+6*y+C(2,1)*(1-2*y)+x*(C(2,0)-C(2,1));
+    Hy_xhi(0) =  6.0*C(2,3)*z-6.0*C(2,3)*x+6.0*C(1,3)*y;
+    Hy_xhi(1) =  3.0-4.0*x-4.0*y-4.0*C(1,4)*y+4.0*C(2,4)*z-4.0*C(2,4)*x;
+    Hy_xhi(2) =  4.0*C(1,1)*y-4.0*C(2,1)*z+4.0*C(2,1)*x;
+    Hy_xhi(3) =  6.0*C(0,3)*y-6.0*C(2,3)*z+6.0*C(2,3)*x;
+    Hy_xhi(4) =  4.0*C(2,4)*z-4.0*C(2,4)*x+4.0*C(0,4)*y;
+    Hy_xhi(5) = -4.0*C(2,1)*z+4.0*C(2,1)*x-4.0*C(0,1)*y;
+    Hy_xhi(6) = -6.0*C(1,3)*y-6.0*C(0,3)*y;
+    Hy_xhi(7) =  4.0*C(0,4)*y-4.0*C(1,4)*y;
+    Hy_xhi(8) = -4.0*C(0,1)*y+4.0*C(1,1)*y;
 
-    Hy_eta(0) = -C(3,1)*(1-2*y)-x*(C(3,2)-C(3,1));
-    Hy_eta(1) = 1+C(2,1)*(1-2*y)-x*(C(2,1)+C(2,2));
-    Hy_eta(2) = -C(1,1)*(1-2*y)+x*(C(1,1)+C(1,2));
-    Hy_eta(3) = x*(C(3,0)+C(3,2));
-    Hy_eta(4) = x*(C(2,0)-C(3,2));
-    Hy_eta(5) = -x*(C(1,0)-C(1,2));
-    Hy_eta(6) = C(3,1)*(1-2*y)-x*(C(3,0)+C(3,1));
-    Hy_eta(7) = -1+C(2,1)*(1-2*y)+x*(C(2,0)-C(2,1));
-    Hy_eta(8) = -C(1,1)*(1-2*y)-x*(C(1,0)-C(1,1));
+    Hy_eta(0) = -6.0*C(2,3)*x-6.0*C(1,3)*z+6.0*C(1,3)*y;
+    Hy_eta(1) =  3.0-4.0*x-4.0*y+4.0*C(1,4)*z-4.0*C(1,4)*y-4.0*C(2,4)*x;
+    Hy_eta(2) = -4.0*C(1,1)*z+4.0*C(1,1)*y+4.0*C(2,1)*x;
+    Hy_eta(3) =  6.0*C(0,3)*x+6.0*C(2,3)*x;
+    Hy_eta(4) = -4.0*C(2,4)*x+4.0*C(0,4)*x;
+    Hy_eta(5) =  4.0*C(2,1)*x-4.0*C(0,1)*x;
+    Hy_eta(6) =  6.0*C(1,3)*z-6.0*C(1,3)*y-6.0*C(0,3)*x;
+    Hy_eta(7) =  4.0*C(0,4)*x+4.0*C(1,4)*z-4.0*C(1,4)*y;
+    Hy_eta(8) = -4.0*C(0,1)*x-4.0*C(1,1)*z+4.0*C(1,1)*y;
 
     for (int i = 0; i < 9; i++)
     {
