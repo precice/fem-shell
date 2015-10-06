@@ -1,13 +1,12 @@
 /*************************************************************
  * todo
  *
- * calc stresses and write into output (steinke 230 für membran,
- *
  * ***********************************************************/
 
 // C++ include files that we need
 #include <iostream>
 #include <algorithm>
+#include <unordered_set>
 #include <math.h>
 
 // libMesh includes
@@ -45,6 +44,7 @@ void assemble_elasticity(EquationSystems& es,
                          const std::string& system_name);
 
 void eval_B(DenseMatrix<Real>& Hcoeffs, Real L1, Real L2, DenseMatrix<Real> &dphi_p, DenseMatrix<Real> &out);
+void eval_B_quad(DenseMatrix<Real>& Hcoeffs, Real xi, Real eta, DenseMatrix<Real> &Jinv, DenseMatrix<Real> &out);
 
 bool debug = false;
 Real nu = 0.4;
@@ -261,17 +261,6 @@ int main (int argc, char** argv)
         std::cout << "]\n" << std::endl;
     }
 
-    // iterator for iterating through the nodes of the mesh:
-    /*MeshBase::const_node_iterator no = mesh.nodes_begin();
-    const MeshBase::const_node_iterator end_no = mesh.nodes_end();
-    for (int i = 0 ; no != end_no; ++no,++i)
-    {
-        Node *nd = (*no);
-        (*nd)(0) += sols[6*i];//displacements(3*i)  /(float)processedNodes[i];
-        (*nd)(1) += sols[6*i+1];//displacements(3*i+1)/(float)processedNodes[i];
-        (*nd)(2) += sols[6*i+2];//displacements(3*i+2)/(float)processedNodes[i];
-    }*/
-
     // Plot the solution
     std::ostringstream file_name;
     file_name << "out/" << outfile << "_"
@@ -343,6 +332,9 @@ void assemble_elasticity(EquationSystems& es,
     Dm *= em/(1.0-nu*nu); // material matrix for membrane part
     std::vector<std::vector<Real> > qps;
 
+    std::unordered_set<dof_id_type> processedNodes;
+    processedNodes.reserve(mesh.n_local_nodes());
+
     // for all local elements elem in mesh do:
     for ( ; el != end_el; ++el)
     {
@@ -361,7 +353,7 @@ void assemble_elasticity(EquationSystems& es,
         if (type == TRI3)
         {
             /**
-              * HIER KOMMT DIE BERECHNUNG VON STIFFNESS-MATRIX und RHS FÜR DREIECKE REIN
+              * HIER KOMMT DIE BERECHNUNG VON STIFFNESS-MATRIX UND RHS FÜR DREIECKE REIN
               **/
             // resize the current element matrix and vector to an appropriate size
             Ke.resize (18, 18);
@@ -369,9 +361,12 @@ void assemble_elasticity(EquationSystems& es,
 
             // transform arbirtrary 3d triangle down to xy-plane with node a at origin (implicit):
             ndi = elem->get_node(0); // node A
+            std::cout << "node A:\n"; ndi->print_info(std::cout);
             ndj = elem->get_node(1); // node B
+            std::cout << "node B:\n"; ndj->print_info(std::cout);
             U = (*ndj)-(*ndi); // U = B-A
             ndj = elem->get_node(2); // node C
+            std::cout << "node C:\n"; ndj->print_info(std::cout);
             V = (*ndj)-(*ndi); // V = C-A
             transUV.resize(3,2);
             for (int i = 0; i < 3; i++)
@@ -404,34 +399,41 @@ void assemble_elasticity(EquationSystems& es,
             // transform planar 3d quadrilateral down to xy-plane with node A at origin:
             Node nI,nJ,nK,nL;
             ndi = elem->get_node(0); // node A
+            std::cout << "node A:\n"; ndi->print_info(std::cout);
             ndj = elem->get_node(1); // node B
-            U = (*ndj)-(*ndi); // vector AB
+            std::cout << "node B:\n"; ndj->print_info(std::cout);
             nI = (*ndi) + 0.5*((*ndj)-(*ndi)); // nI = midpoint on edge AB
             ndi = elem->get_node(2); // node C
+            std::cout << "node C:\n"; ndi->print_info(std::cout);
             nJ = (*ndj) + 0.5*((*ndi)-(*ndj)); // nJ = midpoint on edge BC
             ndj = elem->get_node(3); // node D
+            std::cout << "node D:\n"; ndj->print_info(std::cout);
             nK = (*ndi) + 0.5*((*ndj)-(*ndi)); // nK = midpoint on edge CD
             ndi = elem->get_node(0); // node A
             nL = (*ndj) + 0.5*((*ndi)-(*ndj)); // nL = midpoint on edge DA
-            W = (*ndj) - (*ndi); // vector AD
             ndj = elem->get_node(2);
-            V = (*ndj) - (*ndi); // vector AC
 
-            transUV.resize(3,3);
-            for (int i = 0; i < 3; i++)
-            { // node A lies in local origin (per definition)
-                transUV(i,0) = U(i); // node B in global coordinates (triangle translated s.t. A lies in origin)
-                transUV(i,1) = V(i); // node C in global coordinates ( -"- )
-                transUV(i,2) = W(i); // node D in global coordinates ( -"- )
+            std::cout << "node i:\n"; nI.print_info(std::cout);
+            std::cout << "node j:\n"; nJ.print_info(std::cout);
+            std::cout << "node k:\n"; nK.print_info(std::cout);
+            std::cout << "node l:\n"; nL.print_info(std::cout);
+
+            transUV.resize(3,4); // ({x,y,z},{A,B,C,D})
+            for (int i = 0; i < 4; i++)
+            {
+                ndi = elem->get_node(i);
+                transUV(0,i) = (*ndi)(0); // coord x in global coordinates
+                transUV(1,i) = (*ndi)(1); // coord y in global coordinates
+                transUV(2,i) = (*ndi)(2); // coord z in global coordinates
             }
-            /* transUV [ b_x, c_x, d_x ]
-             *         [ b_y, c_y, d_y ]
-             *         [ b_z, c_z, d_z ]
+            /* transUV [ a_x, b_x, c_x, d_x ]
+             *         [ a_y, b_y, c_y, d_y ]
+             *         [ a_z, b_z, c_z, d_z ]
              */
 
             U = nJ-nL; // Vx
             U = U.unit(); // Vx normalized -> local x-axis unit vector
-            W = nK-nI; // Vr
+            W = nI-nK; // Vr
             W = U.cross(W); // Vz = Vx x Vr
             W = W.unit(); // Vz normalized -> local z-axis unit vector
             V = W.cross(U); // Vy = Vz x Vx -> local y-axis unit vector
@@ -460,12 +462,8 @@ void assemble_elasticity(EquationSystems& es,
         transUV.left_multiply(transTri);
 
         if (debug) {
-            std::cout << "transUV:\n";
-            transUV.print(std::cout);
-            std::cout << std::endl;
-            std::cout << "trafo:\n";
-            transTri.print(std::cout);
-            std::cout << std::endl;
+            std::cout << "transUV:\n"; transUV.print(std::cout);
+            std::cout << "\ntrafo:\n"; transTri.print(std::cout); std::cout << std::endl;
         }
 
         if (type == TRI3)
@@ -620,38 +618,6 @@ void assemble_elasticity(EquationSystems& es,
                 }
             }
 
-
-            Fe.resize(18);
-
-            const BoundaryInfo binfo = mesh.get_boundary_info();
-            DenseVector<Real> arg;
-            for (unsigned int side = 0; side < elem->n_sides(); side++)
-            {
-                if (!binfo.has_boundary_id(elem, side, 0)) // only process non-sticky nodes
-                {
-                    dof_id_type id = elem->get_node(side)->id();//dof_indices_u[side];
-                    if (debug)
-                        std::cout << "id_u = " << (id*6) << ", id_v = " << (id*6+1) << ", id_w = " << (id*6+2) << "\n";
-
-                    arg = forces[id];
-                    if (debug)
-                        std::cout << "force = " << arg(0) << "," << arg(1) << "," << arg(2) << "\n";
-                    // forces don't need to be transformed since we bring the local stiffness matrix back to global co-sys
-                    // directly in libmesh-format:
-                    Fe(side)   = arg(0);//thickness*A_tri*arg(0)/3.0; // u_i
-                    Fe(side+3) = arg(1);//thickness*A_tri*arg(1)/3.0; // v_i
-                    Fe(side+6) = A_tri*arg(2)/3.0;//thickness*A_tri*arg(2)/3.0; // w_i
-                    Fe(side+9) = A_tri*arg(2)/24.0;
-                    Fe(side+12) = A_tri*arg(2)/24.0;
-                }
-            }
-            Fe(9) *= dphi_p(1,1) - dphi_p(0,1);
-            Fe(12) *= dphi_p(0,0) - dphi_p(1,0);
-            Fe(10) *= dphi_p(0,1) - dphi_p(2,1);
-            Fe(13) *= dphi_p(2,0) - dphi_p(0,0);
-            Fe(11) *= dphi_p(2,1) - dphi_p(1,1);
-            Fe(14) *= dphi_p(1,0) - dphi_p(2,0);
-
             // transform Ke from local back to global with transformation matrix T:
             DenseMatrix<Real> KeSub(6,6);
             DenseMatrix<Real> KeNew(18,18);
@@ -687,23 +653,30 @@ void assemble_elasticity(EquationSystems& es,
         else if (type == QUAD4)
         {std::cout << "quad4 element\n";
             // first partial derivatives x_ij, y_ij
-            dphi_p.resize(6,2); // resizes matrix to 3 rows, 2 columns and zeros entries
-            dphi_p(0,0) = -transUV(0,0);              // x12 = x1-x2 = -x2
-            dphi_p(1,0) =  transUV(0,0)-transUV(0,1); // x23 = x2-x3
-            dphi_p(2,0) =  transUV(0,1)-transUV(0,2); // x34 = x3-x4
-            dphi_p(3,0) =  transUV(0,2);              // x41 = x4
-            dphi_p(0,1) = -transUV(1,0);              // y12 = y1-y2 = -y2
-            dphi_p(1,1) =  transUV(1,0)-transUV(1,1); // y23 = y2-y3
-            dphi_p(2,1) =  transUV(1,1)-transUV(1,2); // y34 = y3-y4
-            dphi_p(3,1) =  transUV(1,2);              // y41 = y4
+            dphi_p.resize(6,2); // resizes matrix to 6 rows, 2 columns and zeros entries
+            dphi_p(0,0) = transUV(0,0)-transUV(0,1); // x12 = x1-x2
+            dphi_p(1,0) = transUV(0,1)-transUV(0,2); // x23 = x2-x3
+            dphi_p(2,0) = transUV(0,2)-transUV(0,3); // x34 = x3-x4
+            dphi_p(3,0) = transUV(0,3)-transUV(0,0); // x41 = x4-x1
 
-            dphi_p(4,0) = transUV(0,1); // x31 = x3
-            dphi_p(4,1) = transUV(1,1); // y31 = y3
-            dphi_p(5,0) = transUV(0,2)-transUV(0,0); // x42 = x4-x2
-            dphi_p(5,1) = transUV(1,2)-transUV(1,0); // y42 = y4-y2
+            dphi_p(0,1) = transUV(1,0)-transUV(1,1); // y12 = y1-y2
+            dphi_p(1,1) = transUV(1,1)-transUV(1,2); // y23 = y2-y3
+            dphi_p(2,1) = transUV(1,2)-transUV(1,3); // y34 = y3-y4
+            dphi_p(3,1) = transUV(1,3)-transUV(1,0); // y41 = y4-y1
+
+            dphi_p(4,0) = transUV(0,2)-transUV(0,0); // x31 = x3-x1
+            dphi_p(4,1) = transUV(1,2)-transUV(1,0); // y31 = y3-y1
+            dphi_p(5,0) = transUV(0,3)-transUV(0,1); // x42 = x4-x2
+            dphi_p(5,1) = transUV(1,3)-transUV(1,1); // y42 = y4-y2
+
+            std::cout << "dphi_p:\n";
+            dphi_p.print(std::cout);
+            std::cout << "\n";
 
             // quadrature points definitions:
             Real root = sqrt(1.0/3.0);
+
+            std::cout << "root = " << root << "\n";
 
             // side-lengths squared:
             sidelen.resize(4);
@@ -712,7 +685,7 @@ void assemble_elasticity(EquationSystems& es,
             sidelen[2] = pow(dphi_p(2,0), 2.0) + pow(dphi_p(2,1), 2.0); // side CD, x34^2 + y34^2
             sidelen[3] = pow(dphi_p(3,0), 2.0) + pow(dphi_p(3,1), 2.0); // side DA, x41^2 + y41^2
 
-            A_tri = 0.5 * (-transUV(1,1) * (transUV(0,2)-transUV(0,0)) + (transUV(1,0)-transUV(1,2)) * -transUV(0,1));
+            std::cout << "lij^2 = (" << sidelen[0] << ", " << sidelen[1] << ", " << sidelen[2] << ", " << sidelen[3] << ")\n";
 
             /*****************************************
              * BEGIN OF PLANE COMPUTATION            *
@@ -722,51 +695,64 @@ void assemble_elasticity(EquationSystems& es,
 
             // we iterate over the 2x2 Gauss quadrature points (+- sqrt(1/3)) with weight 1
             Ke_m.resize(8,8);
-            for (int i = 0; i < 2; i++)
+            for (int ii = 0; ii < 2; ii++)
             {
-                for (int j = 0; j < 2; j++)
+                Real r = pow(-1.0, ii) * root; // +/- root
+                for (int jj = 0; jj < 2; jj++)
                 {
-                    Real r = pow(-1.0, i) * root; // +/- root
-                    Real s = pow(-1.0, j) * root; // +/- root
+                    Real s = pow(-1.0, jj) * root; // +/- root
 
-                    J(0,0) = (dphi_p(0,0)+dphi_p(2,0))*s - dphi_p(0,0) + dphi_p(2,0);
-                    J(0,1) = (dphi_p(0,1)+dphi_p(2,1))*s - dphi_p(0,1) + dphi_p(2,1);
-                    J(1,0) = (dphi_p(0,0)+dphi_p(2,0))*r + dphi_p(4,0) + dphi_p(5,0);
-                    J(1,1) = (dphi_p(0,1)+dphi_p(2,1))*r + dphi_p(4,1) + dphi_p(5,1);
-                    J *= 0.25;
+                    DenseVector<Real> shapeQ4(4);
+                    shapeQ4(0) = 0.25*(1-r)*(1-s);
+                    shapeQ4(1) = 0.25*(1+r)*(1-s);
+                    shapeQ4(2) = 0.25*(1+r)*(1+s);
+                    shapeQ4(3) = 0.25*(1-r)*(1+s);
 
-                    Real det = J(0,0)*J(1,1) - J(0,1)*J(1,0);
+                    DenseVector<Real> dhdr(4), dhds(4);
+                    dhdr(0) = -0.25*(1-s);
+                    dhdr(1) =  0.25*(1-s);
+                    dhdr(2) =  0.25*(1+s);
+                    dhdr(3) = -0.25*(1+s);
 
-                    Jinv(0,0) =  J(1,1);
-                    Jinv(0,1) = -J(0,1);
-                    Jinv(1,0) = -J(1,0);
-                    Jinv(1,1) =  J(0,0);
-                    Jinv *= 1.0/det;
+                    dhds(0) = -0.25*(1-r);
+                    dhds(1) = -0.25*(1+r);
+                    dhds(2) =  0.25*(1+r);
+                    dhds(3) =  0.25*(1-r);
+
+                    J.resize(2,2);
+                    for (int i=0; i < 4; i++) {
+                        J(0,0) += dhdr(i)*transUV(0,i);
+                        J(0,1) += dhdr(i)*transUV(1,i);
+                        J(1,0) += dhds(i)*transUV(0,i);
+                        J(1,1) += dhds(i)*transUV(1,i);
+                    }
+
+                    Real detjacob = J.det();
 
                     B_m.resize(3,4);
                     B_m(0,0) =  J(1,1); B_m(0,1) = -J(0,1);
                     B_m(1,2) = -J(1,0); B_m(1,3) =  J(0,0);
                     B_m(2,0) = -J(1,0); B_m(2,1) =  J(0,0); B_m(2,2) = J(1,1); B_m(2,3) = -J(0,1);
-                    B_m *= 1.0/det;
+                    B_m *= 1.0/detjacob;
 
-                    G(0,0) = -1.0+s; G(0,2) =  1.0-s; G(0,4) = 1.0+s; G(0,6) = -1.0-s;
-                    G(1,0) = -1.0+r; G(1,2) = -1.0-r; G(1,4) = 1.0+r; G(1,6) =  1.0-r;
-                    G(2,1) = -1.0+s; G(2,3) =  1.0-s; G(2,5) = 1.0+s; G(2,7) = -1.0-s;
-                    G(3,1) = -1.0+r; G(3,3) = -1.0-r; G(3,5) = 1.0+r; G(3,7) =  1.0-r;
-                    G *= 0.25;
+                    for (int i = 0; i < 4; i++) {
+                        G(0,2*i) = dhdr(i);
+                        G(1,2*i) = dhds(i);
+                        G(2,1+2*i) = dhdr(i);
+                        G(3,1+2*i) = dhds(i);
+                    }
 
                     B_m.right_multiply(G);
 
-                    // Ke_m = t * B^T * Dm * B
+                    // Ke_m = t * B^T * Dm * B * |J|
                     DenseMatrix<Real> Ke_m_tmp;
                     Ke_m_tmp = Dm; // Ke_m = 3x3
                     Ke_m_tmp.left_multiply_transpose(B_m); // Ke_m = 8x8
                     Ke_m_tmp.right_multiply(B_m); // Ke_m = 3x8
-                    Ke_m_tmp *= det;
+                    Ke_m_tmp *= detjacob * thickness; // considered thickness and area is constant all over the element
 
                     Ke_m += Ke_m_tmp;
                 }
-                Ke_m *= thickness; // considered thickness and area is constant all over the element
             }
 
             if (debug) {
@@ -785,61 +771,216 @@ void assemble_elasticity(EquationSystems& es,
             ///////////////////////////////////////////////////////////
            /////// BAUSTELLE /////////////////////////////////////////
           ///////////////////////////////////////////////////////////
-            Ke_p.resize(12,12);
-            for (int i = 0; i < 12; i++)
-                Ke_p(i,i) = 1.0;
-            /*
-            Hcoeffs.resize(1,3);
-            for (int i = 0; i < 3; i++)
-                Hcoeffs(0,i) = sidelen[i];
-
-            // resize the current element matrix and vector to an appropriate size
-            Ke_p.resize(9, 9);
-            for (unsigned int i = 0; i < qps.size(); i++)
+            Hcoeffs.resize(5,4); // [ a_k, b_k, c_k, d_k, e_k ], k=5,6,7,8
+            for (int i = 0; i < 4; i++)
             {
-                if (debug)
-                    std::cout << "quadrature point (" << qps[i][0] << "," << qps[i][1] << ")\n";
-
-                if (debug) {
-                    std::cout << "Hcoeffs:\n";
-                    Hcoeffs.print(std::cout);
-                    std::cout << std::endl;
-                }
-
-                eval_B(Hcoeffs, qps[i][0], qps[i][1], dphi_p, B);
-
-                DenseMatrix<Real> Y(3,3);
-                Y(0,0) = pow(dphi_p(2,1),2.0);
-                Y(0,1) = pow(dphi_p(1,1),2.0);
-                Y(0,2) = dphi_p(2,1)*dphi_p(1,1);
-                Y(1,0) = pow(dphi_p(2,0),2.0);
-                Y(1,1) = pow(dphi_p(1,0),2.0);
-                Y(1,2) = dphi_p(1,0)*dphi_p(2,0);
-                Y(2,0) = -2.0*dphi_p(2,0)*dphi_p(2,1);
-                Y(2,1) = -2.0*dphi_p(1,0)*dphi_p(1,0);
-                Y(2,2) = -dphi_p(2,0)*dphi_p(1,1)-dphi_p(1,0)*dphi_p(2,1);
-                Y *= 1.0/(4.0*pow(A_tri,2.0));
-
-                if (debug) {
-                    std::cout << "B:\n";
-                    B.print(std::cout);
-                    std::cout << std::endl;
-                }
-
-                DenseMatrix<Real> temp;
-                temp = Dp; // temp = 3x3
-                temp.right_multiply(Y); // temp = 3x3
-                temp.right_multiply(B); // temp = 9x3
-                temp.left_multiply_transpose(Y); // temp = 9x3
-                temp.left_multiply_transpose(B); // temp = 9x9
-
-                temp *= 1.0/6.0; // gauss-weight
-
-                Ke_p += temp;
+                Hcoeffs(0,i) = -dphi_p(i,0)/sidelen[i]; // a_k
+                Hcoeffs(1,i) = 0.75 * dphi_p(i,0) * dphi_p(i,1) / sidelen[i]; // b_k
+                Hcoeffs(2,i) = (0.25 * pow(dphi_p(i,0), 2.0) - 0.5 * pow(dphi_p(i,1), 2.0))/sidelen[i]; // c_k
+                Hcoeffs(3,i) = -pow(dphi_p(i,1),1.0)/sidelen[i]; // d_k
+                Hcoeffs(4,i) = (0.25 * pow(dphi_p(i,1), 2.0) - 0.5 * pow(dphi_p(i,0), 2.0))/sidelen[i]; // e_k
             }
 
-            Ke_p *= 2.0*A_tri;
-*/
+            //if (debug) {
+                std::cout << "Hcoeffs:\n";
+                Hcoeffs.print(std::cout);
+                std::cout << std::endl;
+            //}
+
+            // resize the current element matrix and vector to an appropriate size
+            Ke_p.resize(12, 12);
+            for (int ii = 0; ii < 2; ii++)
+            {
+                Real r = pow(-1.0, ii) * root; // +/- sqrt(1/3)
+                for (int jj = 0; jj < 2; jj++)
+                {
+                    Real s = pow(-1.0, jj) * root; // +/- sqrt(1/3)
+
+                    std::cout << "(r,s) = " << r << ", " << s << "\n";
+
+                    J(0,0) = (dphi_p(0,0)+dphi_p(2,0))*s - dphi_p(0,0) + dphi_p(2,0);
+                    J(0,1) = (dphi_p(0,1)+dphi_p(2,1))*s - dphi_p(0,1) + dphi_p(2,1);
+                    J(1,0) = (dphi_p(0,0)+dphi_p(2,0))*r - dphi_p(4,0) + dphi_p(5,0);
+                    J(1,1) = (dphi_p(0,1)+dphi_p(2,1))*r - dphi_p(4,1) + dphi_p(5,1);
+                    J *= 0.25;
+
+                    std::cout << "J:\n";
+                    J.print(std::cout);
+                    std::cout << std::endl;
+
+                    Real det = J.det();
+
+                    std::cout << "J.det = " << det << "\n";
+
+                    Jinv(0,0) =  J(1,1);
+                    Jinv(0,1) = -J(0,1);
+                    Jinv(1,0) = -J(1,0);
+                    Jinv(1,1) =  J(0,0);
+                    Jinv *= 1.0/det;
+
+                    std::cout << "Jinv:\n";
+                    Jinv.print(std::cout);
+                    std::cout << std::endl;
+
+                    eval_B_quad(Hcoeffs, r, s, Jinv, B);
+
+                    //if (debug) {
+                        std::cout << "B:\n";
+                        B.print(std::cout);
+                        std::cout << std::endl;
+                    //}
+
+                    DenseMatrix<Real> temp;
+                    temp = Dp; // temp = 3x3
+                    temp.left_multiply_transpose(B); // temp = 12x3
+                    temp.right_multiply(B); // temp = 12x12
+                    temp *= det;
+
+                    Ke_p += temp;
+
+                    std::cout << "temp:\n";
+                    temp.print(std::cout);
+                    std::cout << std::endl;
+                }
+            }
+
+            /*
+            Ke_p.resize(12,12);
+            for (int ii = 0; ii < 2; ii++)
+            {
+                Real r = pow(-1.0, ii) * root; // +/- root
+                for (int jj = 0; jj < 2; jj++)
+                {
+                    Real s = pow(-1.0, jj) * root; // +/- root
+
+                    DenseVector<Real> shapeQ4(4);
+                    shapeQ4(0) = 0.25*(1-r)*(1-s);
+                    shapeQ4(1) = 0.25*(1+r)*(1-s);
+                    shapeQ4(2) = 0.25*(1+r)*(1+s);
+                    shapeQ4(3) = 0.25*(1-r)*(1+s);
+
+                    DenseVector<Real> dhdr(4), dhds(4);
+                    dhdr(0) = -0.25*(1-s);
+                    dhdr(1) =  0.25*(1-s);
+                    dhdr(2) =  0.25*(1+s);
+                    dhdr(3) = -0.25*(1+s);
+
+                    dhds(0) = -0.25*(1-r);
+                    dhds(1) = -0.25*(1+r);
+                    dhds(2) =  0.25*(1+r);
+                    dhds(3) =  0.25*(1-r);
+
+                    J.resize(2,2);
+                    for (int i=0; i < 4; i++) {
+                        J(0,0) += dhdr(i)*transUV(0,i);
+                        J(0,1) += dhdr(i)*transUV(1,i);
+                        J(1,0) += dhds(i)*transUV(0,i);
+                        J(1,1) += dhds(i)*transUV(1,i);
+                    }
+
+                    Real det = J.det();
+
+                    Jinv(0,0) =  J(1,1);
+                    Jinv(0,1) = -J(0,1);
+                    Jinv(1,0) = -J(1,0);
+                    Jinv(1,1) =  J(0,0);
+                    Jinv *= 1.0/det;
+
+                    DenseVector<Real> dhdx(4), dhdy(4);
+                    for (int i = 0; i < 4; i++) {
+                        dhdx(i) = Jinv(0,0) * dhdr(i) + Jinv(0,1) * dhds(i);
+                        dhdy(i) = Jinv(1,0) * dhdr(i) + Jinv(1,1) * dhds(i);
+                    }
+
+                    DenseMatrix<Real> pb(3,12);
+                    for (int i = 1; i <= 4; i++) {
+                        int i1 = (i-1)*3+1;
+                        int i2 = i1+1;
+                        int i3 = i2+1;
+                        pb(1,i2-1) =  dhdy(i-1);
+                        pb(2,i2-1) =  dhdx(i-1);
+                        pb(0,i3-1) = -dhdx(i-1);
+                        pb(2,i3-1) = -dhdy(i-1);
+                        pb(2,i1-1) = 0.0;
+                    }
+
+                    DenseMatrix<Real> temp;
+                    temp = Dp;
+                    temp.left_multiply_transpose(pb);
+                    temp.right_multiply(pb);
+                    temp *= det;
+                    // kb=kb+B_pb'*D_pb*B_pb*wtx*wty*detjacobian;
+                    Ke_p += temp;
+                }
+            }
+
+            DenseVector<Real> shapeQ4(4);
+            shapeQ4(0) = 0.25;
+            shapeQ4(1) = 0.25;
+            shapeQ4(2) = 0.25;
+            shapeQ4(3) = 0.25;
+
+            DenseVector<Real> dhdr(4), dhds(4);
+            dhdr(0) = -0.25;
+            dhdr(1) =  0.25;
+            dhdr(2) =  0.25;
+            dhdr(3) = -0.25;
+
+            dhds(0) = -0.25;
+            dhds(1) = -0.25;
+            dhds(2) =  0.25;
+            dhds(3) =  0.25;
+
+            J.resize(2,2);
+            for (int i=0; i < 4; i++) {
+                J(0,0) += dhdr(i)*transUV(0,i);
+                J(0,1) += dhdr(i)*transUV(1,i);
+                J(1,0) += dhds(i)*transUV(0,i);
+                J(1,1) += dhds(i)*transUV(1,i);
+            }
+
+            Real det = J.det();
+
+            Jinv(0,0) =  J(1,1);
+            Jinv(0,1) = -J(0,1);
+            Jinv(1,0) = -J(1,0);
+            Jinv(1,1) =  J(0,0);
+            Jinv *= 1.0/det;
+
+            DenseVector<Real> dhdx(4), dhdy(4);
+            for (int i = 0; i < 4; i++) {
+                dhdx(i) = Jinv(0,0) * dhdr(i) + Jinv(0,1) * dhds(i);
+                dhdy(i) = Jinv(1,0) * dhdr(i) + Jinv(1,1) * dhds(i);
+            }
+
+            Real Gg = 0.5*em/(1.0+nu); // shear modulus
+            Real shcof = 5.0/6.0; // shear correction factor
+            DenseMatrix<Real> D_ps;
+            D_ps.resize(2,2);
+            D_ps(0,0) = 1.0;
+            D_ps(1,1) = 1.0;
+            D_ps *= Gg*shcof*thickness;
+
+            DenseMatrix<Real> ps(2,12);
+            for (int i = 1; i <= 4; i++) {
+                int i1 = (i-1)*3+1;
+                int i2 = i1+1;
+                int i3 = i2+1;
+                ps(1,i1-1) =  dhdx(i-1);
+                ps(1,i1-1) =  dhdy(i-1);
+                ps(1,i2-1) = -shapeQ4(i-1);
+                ps(0,i3-1) =  shapeQ4(i-1);
+            }
+
+            D_ps.left_multiply_transpose(ps);
+            D_ps.right_multiply(ps);
+            D_ps *= det * 4.0;
+
+            Ke_p += D_ps;
+            */
+            std::cout << "Ke_p:\n";
+            Ke_p.print(std::cout);
+            std::cout << std::endl;
             /*****************************************
              * END OF PLATE COMPUTATION            *
              *****************************************/
@@ -885,31 +1026,6 @@ void assemble_elasticity(EquationSystems& es,
                 }
             }
 
-            Fe.resize(24);
-
-            const BoundaryInfo binfo = mesh.get_boundary_info();
-            DenseVector<Real> arg;
-            for (unsigned int side = 0; side < elem->n_sides(); side++)
-            {
-                if (!binfo.has_boundary_id(elem, side, 0)) // only process non-sticky nodes
-                {
-                    dof_id_type id = elem->get_node(side)->id();//dof_indices_u[side];
-                    if (debug)
-                        std::cout << "id_u = " << (id*6) << ", id_v = " << (id*6+1) << ", id_w = " << (id*6+2) << "\n";
-
-                    arg = forces[id];
-                    if (debug)
-                        std::cout << "force = " << arg(0) << "," << arg(1) << "," << arg(2) << "\n";
-                    // forces don't need to be transformed since we bring the local stiffness matrix back to global co-sys
-                    // directly in libmesh-format:
-                    Fe(side)   = arg(0);//thickness*A_tri*arg(0)/3.0; // u_i
-                    Fe(side+4) = arg(1);//thickness*A_tri*arg(1)/3.0; // v_i
-                    Fe(side+8) = arg(2);//thickness*A_tri*arg(2)/3.0; // w_i
-                    //Fe(side+12) = A_tri*arg(2)/24.0;
-                    //Fe(side+16) = A_tri*arg(2)/24.0;
-                }
-            }
-
             std::cout << "Ke PRE:\n";
             Ke.print(std::cout);
             std::cout << "\n";
@@ -941,26 +1057,14 @@ void assemble_elasticity(EquationSystems& es,
                         for (int l = 0; l < 6; l++)
                             KeSub(k,l) = Ke(i*6+k,j*6+l);
 
-                    std::cout << "KeSUB:\n";
-                    KeSub.print(std::cout);
-                    std::cout << "\n";
-
                     // the actual transformation step
                     KeSub.right_multiply(TSub);
                     KeSub.left_multiply_transpose(TSub);
-
-                    std::cout << "KeSub AFTER TRAFO:\n";
-                    KeSub.print(std::cout);
-                    std::cout << "\n";
 
                     // copy transformed values into temporal stiffness matrix
                     for (int k = 0; k < 6; k++)
                         for (int l = 0; l < 6; l++)
                             KeNew(i*6+k,j*6+l) = KeSub(k,l);
-
-                    std::cout << "KeNew:\n";
-                    KeNew.print(std::cout);
-                    std::cout << "\n";
                 }
             }
 
@@ -984,20 +1088,48 @@ void assemble_elasticity(EquationSystems& es,
         }
 
         if (debug) {
-            std::cout << "Fe:\n";
-            Fe.print(std::cout);
+            std::cout << "Ke global in libmesh ordering:\n";
+            Ke.print(std::cout);
             std::cout << std::endl;
         }
 
-        /*if (debug) {
-            std::cout << "Ke local:\n";
-            Ke.print(std::cout);
-            std::cout << std::endl;
-        }*/
+        unsigned int nsides = elem->n_sides();
+        Fe.resize(6*nsides);
+        DenseVector<Real> arg;
+        for (unsigned int side = 0; side < nsides; side++)
+        {
+            dof_id_type id = elem->get_node(side)->id();
+            if (processedNodes.find(id) == processedNodes.end())
+            {
+                processedNodes.insert(id);
+
+                if (debug)
+                    std::cout << "id_u = " << (id*6) << ", id_v = " << (id*6+1) << ", id_w = " << (id*6+2) << "\n";
+
+                arg = forces[id];
+                if (debug)
+                    std::cout << "force = " << arg(0) << "," << arg(1) << "," << arg(2) << "\n";
+                // forces don't need to be transformed since we bring the local stiffness matrix back to global co-sys
+                // directly in libmesh-format:
+                Fe(side)          = arg(0);//thickness*A_tri*arg(0)/3.0; // u_i (0,1,..,n-1)
+                Fe(side+nsides)   = arg(1);//thickness*A_tri*arg(1)/3.0; // v_i (n,n+1,...,2n-1)
+                Fe(side+nsides*2) = arg(2);//A_tri*arg(2)/3.0;//thickness*A_tri*arg(2)/3.0; // w_i (2n,2n+1,...,3n-1)
+                //Fe(side+nsides*3) = A_tri*arg(2)/24.0; // theta_x_i (3n,3n+1,...,4n-1)
+                //Fe(side+nsides*4) = A_tri*arg(2)/24.0; // theta_y_i (4n,4n+1,...,5n-1)
+            }
+        }
+        if (nsides == 3) {
+            Fe(9)  *= dphi_p(1,1) - dphi_p(0,1);
+            Fe(10) *= dphi_p(0,1) - dphi_p(2,1);
+            Fe(11) *= dphi_p(2,1) - dphi_p(1,1);
+            Fe(12) *= dphi_p(0,0) - dphi_p(1,0);
+            Fe(13) *= dphi_p(2,0) - dphi_p(0,0);
+            Fe(14) *= dphi_p(1,0) - dphi_p(2,0);
+        }
 
         if (debug) {
-            std::cout << "Ke global in libmesh ordering:\n";
-            Ke.print(std::cout);
+            std::cout << "Fe:\n";
+            Fe.print(std::cout);
             std::cout << std::endl;
         }
 
@@ -1010,6 +1142,93 @@ void assemble_elasticity(EquationSystems& es,
             std::cout << "END ELEMENT\n";
     }
 
+}
+
+void eval_B_quad(DenseMatrix<Real> &Hcoeffs, Real xi, Real eta, DenseMatrix<Real> &Jinv, DenseMatrix<Real> &out)
+{
+    out.resize(3,12);
+
+    DenseVector<Real> N_xi(8), N_eta(8);
+    N_xi(0) =  0.25*(2.0*xi+eta)*(1.0-eta);
+    N_xi(1) =  0.25*(2.0*xi-eta)*(1.0-eta);
+    N_xi(2) =  0.25*(2.0*xi+eta)*(1.0+eta);
+    N_xi(3) =  0.25*(2.0*xi-eta)*(1.0+eta);
+    N_xi(4) = -xi  *(1.0-eta);
+    N_xi(5) =  0.5 *(1.0-pow(eta,2.0));
+    N_xi(6) = -xi  *(1.0+eta);
+    N_xi(7) = -0.5 *(1.0-pow(eta,2.0));
+
+    N_eta(0) =  0.25*(2.0*eta+xi)*(1.0-xi);
+    N_eta(1) =  0.25*(2.0*eta-xi)*(1.0+xi);
+    N_eta(2) =  0.25*(2.0*eta+xi)*(1.0+xi);
+    N_eta(3) =  0.25*(2.0*eta-xi)*(1.0-xi);
+    N_eta(4) = -0.5 *(1.0-pow(xi,2.0));
+    N_eta(5) = -eta *(1.0+xi);
+    N_eta(6) =  0.5 *(1.0-pow(xi,2.0));
+    N_eta(7) = -eta *(1.0-xi);
+
+    int  a = 0,  b = 1,  c = 2,  d = 3, e = 4;
+    int i5 = 0, i6 = 1, i7 = 2, i8 = 3;
+
+    DenseVector<Real> Hx_xi(12), Hy_xi(12), Hx_eta(12), Hy_eta(12);
+    Hx_xi(0) = 1.5 * (   Hcoeffs(a,i5)*N_xi(4) - Hcoeffs(a,i8)*N_xi(7));
+    Hx_xi(1) =           Hcoeffs(b,i5)*N_xi(4) + Hcoeffs(b,i8)*N_xi(7);
+    Hx_xi(2) = N_xi(0) - Hcoeffs(c,i5)*N_xi(4) - Hcoeffs(c,i8)*N_xi(7);
+    Hx_xi(3) = 1.5 * (   Hcoeffs(a,i6)*N_xi(5) - Hcoeffs(a,i5)*N_xi(4));
+    Hx_xi(4) =           Hcoeffs(b,i6)*N_xi(5) + Hcoeffs(b,i5)*N_xi(4);
+    Hx_xi(5) = N_xi(1) - Hcoeffs(c,i6)*N_xi(5) - Hcoeffs(c,i5)*N_xi(4);
+    Hx_xi(6) = 1.5 * (   Hcoeffs(a,i7)*N_xi(6) - Hcoeffs(a,i6)*N_xi(5));
+    Hx_xi(7) =           Hcoeffs(b,i7)*N_xi(6) + Hcoeffs(b,i6)*N_xi(5);
+    Hx_xi(8) = N_xi(2) - Hcoeffs(c,i7)*N_xi(6) - Hcoeffs(c,i6)*N_xi(5);
+    Hx_xi(9) = 1.5 * (   Hcoeffs(a,i8)*N_xi(7) - Hcoeffs(a,i7)*N_xi(6));
+    Hx_xi(10)=           Hcoeffs(b,i8)*N_xi(7) + Hcoeffs(b,i7)*N_xi(6);
+    Hx_xi(11)= N_xi(3) - Hcoeffs(c,i8)*N_xi(7) - Hcoeffs(c,i7)*N_xi(6);
+
+    Hy_xi(0) = 1.5 * (   Hcoeffs(d,i5)*N_xi(4) - Hcoeffs(d,i8)*N_xi(7));
+    Hy_xi(1) = -N_xi(0) -Hcoeffs(e,i5)*N_xi(4) - Hcoeffs(e,i8)*N_xi(7);
+    Hy_xi(2) =          -Hcoeffs(b,i5)*N_xi(4) - Hcoeffs(b,i8)*N_xi(7);
+    Hy_xi(3) = 1.5 * (   Hcoeffs(d,i6)*N_xi(5) - Hcoeffs(d,i5)*N_xi(4));
+    Hy_xi(4) = -N_xi(1) -Hcoeffs(e,i6)*N_xi(5) - Hcoeffs(e,i5)*N_xi(4);
+    Hy_xi(5) =          -Hcoeffs(b,i6)*N_xi(5) - Hcoeffs(b,i5)*N_xi(4);
+    Hy_xi(6) = 1.5 * (   Hcoeffs(d,i7)*N_xi(6) - Hcoeffs(d,i6)*N_xi(5));
+    Hy_xi(7) = -N_xi(2) -Hcoeffs(e,i7)*N_xi(6) - Hcoeffs(e,i6)*N_xi(5);
+    Hy_xi(8) =          -Hcoeffs(b,i7)*N_xi(6) - Hcoeffs(b,i6)*N_xi(5);
+    Hy_xi(9) = 1.5 * (   Hcoeffs(d,i8)*N_xi(7) - Hcoeffs(d,i7)*N_xi(6));
+    Hy_xi(10)= -N_xi(3) -Hcoeffs(e,i8)*N_xi(7) - Hcoeffs(e,i7)*N_xi(6);
+    Hy_xi(11)=          -Hcoeffs(b,i8)*N_xi(7) - Hcoeffs(b,i7)*N_xi(6);
+
+    Hx_eta(0) = 1.5 * (   Hcoeffs(a,i5)*N_eta(4) - Hcoeffs(a,i8)*N_eta(7));
+    Hx_eta(1) =           Hcoeffs(b,i5)*N_eta(4) + Hcoeffs(b,i8)*N_eta(7);
+    Hx_eta(2) = N_eta(0) -Hcoeffs(c,i5)*N_eta(4) - Hcoeffs(c,i8)*N_eta(7);
+    Hx_eta(3) = 1.5 * (   Hcoeffs(a,i6)*N_eta(5) - Hcoeffs(a,i5)*N_eta(4));
+    Hx_eta(4) =           Hcoeffs(b,i6)*N_eta(5) + Hcoeffs(b,i5)*N_eta(4);
+    Hx_eta(5) = N_eta(1) -Hcoeffs(c,i6)*N_eta(5) - Hcoeffs(c,i5)*N_eta(4);
+    Hx_eta(6) = 1.5 * (   Hcoeffs(a,i7)*N_eta(6) - Hcoeffs(a,i6)*N_eta(5));
+    Hx_eta(7) =           Hcoeffs(b,i7)*N_eta(6) + Hcoeffs(b,i6)*N_eta(5);
+    Hx_eta(8) = N_eta(2) -Hcoeffs(c,i7)*N_eta(6) - Hcoeffs(c,i6)*N_eta(5);
+    Hx_eta(9) = 1.5 * (   Hcoeffs(a,i8)*N_eta(7) - Hcoeffs(a,i7)*N_eta(6));
+    Hx_eta(10)=           Hcoeffs(b,i8)*N_eta(7) + Hcoeffs(b,i7)*N_eta(6);
+    Hx_eta(11)= N_eta(3) -Hcoeffs(c,i8)*N_eta(7) - Hcoeffs(c,i7)*N_eta(6);
+
+    Hy_eta(0) = 1.5 * (   Hcoeffs(d,i5)*N_eta(4) - Hcoeffs(d,i8)*N_eta(7));
+    Hy_eta(1) = -N_eta(0)-Hcoeffs(e,i5)*N_eta(4) - Hcoeffs(e,i8)*N_eta(7);
+    Hy_eta(2) =          -Hcoeffs(b,i5)*N_eta(4) - Hcoeffs(b,i8)*N_eta(7);
+    Hy_eta(3) = 1.5 * (   Hcoeffs(d,i6)*N_eta(5) - Hcoeffs(d,i5)*N_eta(4));
+    Hy_eta(4) = -N_eta(1)-Hcoeffs(e,i6)*N_eta(5) - Hcoeffs(e,i5)*N_eta(4);
+    Hy_eta(5) =          -Hcoeffs(b,i6)*N_eta(5) - Hcoeffs(b,i5)*N_eta(4);
+    Hy_eta(6) = 1.5 * (   Hcoeffs(d,i7)*N_eta(6) - Hcoeffs(d,i6)*N_eta(5));
+    Hy_eta(7) = -N_eta(2)-Hcoeffs(e,i7)*N_eta(6) - Hcoeffs(e,i6)*N_eta(5);
+    Hy_eta(8) =          -Hcoeffs(b,i7)*N_eta(6) - Hcoeffs(b,i6)*N_eta(5);
+    Hy_eta(9) = 1.5 * (   Hcoeffs(d,i8)*N_eta(7) - Hcoeffs(d,i7)*N_eta(6));
+    Hy_eta(10)= -N_eta(3)-Hcoeffs(e,i8)*N_eta(7) - Hcoeffs(e,i7)*N_eta(6);
+    Hy_eta(11)=          -Hcoeffs(b,i8)*N_eta(7) - Hcoeffs(b,i7)*N_eta(6);
+
+    for (int i = 0; i < 12; i++)
+    {
+        out(0,i) = Jinv(0,0)*Hx_xi(i) + Jinv(0,1)*Hx_eta(i);
+        out(1,i) = Jinv(1,0)*Hy_xi(i) + Jinv(1,1)*Hy_eta(i);
+        out(2,i) = Jinv(0,0)*Hy_xi(i) + Jinv(0,1)*Hy_eta(i) + Jinv(1,0)*Hx_xi(i) + Jinv(1,1)*Hx_eta(i);
+    }
 }
 
 void eval_B(DenseMatrix<Real>& C, Real L1, Real L2, DenseMatrix<Real>& dphi_p, DenseMatrix<Real> &out)
