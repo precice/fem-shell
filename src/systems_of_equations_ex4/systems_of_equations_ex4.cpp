@@ -101,8 +101,8 @@ int main (int argc, char** argv)
     if ( command_line.search(1, "-out") )
         outfile = command_line.next("out");
 
-    std::cout << "d: " << (debug?"true":"false") << ", nu:" << nu << ", em:" << em << ", t:" << thickness;
-    std::cout << ", file:" << filename << ", outfile:" << outfile << "\n";
+    //std::cout << "d: " << (debug?"true":"false") << ", nu:" << nu << ", em:" << em << ", t:" << thickness;
+    //std::cout << ", file:" << filename << ", outfile:" << outfile << "\n";
 
     // Skip this 2D example if libMesh was compiled as 1D-only.
     libmesh_example_requires(dim <= LIBMESH_DIM, "2D support");
@@ -122,7 +122,7 @@ int main (int argc, char** argv)
     }
 
     // Print information about the mesh to the screen.
-    if (debug)
+    //if (debug)
         mesh.print_info();
 
     // Load file with forces (only needed for stand-alone version)
@@ -399,24 +399,24 @@ void assemble_elasticity(EquationSystems& es,
             // transform planar 3d quadrilateral down to xy-plane with node A at origin:
             Node nI,nJ,nK,nL;
             ndi = elem->get_node(0); // node A
-            std::cout << "node A:\n"; ndi->print_info(std::cout);
+            //std::cout << "node A (" << ndi->processor_id() << "):\n"; ndi->print_info(std::cout);}
             ndj = elem->get_node(1); // node B
-            std::cout << "node B:\n"; ndj->print_info(std::cout);
+            //std::cout << "node B (" << ndj->processor_id() << "):\n"; ndj->print_info(std::cout);}
             nI = (*ndi) + 0.5*((*ndj)-(*ndi)); // nI = midpoint on edge AB
             ndi = elem->get_node(2); // node C
-            std::cout << "node C:\n"; ndi->print_info(std::cout);
+            //std::cout << "node C (" << ndi->processor_id() << "):\n"; ndi->print_info(std::cout);}
             nJ = (*ndj) + 0.5*((*ndi)-(*ndj)); // nJ = midpoint on edge BC
             ndj = elem->get_node(3); // node D
-            std::cout << "node D:\n"; ndj->print_info(std::cout);
+            //std::cout << "node D (" << ndj->processor_id() << "):\n"; ndj->print_info(std::cout);}
             nK = (*ndi) + 0.5*((*ndj)-(*ndi)); // nK = midpoint on edge CD
             ndi = elem->get_node(0); // node A
             nL = (*ndj) + 0.5*((*ndi)-(*ndj)); // nL = midpoint on edge DA
             ndj = elem->get_node(2);
 
-            std::cout << "node i:\n"; nI.print_info(std::cout);
-            std::cout << "node j:\n"; nJ.print_info(std::cout);
-            std::cout << "node k:\n"; nK.print_info(std::cout);
-            std::cout << "node l:\n"; nL.print_info(std::cout);
+            //std::cout << "node i:\n"; nI.print_info(std::cout);
+            //std::cout << "node j:\n"; nJ.print_info(std::cout);
+            //std::cout << "node k:\n"; nK.print_info(std::cout);
+            //std::cout << "node l:\n"; nL.print_info(std::cout);
 
             transUV.resize(3,4); // ({x,y,z},{A,B,C,D})
             for (int i = 0; i < 4; i++)
@@ -433,7 +433,7 @@ void assemble_elasticity(EquationSystems& es,
 
             U = nJ-nL; // Vx
             U = U.unit(); // Vx normalized -> local x-axis unit vector
-            W = nI-nK; // Vr
+            W = nK-nI; // Vr
             W = U.cross(W); // Vz = Vx x Vr
             W = W.unit(); // Vz normalized -> local z-axis unit vector
             V = W.cross(U); // Vy = Vz x Vx -> local y-axis unit vector
@@ -465,6 +465,8 @@ void assemble_elasticity(EquationSystems& es,
             std::cout << "transUV:\n"; transUV.print(std::cout);
             std::cout << "\ntrafo:\n"; transTri.print(std::cout); std::cout << std::endl;
         }
+
+        Real area;
 
         if (type == TRI3)
         {std::cout << "tri3 element\n";
@@ -651,7 +653,7 @@ void assemble_elasticity(EquationSystems& es,
                             Ke(3*alpha+i,3*beta+j) = KeNew(6*i+alpha,6*j+beta);
         }
         else if (type == QUAD4)
-        {std::cout << "quad4 element\n";
+        {//std::cout << "quad4 element\n";
             // first partial derivatives x_ij, y_ij
             dphi_p.resize(6,2); // resizes matrix to 6 rows, 2 columns and zeros entries
             dphi_p(0,0) = transUV(0,0)-transUV(0,1); // x12 = x1-x2
@@ -669,14 +671,14 @@ void assemble_elasticity(EquationSystems& es,
             dphi_p(5,0) = transUV(0,3)-transUV(0,1); // x42 = x4-x2
             dphi_p(5,1) = transUV(1,3)-transUV(1,1); // y42 = y4-y2
 
-            std::cout << "dphi_p:\n";
-            dphi_p.print(std::cout);
-            std::cout << "\n";
+            if (debug) {
+                std::cout << "dphi_p:\n";
+                dphi_p.print(std::cout);
+                std::cout << "\n";
+            }
 
             // quadrature points definitions:
             Real root = sqrt(1.0/3.0);
-
-            std::cout << "root = " << root << "\n";
 
             // side-lengths squared:
             sidelen.resize(4);
@@ -685,7 +687,8 @@ void assemble_elasticity(EquationSystems& es,
             sidelen[2] = pow(dphi_p(2,0), 2.0) + pow(dphi_p(2,1), 2.0); // side CD, x34^2 + y34^2
             sidelen[3] = pow(dphi_p(3,0), 2.0) + pow(dphi_p(3,1), 2.0); // side DA, x41^2 + y41^2
 
-            std::cout << "lij^2 = (" << sidelen[0] << ", " << sidelen[1] << ", " << sidelen[2] << ", " << sidelen[3] << ")\n";
+            if (debug)
+                std::cout << "lij^2 = (" << sidelen[0] << ", " << sidelen[1] << ", " << sidelen[2] << ", " << sidelen[3] << ")\n";
 
             /*****************************************
              * BEGIN OF PLANE COMPUTATION            *
@@ -768,9 +771,6 @@ void assemble_elasticity(EquationSystems& es,
             /*****************************************
              * BEGIN OF PLATE COMPUTATION            *
              *****************************************/
-            ///////////////////////////////////////////////////////////
-           /////// BAUSTELLE /////////////////////////////////////////
-          ///////////////////////////////////////////////////////////
             Hcoeffs.resize(5,4); // [ a_k, b_k, c_k, d_k, e_k ], k=5,6,7,8
             for (int i = 0; i < 4; i++)
             {
@@ -811,6 +811,7 @@ void assemble_elasticity(EquationSystems& es,
                     }
 
                     Real det = J.det();
+                    area = det/2.0;
 
                     if (debug) std::cout << "J.det = " << det << "\n";
 
@@ -842,9 +843,11 @@ void assemble_elasticity(EquationSystems& es,
 
                     Ke_p += temp;
 
-                    std::cout << "temp:\n";
-                    temp.print(std::cout);
-                    std::cout << std::endl;
+                    if (debug) {
+                        std::cout << "temp:\n";
+                        temp.print(std::cout);
+                        std::cout << std::endl;
+                    }
                 }
             }
 
@@ -898,9 +901,11 @@ void assemble_elasticity(EquationSystems& es,
                 }
             }
 
-            std::cout << "Ke PRE:\n";
-            Ke.print(std::cout);
-            std::cout << "\n";
+            if (debug) {
+                std::cout << "Ke PRE:\n";
+                Ke.print(std::cout);
+                std::cout << "\n";
+            }
 
             // transform Ke from local back to global with transformation matrix T:
             DenseMatrix<Real> KeSub(6,6);
@@ -972,7 +977,11 @@ void assemble_elasticity(EquationSystems& es,
         DenseVector<Real> arg;
         for (unsigned int side = 0; side < nsides; side++)
         {
-            dof_id_type id = elem->get_node(side)->id();
+            Node* node = elem->get_node(side);
+            dof_id_type id = node->id();
+            if (node->processor_id() != global_processor_id())
+                continue;
+
             if (processedNodes.find(id) == processedNodes.end())
             {
                 processedNodes.insert(id);
