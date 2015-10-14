@@ -1,6 +1,10 @@
 /*************************************************************
  * todo
  *
+ *  Code preCICE-ready machen
+ *  Gegenstück solver besorgen
+ *  Testen!
+ *  Ergebnis aufzeichnen
  * ***********************************************************/
 
 // C++ include files that we need
@@ -36,6 +40,9 @@
 //#include "libmesh/dense_submatrix.h"
 //#include "libmesh/dense_subvector.h"
 
+// preCICE includes
+#include "precice/SolverInterface.hpp"
+
 // Bring in everything from the libMesh namespace
 using namespace libMesh;
 
@@ -47,8 +54,8 @@ void eval_B(DenseMatrix<Real>& Hcoeffs, Real L1, Real L2, DenseMatrix<Real> &dph
 void eval_B_quad(DenseMatrix<Real>& Hcoeffs, Real xi, Real eta, DenseMatrix<Real> &Jinv, DenseMatrix<Real> &out);
 
 bool debug = false;
-Real nu = 0.4;
-Real em = 100000.0;
+Real nu = 0.3;
+Real em = 1.0e6;
 Real thickness = 1.0;
 std::vector<DenseVector<Real> > forces;
 
@@ -63,18 +70,16 @@ int main (int argc, char** argv)
 
     std::cout << "Start of process " << global_processor_id() << "\n";
 
-    if (argc < 7)
+    if (argc != 8)
     {
-        //if (processor_id() == 0)
-        {
-            err << "Usage: " << argv[0] << " -d -nu -e -mesh -out\n"
-                << "-d: Debug-Mode (1=on, 0=off (default))\n"
-                << "-nu: Possion-Number nu (0.4 default)\n"
-                << "-e: Elasticity Modulus E (1000000.0 default)\n"
-                << "-t: Thickness (1.0 default)\n"
-                << "-mesh: Input mesh file (*.xda or *.msh)\n"
-                << "-out: Output file name (without extension)\n";
-        }
+        err << "Usage: " << argv[0] << " -d -nu -e -t -mesh -out -config\n"
+            << "-d: Debug-Mode (1=on, 0=off (default))\n"
+            << "-nu: Possion-Number (0.3 default)\n"
+            << "-e: Elasticity Modulus (1.0e6 default)\n"
+            << "-t: Thickness (1.0 default)\n"
+            << "-mesh: Input mesh file (*.xda or *.msh)\n"
+            << "-out: Output file name (without extension)\n"
+            << "-config: preCICE configuration file name\n";
 
         libmesh_error_msg("Error, must choose valid parameters.");
     }
@@ -85,10 +90,10 @@ int main (int argc, char** argv)
     debug = false;
     if ( command_line.search(1, "-d") )
         debug = command_line.next(0) == 1? true : false;
-    nu = 0.4;
+    nu = 0.3;
     if ( command_line.search(1, "-nu") )
         nu = command_line.next(nu);
-    em = 1000000.0;
+    em = 1.0e6;
     if ( command_line.search(1, "-e") )
         em = command_line.next(em);
     thickness = 1.0;
@@ -100,15 +105,20 @@ int main (int argc, char** argv)
     std::string outfile;
     if ( command_line.search(1, "-out") )
         outfile = command_line.next("out");
+    std::string configFileName;
+    if ( command_line.search(1, "-config") )
+        configFileName = command_line.next("");
 
-    //std::cout << "d: " << (debug?"true":"false") << ", nu:" << nu << ", em:" << em << ", t:" << thickness;
-    //std::cout << ", file:" << filename << ", outfile:" << outfile << "\n";
-
-    // Skip this 2D example if libMesh was compiled as 1D-only.
-    libmesh_example_requires(dim <= LIBMESH_DIM, "2D support");
+    SolverInterface *interface = NULL;
+    if (global_processor_id() == 0) // TODO: schauen ob das so funktioniert. SolverInterface darf nur von rank 0 benutzt werden (im MPI Fall)
+    {
+        std::string solverName = "STRUCTURE";
+        interface = new SolverInterface(solverName, 0, 1);
+        interface->configure(configFileName);
+    }
 
     // Create a 2D mesh distributed across the default MPI communicator.
-    Mesh mesh(init.comm(), dim);
+    Mesh mesh(init.comm(), interface.getDimensions()-1);
     mesh.allow_renumbering(false);
     if (mesh.allow_renumbering())
         std::cout << "mesh erlaubt renumbering\n";
@@ -122,27 +132,15 @@ int main (int argc, char** argv)
     }
 
     // Print information about the mesh to the screen.
-    //if (debug)
+    if (debug)
         mesh.print_info();
 
+    /** mit preCICE nicht mehr nötig
     // Load file with forces (only needed for stand-alone version)
     std::filebuf fb;
     if (filename.find(".xda") != std::string::npos ||
         filename.find(".msh") != std::string::npos)
         filename.resize(filename.size()-4);
-
-    /*
-     * load mesh file and create a map linking the real node IDs to the libmesh created Ids
-     * needed to get the force vectors to the right positions (nodes)
-     */
-    // open mesh file
-    // case .xda, .msh, etc
-    // look for elements definition
-    // go through all elements
-    //    go through all nodes n of element el
-    //       if (map.find(n) == map.end()) // node-id was not yet processed
-    //          map.insert(n,i);
-    //          i++;
 
     filename += "_f";
 
@@ -163,14 +161,55 @@ int main (int argc, char** argv)
             forces.push_back(p);
         }
     }
+    **/
 
-    /*if (debug)
+    // stattdessen kommt hier die preCICE Initialisierung hin:
+    int n_elements = mesh.n_nodes(); // number of nodes in the mesh
+    int dimensions = 0;
+    double *forces, *displacements, *grid;
+    int meshID, dID, fID;
+    int *vertexIDs;
+    if (interface != NULL)
     {
-        std::cout << "Forces-vector has " << forces.size() << " entries: [\n";
-        for (unsigned int i = 0; i < forces.size(); i++)
-            std::cout << "(" << forces[i](0) << "," << forces[i](1) << "," << forces[i](2) << ")\n";
-        std::cout << "]\n";
-    }*/
+        dimensions = interface.getDimensions();
+        forces = new double[n_elements*3];
+        displacements = new double[n_elements*3];
+        grid = new double[n_elements]; // TODO: WAS REPRÄSENTIERT grid IN preCICE WIRKLICH? WAS IST DER UNTERSCHIED FÜR preCICE ZWISCHEN node UND element?
+                                       // PROBLEM IST NÄMLICH: WERTE WERDEN JA NICHT PRO ELEMENT SONDERN PRO KNOTEN GESPEICHERT...
+        for (int i = 0; i < n_elements; i++)
+        {
+            forces[i*3] = 0.0;
+            forces[i*3+1] = 0.0;
+            forces[i*3+2] = 0.0;
+            displacements[i*3] = 0.0;
+            displacements[i*3+1] = 0.0;
+            displacements[i*3+2] = 0.0;
+            for (int dim = 0; dim < dimensions; dim++) // TODO: WAS MACH ICH HIER?
+                grid[i*dimensions + dim] = i;
+        }
+
+        meshID = interface->getMeshID("Structure_Nodes");
+        dID    = interface->getDataID("Displacements", meshID);
+        fID    = interface->getDataID("Forces", meshID);
+
+        vertexIDs = new int[n_elements];
+        interface->setMeshVertices(meshID, n_elements, grid, vertexIDs);
+
+        interface->initialize();
+
+        if (interface.isActionRequired(actionWriteInitialData()))
+        {
+            interface->writeBlockScalarData(dID, n_elements, vertexIDs, displacements);
+            interface->fulfilledAction(actionWriteInitialData());
+        }
+
+        interface->initializeData();
+
+        if (interface->isReadDataAvailable())
+        {
+            interface->readBlockScalarData(fID, n_elements, vertexIDs, forces);
+        }
+    }
 
     // Create an equation systems object.
     EquationSystems equation_systems (mesh);
@@ -197,7 +236,7 @@ int main (int argc, char** argv)
     boundary_ids.insert(1);
     // Create a vector storing the variable numbers which the BC applies to
     std::vector<unsigned int> variables(6);
-    variables[0] = u_var; variables[1] = v_var; variables[2] = w_var;
+    variables[0] = u_var;  variables[1] = v_var;  variables[2] = w_var;
     variables[3] = tx_var; variables[4] = ty_var; variables[5] = tz_var;
     // Create a ZeroFunction to initialize dirichlet_bc
     ConstFunction<Number> cf(0.0);
@@ -213,54 +252,74 @@ int main (int argc, char** argv)
     DirichletBoundary dirichlet_bc2(boundary_ids2,variables2,&cf2);
     system.get_dof_map().add_dirichlet_boundary(dirichlet_bc2);
 
-    if (debug)
-        std::cout << "before systems.init\n";
-
-    // Initialize the data structures for the equation system.
-    equation_systems.init();
-
-    if (debug)
-        std::cout << "after systems.init\n";
-
-    // Print information about the system to the screen.
-    equation_systems.print_info();
-
-    //const Real tol = equation_systems.parameters.get<Real>("linear solver tolerance");
-    //const unsigned int maxits = equation_systems.parameters.get<unsigned int>("linear solver maximum iterations");
-    //equation_systems.parameters.set<unsigned int>("linear solver maximum iterations") = maxits*3;
-    //equation_systems.parameters.set<Real>        ("linear solver tolerance") = tol/1000.0;
-
-    /**
-     * Solve the system
-     **/
-    equation_systems.solve();
-
-    if (debug)
-       std::cout << "after solve\n";
-
-    std::vector<Number> sols;
-    equation_systems.build_solution_vector(sols);
-
-    if (debug)
-       std::cout << "after build solution vector\n";
-
-    if (debug)
-    {
-        system.matrix->print(std::cout);
-        system.rhs->print(std::cout);
-    }
-
-    // be sure that only the master process (id = 0) act on the solution, since the rest of the processes only see their own partial solution
+    // TODO: PROBLEM: andere Prozesse haben keinen Zugriff auf interface, müssen aber auch in die while-Schleife
+    // eigene bool von rank 0 gesteuert über broadcast verteilt könnte funktionieren
+    bool ongoing = false;
     if (global_processor_id() == 0)
+        ongoing = interface->isCouplingOngoing();
+    Communicator::broadcast(ongoing);
+    while (ongoing)
     {
-        std::cout << global_processor_id() << ": Solution: x=[";
-        MeshBase::const_node_iterator no = mesh.nodes_begin();
-        const MeshBase::const_node_iterator end_no = mesh.nodes_end();
-        for (int i = 0 ; no != end_no; ++no,++i)
-           std::cout << "uvw_" << i << " = " << sols[6*i] << ", " << sols[6*i+1] << ", " << sols[6*i+2] << "\n";
-        std::cout << "]\n" << std::endl;
+        // Initialize the data structures for the equation system.
+        equation_systems.reinit();
+
+        // Print information about the system to the screen.
+        //equation_systems.print_info();
+
+        //const Real tol = equation_systems.parameters.get<Real>("linear solver tolerance");
+        //const unsigned int maxits = equation_systems.parameters.get<unsigned int>("linear solver maximum iterations");
+        //equation_systems.parameters.set<unsigned int>("linear solver maximum iterations") = maxits*3;
+        //equation_systems.parameters.set<Real>        ("linear solver tolerance") = tol/1000.0;
+
+        /**
+         * Solve the system
+         **/
+        equation_systems.solve();
+
+        std::vector<Number> sols;
+        equation_systems.build_solution_vector(sols);
+
+        if (debug)
+        {
+            system.matrix->print(std::cout);
+            system.rhs->print(std::cout);
+        }
+
+        // be sure that only the master process (id = 0) act on the solution, since the rest of the processes only see their own partial solution
+        if (global_processor_id() == 0)
+        {
+            //std::cout << global_processor_id() << ": Solution: x=[";
+            MeshBase::const_node_iterator no = mesh.nodes_begin();
+            const MeshBase::const_node_iterator end_no = mesh.nodes_end();
+            for (int i = 0 ; no != end_no; ++no,++i)
+            {
+               //std::cout << "uvw_" << i << " = " << sols[6*i] << ", " << sols[6*i+1] << ", " << sols[6*i+2] << "\n";
+               // copy results into preCICE exchange array:
+               displacements[3*i] = sols[6*i];
+               displacements[3*i+1] = sols[6*i+1];
+               displacements[3*i+2] = sols[6*i+2];
+            }
+            //std::cout << "]\n" << std::endl;
+
+            interface->writeBlockScalarData(dID, n_elements, vertexIDs, displacements);
+            interface->readBlockScalarData(fID, n_elements, vertexIDs, forces);
+
+            if (interface->isActionRequired(actionReadIterationCheckpoint())) // i.e. not yet converged
+            {
+                interface->fulfilledAction(actionReadIterationCheckpoint());
+            }
+            else
+            {
+                // ???
+            }
+        }
+
+        if (global_processor_id() == 0)
+            ongoing = interface->isCouplingOngoing();
+        Communicator::broadcast(ongoing);
     }
 
+    /*
     // Plot the solution
     std::ostringstream file_name;
     file_name << "out/" << outfile << "_"
@@ -270,8 +329,13 @@ int main (int argc, char** argv)
               << ".e";
 
     ExodusII_IO (mesh).write_equation_systems(file_name.str(),equation_systems);
+    */
 
     std::cout << "All done ;)\n";
+    if (global_processor_id() == 0)
+    {
+        interface->finalize();
+    }
 
     return 0;
 }
