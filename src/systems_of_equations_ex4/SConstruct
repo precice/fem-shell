@@ -9,8 +9,8 @@ conf = Configure(env)
 libmeshRoot = os.getenv('LIBMESH_ROOT')
 
 env.Append(CPPPATH = [os.path.join(libmeshRoot, 'include'),
-                      "/usr/include/vtk-6.1"])
-env.Append(LIBPATH = [os.path.join(libmeshRoot, "lib")])
+                      "/usr/include/vtk-5.8"])
+env.Append(LIBPATH = [os.path.join(libmeshRoot, ".libs")])
 
 conf.CheckLib("mesh_opt")
 

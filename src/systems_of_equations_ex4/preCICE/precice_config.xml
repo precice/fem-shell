@@ -1,65 +1,82 @@
+<?xml version="1.0"?>
+
 <precice-configuration>
- <log-filter target="debug" component="precice" switch="on" />
- <log-filter target="info" component="" switch="on" />
- <log-filter target="debug" component="precice::cplscheme::impl::IQN" switch="off" /> 
- <log-filter target="debug" component="precice::cplscheme::ImplicitCouplingScheme" switch="off" />
+  
+  <log-filter target="debug" component="precice" switch="off" />
+  <log-filter target="info"  component="" switch="on"/>
+  <log-filter target="debug" component="precice::cplscheme::impl::IQNILSPostProcessing" switch="on" />
+  <log-filter target="debug" component="precice::cplscheme::impl::BaseQNPostProcessing" switch="on" />
+  <log-filter target="debug" component="precice::cplscheme::impl::MMPostProcessing" switch="on" />
+  <log-filter target="debug" component="precice::cplscheme::ImplicitCouplingScheme" switch="on" />
+  
+  <solver-interface dimensions="3">
+    
+    <!-- Data fields that are exchanged between the solvers -->
+    <data:vector name="Forces"/>
+    <data:vector name="Displacements"/>
 
- <solver-interface dimensions="3">
-  <data:vector name="Forces" />
-  <data:vector name="Displacements" />
+    <!-- A common mesh that uses these data fields -->
+    <mesh name="Fluid_Nodes">
+        <use-data name="Displacements"/>
+        <use-data name="Forces"/>
+    </mesh>
 
-  <mesh name="Fluid_Nodes">
-   <use-data name="Displacements"/>
-   <use-data name="Forces"/>
-  </mesh>
-  <mesh name="Structure_Nodes">
-   <use-data name="Displacements"/>
-   <use-data name="Forces"/>
-  </mesh>
+    <mesh name="Structure_Nodes">
+       <use-data name="Displacements"/>   
+       <use-data name="Forces"/>
+    </mesh>
 
-  <participant name="FLUID"> 
-   <use-mesh name="Fluid_Nodes" provide="yes"/> 
-   <use-mesh name="Structure_Nodes" provide="STRUCTURE"/> 
+    <!-- Communication method, use TCP sockets -->
+    <m2n:sockets from="FLUID" to="STRUCTURE" />
 
-   <write-data name="Forces" mesh="Fluid_Nodes"/> 
-   <read-data name="Displacements" mesh="Fluid_Nodes"/> 
+    <!-- Represents each solver using preCICE. In a coupled simulation, two participants have to be
+         defined. The name of the participant has to match the name given on construction of the
+         precice::SolverInterface object used by the participant. -->
+    
+    <participant name="FLUID">
+      <!-- Makes the named mesh available to the participant. Mesh is provided by the solver directly. -->
 
-   <mapping:nearest-projection direction="write" from="Fluid_Nodes" to="Structure_Nodes" constraint="consistent" timing="initial"/> 
-   <mapping:nearest-projection direction="read"  from="Structure_Nodes" to="Fluid_Nodes" constraint="consistent" timing="initial"/> 
+      <use-mesh name="Fluid_Nodes" provide="yes"/>
+      <use-mesh name="Structure_Nodes" from="STRUCTURE"/>
+      <!-- Define input/output of the solver.  -->
+      <write-data name="Forces" mesh="Fluid_Nodes"/>
+      <read-data  name="Displacements" mesh="Fluid_Nodes"/>
+      <mapping:nearest-projection direction="write" from="Fluid_Nodes" to="Structure_Nodes" constraint="consistent" timing="initial"/>
+      <mapping:nearest-projection direction="read"  from="Structure_Nodes" to="Fluid_Nodes" constraint="consistent" timing="initial"/>
+<!--      <export:vtk timestep-interval="1" directory="output/"/>-->
+    </participant>
+    
+    <participant name="STRUCTURE">
+      <use-mesh name="Structure_Nodes" provide="yes"/>
+      <write-data name="Displacements" mesh="Structure_Nodes"/>
+      <read-data  name="Forces"      mesh="Structure_Nodes"/>
+      <export:vtk timestep-interval="1" directory="output/"/>
+    </participant>
+   
 
-   <export:vtk timestep-interval="10" directory="output/"/> 
-  </participant>
-
-  <participant name="STRUCTURE"> 
-   <use-mesh name="Structure_Nodes" provide="yes"/>
-
-   <write-data name="Displacements" mesh="Structure_Nodes"/>
-   <read-data name="Forces" mesh="Structure_Nodes"/>
-
-   <export:vtk timestep-interval="10" directory="output/"/>
-  </participant>
-
-  <m2n:sockets from="FLUID" to="STRUCTURE" />
-
-  <coupling-scheme:serial-implicit> 
-   <participants first="FLUID" second="STRUCTURE"/>
-
-   <max-time value="40.0"/> 
-   <timestep-length value="1" valid-digits="8"/> 
-   <max-iterations value="40"/> 
-
-   <exchange data="Forces" mesh="Structure_Nodes" from="FLUID" to="STRUCTURE"/> 
-   <exchange data="Displacements" mesh="Structure_Nodes" from="STRUCTURE" to="FLUID"/> 
-
-   <relative-convergence-measure data="Forces" mesh="Structure_Nodes" limit="1e-5"/> 
-   <relative-convergence-measure data="Displacements" mesh="Structure_Nodes" limit="1e-5"/> 
-
-   <post-processing:aitken> 
-    <data name="Displacements" mesh="Structure_Nodes"> 
-    <initial-relaxation value="0.001"/> 
-   </post-processing:aitken> 
-
-   <extrapolation-order value="2"/> 
-  </coupling-scheme:serial-implicit>
- </solver-interface>
+      <coupling-scheme:serial-implicit>
+         <participants first="FLUID" second="STRUCTURE"/>
+         <max-time value="1.0"/>
+         <timestep-length value="1e-0" valid-digits="8"/>
+         <!--<checkpoint timestep-interval="10"/> -->
+         <max-iterations value="40"/>
+         <exchange data="Forces"        mesh="Structure_Nodes" from="FLUID" to="STRUCTURE"/>
+         <exchange data="Displacements" mesh="Structure_Nodes" from="STRUCTURE" to="FLUID" initialize="true"/>
+<!--         <relative-convergence-measure data="Stresses"        mesh="Structure_Nodes" limit="1e-7"/> -->
+         <relative-convergence-measure data="Displacements" mesh="Structure_Nodes" limit="1e-7"/>
+         <post-processing:IQN-ILS> 
+	    <!-- PostProc always done on the second solver -->
+            <data name="Displacements" mesh="Structure_Nodes">
+            <!-- <data name="Stresses" mesh="Structure_Nodes" scaling="1e7">  Won't work for a serial scheme--> 
+            <initial-relaxation value="0.001"/>
+            <max-used-iterations value="50"/>
+            <timesteps-reused value="8"/>
+            <filter name="QR1-filter"/>
+            <singularity-limit value="1e-13"/>
+         </post-processing:IQN-ILS>
+         <extrapolation-order value="2"/>
+      </coupling-scheme:serial-implicit>
+    
+  </solver-interface>
+  
 </precice-configuration>
