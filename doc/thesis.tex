@@ -33,14 +33,14 @@ In preparation of evaluating the frameworks many criteria were created to object
  \begin{itemize}
  \item Open Source: All frameworks under consideration need to be published under the GNU Lesser General Public License or similar license that allows modification and/or redistribution.
  \item Parallelization: In order to accelerate the calculations the framework has to be able to support the widely used Message Passing Interface (MPI).
- \item The programming language was chosen to be C++. Therefore the framework has to be written in this language.
- \item Mesh file import: Common mesh files types like gmsh or xda/xdr must be able to load by the framework. Simultaneously the framework must support finite elements like triangles and quadrilaterals with three and four nodes respectively and be able to handle two dimensional elements defined within three dimensional space.
- \item The framework should handle different types of boundary conditions defined in a mesh file.
- \item Built-in solvers: In order so solve the matrix-vector-system the framework must provide a variety of different iterative solvers.
+ \item The programming language was chosen to be C++. Therefore the framework has to be written in this language. %TODO: warum c++: persönlich größere erfahrung, python wäre generell auch denkbar
+ \item Mesh file import: Common mesh files types like gmsh or xda/xdr must be able to load by the framework. Simultaneously the framework must support finite elements like triangles and quadrilaterals with three and four nodes respectively and be able to handle two dimensional elements defined within three dimensional space. %TODO warum muss framework meshes importieren können, was setze ich beim mesh file voraus; es geht auch ein vom framework selbst definiertes format, so lange es die bedingungen erfüllt und einfach reproduzierbar ist
+ \item The framework should handle different types of boundary conditions defined in a mesh file. %TODO diesen punkt mit dem vorigen verschmelzen, die bcs sind meine forderungen
+ \item Built-in solvers: In order so solve the matrix-vector-system the framework must provide a variety of different iterative solvers. %TODO siehe zwischenvortrag: höhere flexibilität für anwender
  \item Convenience functions: To optimize the calculations the framework should make use of functions to get matrix-vector and matrix-matrix products, transpose matrix or sparse-matrices.
- \item Accessible and detailed documentation: In order to guarantee maintainability and expandability the framework has to have a good documentation itself.
- \item Up-to-date: The framework should be well maintained and actively supported by its developers to ensure a long term compatibility with possible new features of the thesis' code.
- \item The framework should be used by at least a few projects. This shows the framework's importance and usability.
+ \item Accessible and detailed documentation: In order to guarantee maintainability and expandability the framework has to have a good documentation itself. %TODO example-codes, dokumentierte klassen und funktionen, mailing-listen und/oder foren zur einfachen verständigung mit den entwicklern
+ \item Up-to-date: The framework should be well maintained and actively supported by its developers to ensure a long term compatibility with possible new features of the thesis' code
+ \item The framework should be used by at least a few projects. This shows the framework's importance and usability. %TODO nicht nur projects sondern auch publikationen
  \item Easy-to-learn syntax and structure: A rather subjective aspect but an important one. The limited time for the thesis does not allow to study highly complicated structures or semantics. This accompanies the documentation aspect.
  \end{itemize}
  \subsection{Frameworks Overview}
