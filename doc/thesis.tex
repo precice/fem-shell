@@ -158,7 +158,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
  \end{equation}
  \subsection{Plane Element}
  First part of shell element: plane part. derivation of this part with two exemplary finite element types
-  \subsubsection{Problem Definition}\label{sec:MprobDef}
+  \subsubsection{Problem Definition}\label{sec:PlaneProbDef}
   %- Bild ähnlich ch7.1 mit xy-Ausdehnung, Dicke t, Mittelfläche, Rand, KoSys; Streckenlast q0 und Volumenkraft g aber weglassen\newline
   \begin{figure}
 \centering
@@ -252,14 +252,116 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   with the first term being the elastic strain energy and the second term the single forces.
   
   \subsubsection{Tri-3 Plane Element}
-  mathematical derivation of three node triangular plane element discretization\\
+  mathematical derivation of three node triangular plane element \textbf{discretization}\\
   see Steinke \cite{steinke2005finite} page 215-221\\
-  - Bild von trianguliertem Körper\\
-  - ansatzfunktion (abgewandelt statt phi, u und v separat)\\
-  - interpolationsbedingunen führen auf Formfunktionen\\
-  - Dehnungs-Verschiebungs-Beziehung -> führt zu B + Spannungs-Verschiebungs-Beziehung\\
-  - Einsetzen in Gesamtpotential + Variation\\
-  - Bestimmung von K kürzen: wichtig ist nur s.221 K = t*int(H*dA,A) mit dV = t*dA
+  % Bild von trianguliertem Körper\\
+  \begin{figure}
+  	\centering
+  	\includegraphics[width=0.7\linewidth]{figures/platzhalter}
+  	\caption[kurze Unter-Überschrift]{lange Unter-Überschrift}
+  	\label{fig:platzhalter}
+  \end{figure}
+  In section \ref{sec:PlaneProbDef} the plane's functional was derived. Now the focus is on the functional's discretization. Figure \ref{fig:platzhalter} shows a general, planar object defined to be placed in the xy-plane. The first discretization step is to divide the object into single triangles approximating the shape of it. This process is called triangulation. Every one of these triangles then represents a finite element with one node at every corner. The finer the triangulation is done the better the object and its boundary are matched by its discrete complement, but also the more finite elements have to be considered in later calculations.
+  \begin{figure}
+  	\centering
+  	\includegraphics[width=0.7\linewidth]{figures/platzhalter}
+  	\caption[kurze Unter-Überschrift]{lange Unter-Überschrift}
+  	\label{fig:platzhalter}
+  \end{figure}
+  One triangular finite element is shown in Figure \ref{fig:platzhalter}. It is defined by the coordinates $(x_i,y_i)$ of its three nodes. Since the element is located in the xy-plane, the z-coordinate is of no interest and will be ignored. At every node, forces can be applied denoted with $F_{x_i}$ and $F_{y_i}$. Accordingly, every node can be displaced. The movement along the x-axis is denoted with $u_i$, or with $v_i$ along the y-axis respectively. Note, that the node numbering is in counter-clockwise direction. This definition will be kept throughout the thesis, and is important to remember when implementing the FEM-code in order to reduce errors.
+  In this thesis only triangles defined by three nodes are discussed. There are many more finite elements forming triangles, such as six node triangles or even seven node triangles. The main difference between these types of elements are the order of shape functions. More details about higher order triangular finite elements can be found in %TODO \cite
+  
+  % ansatzfunktion (abgewandelt statt phi, u und v separat)\\
+  In the case of a three node triangle the basis functions for the two displacements $u$ and $v$ are as follows \cite{steinke2005finite}:
+  \begin{equation}\label{eq:t3_ansatzU}
+  u(x,y) = a_0 + a_1L_1 + a_2L_2 = \begin{pmatrix}
+  1 & L_1 & L_2
+  \end{pmatrix} \begin{pmatrix}
+  a_0 \\ a_1 \\ a_2
+  \end{pmatrix} = \vec{x}^T \vec{a},
+  \end{equation}
+  \begin{equation}\label{eq:t3_ansatzV}
+  v(x,y) = a_0 + a_1L_1 + a_2L_2 = \begin{pmatrix}
+  1 & L_1 & L_2
+  \end{pmatrix} \begin{pmatrix}
+  a_0 \\ a_1 \\ a_2
+  \end{pmatrix} = \vec{x}^T \vec{a},
+  \end{equation}
+  both defined in trilinear coordinates (see figure \ref{fig:platzhalter}).
+  % dreieckskoordinaten (ähnlich bild 2.7 auf s.39(53))
+  \begin{figure}
+  	\centering
+  	\includegraphics[width=0.7\linewidth]{figures/platzhalter}
+  	\caption[kurze Unter-Überschrift]{lange Unter-Überschrift}
+  	\label{fig:platzhalter}
+  \end{figure}
+  % interpolationsbedingunen führen auf Formfunktionen\\
+  To get the unknown coefficients $a_i$, values for the trilinear coordinates are set. This creates a system of linear equations:
+  \begin{align}
+  u(L_1=1, L_2=0) = u_1 &\rightarrow u_1 = a_0 + a_1 \nonumber\\
+  u(L_1=0, L_2=1) = u_2 &\rightarrow u_2 = a_0 + a_2 \nonumber\\
+  u(L_1=0, L_2=0) = u_3 &\rightarrow u_3 = a_0
+  \end{align}
+  Alternatively, this could be also done with $v$. Written as matrix and vector:
+  \begin{align}
+  \underline{A} \vec{a} = \vec{u} \nonumber\\
+  \begin{pmatrix}
+  1 & 1 & 0\\
+  1 & 0 & 1\\
+  1 & 0 & 0
+  \end{pmatrix} \begin{pmatrix}
+  a_0 \\ a_1 \\ a_2
+  \end{pmatrix} = \begin{pmatrix}
+  u_1 \\ u_2 \\ u_3
+  \end{pmatrix}
+  \end{align}
+  Now, inverting matrix $A$ the coefficients can be found:
+  \begin{equation}\label{eq:t3_coeffsA}
+  \vec{a} = \underline{A}^{-1} \vec{u} = \begin{pmatrix}
+  0 & 0 & 1\\
+  1 & 0 & -1\\
+  0 & 1 & -1
+  \end{pmatrix} \begin{pmatrix}
+  u_1 \\ u_2 \\ u_3
+  \end{pmatrix}
+  \end{equation}
+  If one put equation \ref{eq:t3_coeffsA} into \ref{eq:t3_ansatzU}, or the analogon into \ref{eq:t3_ansatzV}, the shape functions for the three node triangular finite element will be derived, as described in \cite{steinke2005finite}:
+  \begin{align}\label{eq:t3SF}
+  u &= \vec{x}^T \vec{a} = \vec{x}^T \underline{A}^{-1}\vec{u} = \vec{N}^T\vec{u} \nonumber\\
+  \vec{N}^T &= \vec{x}^T \underline{A}^{-1} =
+  \begin{pmatrix}
+  1 & L_1 & L_2
+  \end{pmatrix} \begin{pmatrix}
+  0 & 0 & 1\\
+  1 & 0 & -1\\
+  0 & 1 & -1
+  \end{pmatrix} \nonumber\\
+  &= \begin{pmatrix}
+  L_1 & L_2 & 1-L_1-L_2
+  \end{pmatrix} = \begin{pmatrix}
+  N_1 & N_2 & N_3
+  \end{pmatrix}
+  \end{align}
+  Characteristically for the shape function, as stated in \cite{steinke2005finite}, is, that shape function $N_i$ gets the value 1 at node $i$ and 0 at the two other nodes. The functions are linear with respect to $L_1$ and $L_2$ which can be noticed in equation \ref{eq:t3SF}. As stated before, these shape functions are the same for displacement $u$ and $v$. With the knowledge of the displacement values of the element's nodes one can formulate the displacement functions in trilinear coordinate notation as follows:
+  \begin{align}
+  u &= N_1 u_1 + N_2 u_2 + N_3 u_3 \nonumber\\
+  v &= N_1 v_1 + N_2 v_2 + N_3 v_3
+  \end{align}
+  Or in matrix form:
+  \begin{align}
+  \vec{\hat{u}} &= \underline{N} \vec{u} \nonumber\\
+  \begin{pmatrix}
+  u \\ v
+  \end{pmatrix} &= \begin{pmatrix}
+  N_1 & 0 & N_2 & 0 & N_3 & 0 \\
+  0 & N_1 & 0 & N_2 & 0 & N_3
+  \end{pmatrix} \begin{pmatrix}
+  u_1 \\ v_1 \\ u_2 \\ v_2 \\ u_3 \\ v_3
+  \end{pmatrix}
+  \end{align}
+  % Dehnungs-Verschiebungs-Beziehung -> führt zu B + Spannungs-Verschiebungs-Beziehung\\
+  % Einsetzen in Gesamtpotential + Variation\\
+  % Bestimmung von K kürzen: wichtig ist nur s.221 K = t*int(H*dA,A) mit dV = t*dA
   \subsubsection{Quad-4 Plane Element}
   - mathematical derivation of four node quadrilateral plane element\newline
   - see Steinke \cite{steinke2005finite} page 237-250 + Cook \cite{cook2002concepts} page 202-208\\
