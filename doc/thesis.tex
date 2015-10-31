@@ -199,7 +199,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   \end{pmatrix}^T
   \end{equation}
   The kinematic relationship $\vec{\epsilon}=\underline{L}\vec{u}$ \ref{eq:displ_strain_relation} linking the displacements $\vec{u}$ with the strains $\vec{\epsilon}$ at full length:
-  \begin{equation}
+  \begin{equation}\label{eq:t3displ-str-rel}
   \vec{\epsilon} = \begin{pmatrix}
   \epsilon_{xx} \\
   \epsilon_{yy} \\
@@ -287,7 +287,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   a_0 \\ a_1 \\ a_2
   \end{pmatrix} = \vec{x}^T \vec{a},
   \end{equation}
-  both defined in trilinear coordinates (see figure \ref{fig:platzhalter}).
+  both defined in triangular coordinates (see figure \ref{fig:platzhalter}).
   % dreieckskoordinaten (ähnlich bild 2.7 auf s.39(53))
   \begin{figure}
   	\centering
@@ -296,7 +296,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   	\label{fig:platzhalter}
   \end{figure}
   % interpolationsbedingunen führen auf Formfunktionen\\
-  To get the unknown coefficients $a_i$, values for the trilinear coordinates are set. This creates a system of linear equations:
+  To get the unknown coefficients $a_i$, values for the triangular coordinates are set. This creates a system of linear equations:
   \begin{align}
   u(L_1=1, L_2=0) = u_1 &\rightarrow u_1 = a_0 + a_1 \nonumber\\
   u(L_1=0, L_2=1) = u_2 &\rightarrow u_2 = a_0 + a_2 \nonumber\\
@@ -342,14 +342,14 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   N_1 & N_2 & N_3
   \end{pmatrix}
   \end{align}
-  Characteristically for the shape function, as stated in \cite{steinke2005finite}, is, that shape function $N_i$ gets the value 1 at node $i$ and 0 at the two other nodes. The functions are linear with respect to $L_1$ and $L_2$ which can be noticed in equation \ref{eq:t3SF}. As stated before, these shape functions are the same for displacement $u$ and $v$. With the knowledge of the displacement values of the element's nodes one can formulate the displacement functions in trilinear coordinate notation as follows:
+  Characteristically for the shape function, as stated in \cite{steinke2005finite}, is, that shape function $N_i$ gets the value 1 at node $i$ and 0 at the two other nodes. The functions are linear with respect to $L_1$ and $L_2$ which can be noticed in equation \ref{eq:t3SF}. As stated before, these shape functions are the same for displacement $u$ and $v$. With the knowledge of the displacement values of the element's nodes one can formulate the displacement functions in triangular coordinate notation as follows:
   \begin{align}
   u &= N_1 u_1 + N_2 u_2 + N_3 u_3 \nonumber\\
   v &= N_1 v_1 + N_2 v_2 + N_3 v_3
   \end{align}
   Or in matrix form:
-  \begin{align}
-  \vec{\hat{u}} &= \underline{N} \vec{u} \nonumber\\
+  \begin{align} \label{eq:t3u=Nu}
+  \vec{\tilde{u}} &= \underline{N} \vec{u} \nonumber\\
   \begin{pmatrix}
   u \\ v
   \end{pmatrix} &= \begin{pmatrix}
@@ -358,6 +358,66 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   \end{pmatrix} \begin{pmatrix}
   u_1 \\ v_1 \\ u_2 \\ v_2 \\ u_3 \\ v_3
   \end{pmatrix}
+  \end{align}
+  The vector $\vec{\tilde{u}}$ describes the element's displacements as product of matrix $\underline{N}$ containing the shape functions and vector $\vec{u}$ containing the displacements of the single triangle's nodes. Now, one can put equation \ref{eq:t3u=Nu} into \ref{eq:t3displ-str-rel}:
+  \begin{equation}
+  \vec{\epsilon} = \underline{L}\vec{\tilde{u}} = \underline{L}\;\underline{N} \vec{u} = \underline{B} \vec{u}
+  \end{equation}
+  The product of $\underline{L}$ and $\underline{N}$ is called \textit{strain-displacement matrix} $\underline{B}$.
+  In order to calculate the strain-displacement matrix, one has to assemble the $\underline{L}$ matrix containing the first partial derivatives of the triangular element. With the chain rule applied, the partial derivatives look as follows:
+  \begin{align}
+  \frac{\partial}{\partial L_1} = \frac{\partial x}{\partial L_1} \frac{\partial}{\partial x} + \frac{\partial y}{\partial L_1} \frac{\partial}{\partial y} \nonumber\\
+  \frac{\partial}{\partial L_2} = \frac{\partial x}{\partial L_2} \frac{\partial}{\partial x} + \frac{\partial y}{\partial L_2} \frac{\partial}{\partial y}
+  \end{align}
+  or in matrix notation:
+  \begin{align}
+  \tilde{\nabla} &= \underline{J} \nabla \nonumber\\
+  \begin{pmatrix}
+  \frac{\partial}{\partial L_1}\\ \frac{\partial}{\partial L_2}
+  \end{pmatrix} &= \begin{pmatrix}
+  \frac{\partial x}{\partial L_1} & \frac{\partial y}{\partial L_1}\\
+  \frac{\partial x}{\partial L_2} & \frac{\partial y}{\partial L_2}
+  \end{pmatrix} \begin{pmatrix}
+  \frac{\partial}{\partial x}\\ \frac{\partial}{\partial y}
+  \end{pmatrix},
+  \end{align}
+  where $\underline{J}$ represents the Jacobian, $\nabla$ the partial derivatives in Cartesian coordinates and $\tilde{\nabla}$ the partial derivatives in triangular coordinates. To get the derivatives in Cartesian form the upper equation must be multiplied with the inverse Jacobian $\underline{J}^{-1}$:
+  \begin{equation}
+  \underline{J}^{-1} = \frac{1}{|\underline{J}|} \begin{pmatrix}
+  \frac{\partial y}{\partial L_2} & -\frac{\partial y}{\partial L_1} \\
+  \frac{-\partial x}{\partial L_2} & \frac{\partial x}{\partial L_1}
+  \end{pmatrix}
+  \end{equation}
+  The conversion between triangular and Cartesian coordinates can be summarized as follows (see Figure \ref{fig:platzhalter} and \cite{steinke2005finite}):
+  \begin{align}\label{eq:triCoord<->CartCoord}
+  L_1 + L_2 + L_3 &= 1 \rightarrow L_3 = 1-L_1-L_2 \nonumber\\
+  x &= x_1L_1 + x_2L_2 + x_3L_3 = (x_1-x_3)L_1 + (x_2-x_3)L2 + x_3\\
+  y &= y_1L_1 + y_2L_2 + y_3L_3 = (y_1-y_3)L_1 + (y_2-y_3)L2 + y_3 \nonumber
+  \end{align}
+  Considering equation \ref{eq:triCoord<->CartCoord} the Jacobian can now be calculated
+  \begin{equation}
+  J = \begin{pmatrix}
+  \frac{\partial x}{\partial L_1} = x_1-x_3 = x_{13} & \frac{\partial y}{\partial L_1} = y_1-y_3 = y_{13}\\
+  \frac{\partial x}{\partial L_2} = x_2-x_3 = x_{23} & \frac{\partial y}{\partial L_2} = y_2-y_3 = y_{23}
+  \end{pmatrix} = \begin{pmatrix}
+  x_{13} & y_{13}\\
+  x_{23} & y_{23}
+  \end{pmatrix}
+  \end{equation}
+  and hence the inverse Jacobian:
+  \begin{equation}
+  \underline{J}^{-1} = \frac{1}{2 A_\triangle} \begin{pmatrix}
+  y_{23} & -y_{13}\\
+  -x_{23} & x_{13}
+  \end{pmatrix}
+  \end{equation}
+  This yields to a new version of the differential operator $\underline{L}$ \cite{steinke2005finite}:
+  \begin{align}
+  \underline{\tilde{L}}
+  \end{align}
+   and can be calculated as follows \cite{steinke2005finite}:
+  \begin{align}
+  \underline{B} = \underline{L}\; \underline{N}
   \end{align}
   % Dehnungs-Verschiebungs-Beziehung -> führt zu B + Spannungs-Verschiebungs-Beziehung\\
   % Einsetzen in Gesamtpotential + Variation\\
@@ -462,8 +522,8 @@ contains development of the program code with focus on the assembly of the syste
   \item übersicht über die klassen (im sinne von: für welche probleme kann man es einsetzen)
   \item noch was allgemeines übersichtmäßiges
   \item implementierte solver z.b. für elasticity problem; hier in doxygen function description reinschauen
-  \item funktionen wie assembly_matrix muss user selbst füllen
-  \item boundary_info mit ids usw. automatisch erstellt bei mesh import
+  \item funktionen wie assembly\_matrix muss user selbst füllen
+  \item boundary\_info mit ids usw. automatisch erstellt bei mesh import
   \item boundary conditions erstellbar -> automatisch constrains system und rhs
  \end{itemize}
  \subsection{libMesh FEM}
