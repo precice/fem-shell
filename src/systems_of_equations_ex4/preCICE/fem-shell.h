@@ -5,6 +5,7 @@
 #include <iostream>
 #include <algorithm>
 #include <unordered_set>
+#include <unordered_map>
 #include <math.h>
 
 // libMesh includes
@@ -47,6 +48,7 @@ Real em;
 Real thickness;
 double *forces;
 DenseMatrix<Real> Dp, Dm;
+std::unordered_map<dof_id_type, int> id_map;
 
 // function prototypes:
 void read_parameters(int argc, char **argv);

@@ -55,7 +55,7 @@ int main (int argc, char** argv)
     std::cout << "preCICE configured..." << std::endl;
 
     //init data
-    int n_nodes = mesh.n_nodes();
+    int n_nodes = mesh.n_local_nodes();
     double *displ;
     int dimensions = interface.getDimensions();
     displ  = new double[dimensions*n_nodes];  // Second dimension (only one cell deep) stored right after the first dimension: see SolverInterfaceImpl::setMeshVertices
@@ -70,8 +70,8 @@ int main (int argc, char** argv)
     int *vertexIDs;
     vertexIDs = new int[n_nodes];
 
-    MeshBase::const_node_iterator no = mesh.nodes_begin();
-    const MeshBase::const_node_iterator end_no = mesh.nodes_end();
+    MeshBase::const_node_iterator no = mesh.local_nodes_begin();
+    const MeshBase::const_node_iterator end_no = mesh.local_nodes_end();
     for (int i = 0 ; no != end_no; ++no,++i)
     {
         for (int dims = 0; dims < dimensions; dims++)
@@ -83,10 +83,18 @@ int main (int argc, char** argv)
         grid[i*dimensions]   = (*nd)(0);
         grid[i*dimensions+1] = (*nd)(1);
         grid[i*dimensions+2] = (*nd)(2);
+        std::cout << "node (" << nd->id() << "): [" << (*nd)(0) << ", " << (*nd)(1) << ", " << (*nd)(2) << "]\n";
     }
 
     int t = 0;
     interface.setMeshVertices(meshID, n_nodes, grid, vertexIDs);
+    no = mesh.local_nodes_begin();
+    for (int i = 0 ; no != end_no; ++no,++i)
+    {
+        std::cout << "lm-id: " << (*no)->id() << ", vertexID: " << vertexIDs[i] << "\n";
+        std::pair<dof_id_type, int> pair( (*no)->id(), vertexIDs[i] );
+        id_map.insert(pair);
+    }
 
     std::cout << "Structure: init precice..." << std::endl;
     interface.initialize();
@@ -161,7 +169,6 @@ int main (int argc, char** argv)
     //const unsigned int maxits = equation_systems.parameters.get<unsigned int>("linear solver maximum iterations");
     //equation_systems.parameters.set<unsigned int>("linear solver maximum iterations") = maxits*3;
     //equation_systems.parameters.set<Real>        ("linear solver tolerance") = tol/1000.0;
-
     while ( interface.isCouplingOngoing() )
     {
         // When an implicit coupling scheme is used, checkpointing is required
@@ -177,26 +184,29 @@ int main (int argc, char** argv)
 
         std::vector<Number> sols;
         equation_systems.build_solution_vector(sols);
+        if (global_processor_id() > 0)
+            sols.reserve(mesh.n_nodes()*6);
+        mesh.comm().broadcast(sols);
 
         // be sure that only the master process (id = 0) act on the solution, since the rest of the processes only see their own partial solution
-        if (global_processor_id() == 0)
+        //if (global_processor_id() == 0)
+        //{
+        MeshBase::const_node_iterator no = mesh.local_nodes_begin();
+        const MeshBase::const_node_iterator end_no = mesh.local_nodes_end();
+        for (int i = 0 ; no != end_no; ++no,++i)
         {
-            std::cout << global_processor_id() << ": Solution: x=[";
-            MeshBase::const_node_iterator no = mesh.nodes_begin();
-            const MeshBase::const_node_iterator end_no = mesh.nodes_end();
-            for (int i = 0 ; no != end_no; ++no,++i)
-            {
-               std::cout << "uvw_" << i << " = " << sols[6*i] << ", " << sols[6*i+1] << ", " << sols[6*i+2] << "\n";
-               displ[i*dimensions] = sols[6*i];
-               displ[i*dimensions+1] = sols[6*i+1];
-               displ[i*dimensions+2] = sols[6*i+2];
-            }
-            std::cout << "]\n" << std::endl;
+            int id = (*no)->id();
+            displ[i*dimensions] = sols[6*id];
+            displ[i*dimensions+1] = sols[6*id+1];
+            displ[i*dimensions+2] = sols[6*id+2];
         }
 
         interface.writeBlockVectorData(displID, n_nodes, vertexIDs, displ);
-        interface.advance(0.01); // Advance by dt = 0.01
+        interface.advance(0.5); // Advance by dt = 1.0
         interface.readBlockVectorData(forceID, n_nodes, vertexIDs, forces);
+
+        //for (int i = 0; i < mesh.n_local_nodes(); i++)
+        //    std::cout << forces[i*3+2] << ", ";
 
         if (interface.isActionRequired(actionReadIterationCheckpoint()))
         {
@@ -207,6 +217,17 @@ int main (int argc, char** argv)
         {
             std::cout << "Advancing in time, finished timestep: " << t << std::endl;
             t++;
+
+            if (global_processor_id() == 0)
+            {
+                std::cout << "Solution: x=[";
+                MeshBase::const_node_iterator no = mesh.nodes_begin();
+                const MeshBase::const_node_iterator end_no = mesh.nodes_end();
+                for (int i = 0 ; no != end_no; ++no,++i)
+                   std::cout << "uvw_" << i << " = " << sols[6*i] << ", " << sols[6*i+1] << ", " << sols[6*i+2] << "\n";
+                std::cout << "]\n" << std::endl;
+            }
+
             writeOutput(mesh, equation_systems);
         }
     }
@@ -1083,12 +1104,13 @@ void contribRHS(const Elem **elem, DenseVector<Real> &Fe, std::unordered_set<uns
         {
             processedNodes->insert(id);
 
-            if (debug)
-                std::cout << "id_u = " << (id*6) << ", id_v = " << (id*6+1) << ", id_w = " << (id*6+2) << "\n";
-
-            arg(0) = forces[id*3];
-            arg(1) = forces[id*3+1];
-            arg(2) = forces[id*3+2];
+            std::unordered_map<libMesh::dof_id_type,int>::const_iterator preCICE_id = id_map.find(id);
+            if (preCICE_id != id_map.end())
+            {
+                arg(0) = forces[preCICE_id->second*3];
+                arg(1) = forces[preCICE_id->second*3+1];
+                arg(2) = forces[preCICE_id->second*3+2];
+            }
             if (debug)
                 std::cout << "force = " << arg(0) << "," << arg(1) << "," << arg(2) << "\n";
             // forces don't need to be transformed since we bring the local stiffness matrix

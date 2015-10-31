@@ -458,27 +458,35 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
 contains development of the program code with focus on the assembly of the system and its solving, the process of parallelization and the coupling step with preCISE
  \subsection{Introduction to libMesh}
  was kann libMesh eigentlich alles; wo unterstützt es einen, was muss man selbst machen
+ \begin{itemize}
+  \item übersicht über die klassen (im sinne von: für welche probleme kann man es einsetzen)
+  \item noch was allgemeines übersichtmäßiges
+  \item implementierte solver z.b. für elasticity problem; hier in doxygen function description reinschauen
+  \item funktionen wie assembly_matrix muss user selbst füllen
+  \item boundary_info mit ids usw. automatisch erstellt bei mesh import
+  \item boundary conditions erstellbar -> automatisch constrains system und rhs
+ \end{itemize}
  \subsection{libMesh FEM}
- details about the implementation with the libmesh FEM framework:\newline
- - initialization: loading of parameters, setting up libmesh (evtl. uninteressant und es kann weg, oder es muss noch mehr hier rein)\newline
- - mesh loading/import: wie sieht mesh file aus bzw. welche typen werden akzeptiert, welche ids für bcs müssen verwendet werden\newline
- - set up of system: erstellen des linearimplicitsystems, erstellen der variablen, der bcs, des solvers usw.\newline
- - assembly of system matrix and RHS: größter teil; hier wird auf die erstellung der lokalen und globalen stiffnessmatrix eingegangen (integral mit gauss-quadratur lösen z.B. \cite{steinke2005finite} s.248), das auslesen der forces und der entsprechende eintrag in der rhs gesetzt; das mitverfolgen der bereits bearbeiteten knoten mittels unordered\_set usw.\newline
- - boundary conditions: eventuell bereits unter setup; grundsätzlich auf die beiden bc-typen eingehen, wie das in libmesh gelöst wurde\newline
- - solving and getting the result vector: das lösen an sich ist eine code-zeile. hier kann man aber schreiben, mit was libmesh umgehen kann an lösern, welche einstellmöglichkeiten es gibt (error-eps, \#iters). und es geht drum, wie man an die tatsächlichen werte für die displacements kommt und was daraus am ende wird\newline
+ details about the implementation with the libmesh FEM framework:\\
+ - initialization: loading of parameters, setting up libmesh (evtl. uninteressant und es kann weg, oder es muss noch mehr hier rein)\\
+ - mesh loading/import: wie sieht mesh file aus bzw. welche typen werden akzeptiert, welche ids für bcs müssen verwendet werden\\
+ - set up of system: erstellen des linearimplicitsystems, erstellen der variablen, der bcs, des solvers usw.\\
+ - assembly of system matrix and RHS: größter teil; hier wird auf die erstellung der lokalen und globalen stiffnessmatrix eingegangen (integral mit gauss-quadratur lösen z.B. \cite{steinke2005finite} s.248), das auslesen der forces und der entsprechende eintrag in der rhs gesetzt; das mitverfolgen der bereits bearbeiteten knoten mittels unordered\_set usw.\\
+ - boundary conditions: eventuell bereits unter setup; grundsätzlich auf die beiden bc-typen eingehen, wie das in libmesh gelöst wurde\\
+ - solving and getting the result vector: das lösen an sich ist eine code-zeile. hier kann man aber schreiben, mit was libmesh umgehen kann an lösern, welche einstellmöglichkeiten es gibt (error-eps, \#iters). und es geht drum, wie man an die tatsächlichen werte für die displacements kommt und was daraus am ende wird\\
  - für die standalone-version noch ein absatz zur ausgabe in exodus2-file
  \subsection{Parallelization with MPI}
- additional steps to make the code ready for multi process execution with MPI\newline
- - viel ist es nicht, was man tun muss, damit libmesh mit mpi läuft\newline
- - grundsätzlich ist zum lösen des gleichungssystem mit mehreren prozessen petsc als externe lib notwendig\newline
- - am mesh muss nichts verändert werden, da libmesh automatisch eine partitionierung des meshes vornimmt (kann aber verbessert werden)\newline
+ additional steps to make the code ready for multi process execution with MPI\\
+ - viel ist es nicht, was man tun muss, damit libmesh mit mpi läuft\\
+ - grundsätzlich ist zum lösen des gleichungssystem mit mehreren prozessen petsc als externe lib notwendig\\
+ - am mesh muss nichts verändert werden, da libmesh automatisch eine partitionierung des meshes vornimmt (kann aber verbessert werden)\\
  - damit rhs korrekt gesetzt wird muss über die prozessgrenzen hinweg klar sein, ob knoten bereits bearbeitet wurde oder nicht. wie das gelöst wurde kommt hier rein\newline
 \section{Coupling with preCICE}
 still under construction; just a rough idea what this section will contain
  \subsection{Coupling}
  short introduction what coupling means (in this case)
   \subsubsection{Introduction to coupling}
-  $\dots$
+  todo: ref preCICE phd, andere ref evtl.
   \subsubsection{Coupling methods}
   $\dots$
  \subsection{preCICE}
