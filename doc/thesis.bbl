@@ -1,0 +1,105 @@
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{NTRNXB08}
+
+\bibitem[BLSS]{echempp}
+Martin Bogdan, Kai Ludwig, Elena Sapozhnikova, and Bernd Speiser.
+\newblock Echem++ - a problem solving environment for electrochemistry.
+\newblock
+  \url{http://www.echem.uni-tuebingen.de/echem/software/EChem++/echem++.shtml/}.
+
+\bibitem[BT82]{batoz1982evaluation}
+Jean-Louis Batoz and Mabrouk~Ben Tahar.
+\newblock Evaluation of a new quadrilateral thin plate bending element.
+\newblock {\em International Journal for Numerical Methods in Engineering},
+  18(11):1655--1677, 1982.
+
+\bibitem[CMPW02]{cook2002concepts}
+Robert~D. Cook, David~S. Malkus, Michael~E. Plesha, and Robert~J. Witt.
+\newblock {\em Concepts and Applications of Finite Element Analysis}.
+\newblock J. Wiley, 2002.
+
+\bibitem[Con]{feelpp}
+Feel++ Consortium.
+\newblock Feel++ - finite element embedded library in c++.
+\newblock \url{http://www.feelpp.org}.
+
+\bibitem[Jar]{icetools}
+Alexander~H. Jarosch.
+\newblock icetools: a numerical ice flow model download.
+\newblock \url{http://sourceforge.net/projects/icetools/}.
+
+\bibitem[KPSC06]{libmesh}
+B.~S. Kirk, J.~W. Peterson, R.~H. Stogner, and G.~F. Carey.
+\newblock {\texttt{libMesh}: A C++ Library for Parallel Adaptive Mesh
+  Refinement/Coarsening Simulations}.
+\newblock {\em Engineering with Computers}, 22(3--4):237--254, 2006.
+\newblock \url{http://dx.doi.org/10.1007/s00366-006-0049-3}.
+
+\bibitem[mfea]{mfemPubs}
+Mfem - finite element discretization library.
+\newblock \url{http://mfem.org/publications/}.
+
+\bibitem[mfeb]{mfem}
+{MFEM}: Modular finite element methods.
+\newblock \url{http://www.mfem.org}.
+
+\bibitem[NTRNXB08]{nguyen2008smoothed}
+N~Nguyen-Thanh, Timon Rabczuk, H~Nguyen-Xuan, and St{\'e}phane~PA Bordas.
+\newblock A smoothed finite element method for shell analysis.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  198(2):165--177, 2008.
+
+\bibitem[Pat]{oofemPubs}
+Bo{\v{r}}ek Patz{\'{a}}k.
+\newblock publications [oofem wiki].
+\newblock \url{http://www.oofem.org/wiki/doku.php?id=publications}.
+
+\bibitem[Pat09]{oofem}
+Bo{\v{r}}ek Patz{\'{a}}k.
+\newblock Oofem project home page, 2009.
+\newblock \url{http://www.oofem.org}.
+
+\bibitem[PCD{\etalchar{+}}12]{prud2012feel++}
+Christophe Prud’Homme, Vincent Chabannes, Vincent Doyeux, Mourad Ismail,
+  Abdoulaye Samak{\'e}, and Gon{\c{c}}alo Pena.
+\newblock Feel++: A computational framework for galerkin methods and advanced
+  numerical methods.
+\newblock In {\em ESAIM: Proceedings}, volume~38, pages 429--455. EDP Sciences,
+  2012.
+
+\bibitem[Spe88]{specht1988modified}
+Bernhard Specht.
+\newblock Modified shape functions for the three-node plate bending element
+  passing the patch test.
+\newblock {\em International Journal for Numerical Methods in Engineering},
+  26(3):705--715, 1988.
+
+\bibitem[SPR]{getfemppMPI}
+Luis Saavedra, Julien Pommier, and Yves Renard.
+\newblock Mpi parallelization of getfem++ - getfem++.
+\newblock
+  \url{http://download.gna.org/getfem/html/homepage/userdoc/parallel.html}.
+
+\bibitem[Ste15]{steinke2005finite}
+Peter Steinke.
+\newblock {\em Finite-Elemente-Methode: Rechnergest{\"u}tzte Einf{\"u}hrung}.
+\newblock Springer-Verlag, 2015.
+
+\bibitem[Thi]{simnibs}
+Axel Thielscher.
+\newblock free software package for the simulation of non-invasive brain
+  stimulation.
+\newblock \url{http://simnibs.de/}.
+
+\bibitem[ZT00]{zienkiewicz2000finite}
+Olgierd~Cecil Zienkiewicz and Robert~Leroy Taylor.
+\newblock {\em The finite element method: Solid mechanics}, volume~2.
+\newblock Butterworth-heinemann, 2000.
+
+\bibitem[ZTZT77]{zienkiewicz1977fem}
+Olgierd~Cecil Zienkiewicz, Robert~Leroy Taylor, Olgierd~Cecil Zienkiewicz, and
+  Robert~Lee Taylor.
+\newblock {\em The finite element method}, volume~3.
+\newblock McGraw-hill London, 1977.
+
+\end{thebibliography}

@@ -1,0 +1,69 @@
+\section{Framework Evaluation}
+Part of the thesis was to find several frameworks which ease the work with the finite element method. An evaluation of these frameworks was done to select a suitable one for the given task. The evaluation's criteria are presented in this chapter as well as a short description of the studied frameworks.
+ \subsection{General Aspects}
+In preparation of evaluating the frameworks many criteria were created to objectify the search for the most suitable. The individual aspects were as follows:
+ \begin{itemize}
+ \item Open Source: All frameworks under consideration need to be published under the GNU Lesser General Public License or similar license that allows modification and/or redistribution.
+ \item Parallelization: In order to accelerate the calculations the framework has to be able to support the widely used Message Passing Interface (MPI).
+ \item The programming language was chosen to be C++. Therefore the framework has to be written in this language. %TODO: warum c++: persönlich größere erfahrung, python wäre generell auch denkbar
+ \item Mesh file import: Common mesh files types like gmsh or xda/xdr must be able to load by the framework. Simultaneously the framework must support finite elements like triangles and quadrilaterals with three and four nodes respectively and be able to handle two dimensional elements defined within three dimensional space. %TODO warum muss framework meshes importieren können, was setze ich beim mesh file voraus; es geht auch ein vom framework selbst definiertes format, so lange es die bedingungen erfüllt und einfach reproduzierbar ist
+ \item The framework should handle different types of boundary conditions defined in a mesh file. %TODO diesen punkt mit dem vorigen verschmelzen, die bcs sind meine forderungen
+ \item Built-in solvers: In order so solve the matrix-vector-system the framework must provide a variety of different iterative solvers. %TODO siehe zwischenvortrag: höhere flexibilität für anwender
+ \item Convenience functions: To optimize the calculations the framework should make use of functions to get matrix-vector and matrix-matrix products, transpose matrix or sparse-matrices.
+ \item Accessible and detailed documentation: In order to guarantee maintainability and expandability the framework has to have a good documentation itself. %TODO example-codes, dokumentierte klassen und funktionen, mailing-listen und/oder foren zur einfachen verständigung mit den entwicklern
+ \item Up-to-date: The framework should be well maintained and actively supported by its developers to ensure a long term compatibility with possible new features of the thesis' code
+ \item The framework should be used by at least a few projects. This shows the framework's importance and usability. %TODO nicht nur projects sondern auch publikationen
+ \item Easy-to-learn syntax and structure: A rather subjective aspect but an important one. The limited time for the thesis does not allow to study highly complicated structures or semantics. This accompanies the documentation aspect.
+ \end{itemize}
+ \subsection{Frameworks Overview}
+ The following list contains FEM libraries and frameworks which were evaluated.
+%  \subsubsection{FEniCS}
+  \subsubsection{Feel++}
+  - "Feel++ is a unified C++ implementation of Galerkin methods (finite and spectral element methods) in 1D, 2D and 3D to solve partial differential equations."\cite{feelpp}\newline
+  - creation of versatile mathematical kernels allow testing and comparing different techniques and methods in solving problems\newline
+  - focus on close mathematical abstractions regarding partial differential equations (PDE)\newline
+  - \cite{prud2012feel++}
+  - imports e.g. gmsh mesh files\newline
+  - seamlessly parallel with mpi\newline
+  - currently used in projects at Cemosis (Center for Modeling and Simulation in Strasbourg, France) including fluid structure interactions, high field magnets simulation, or, optical tomography\newline
+  - actively developed, last major release were on February 2015
+  \subsubsection{OOFEM}\cite{oofem}
+  - Object Oriented Finite Element Solver (OOFEM) 
+  - actively developed with latest release from February 2014\newline
+  - object oriented architecture; extensible in terms of new element types, boundary conditions or numerical algorithms\newline
+  - modules for structural mechanics, transport problems and fluid dynamics\newline
+  - focuses on efficient and robust solution to mechanical, transport and fluid problems\newline
+  - written in C++ with focus on portability\newline
+  - interfaces to various external software libraries like PETSc, ParMETIS, or, ParaView\newline
+  - is used in several publications \cite{oofemPubs}
+  \subsubsection{GetFEM++}
+  - latest release from July 2015
+  - framework for solving potentially coupled systems of linear and nonlinear PDE\newline
+  - written in C++ but provides interfaces to languages like Python and Matlab\newline
+  - model description that gather the variables, data and terms of a problem and some predefined bricks representing classical models\newline
+  - easy switching from one method to another due to separation of geometric transformation, integration methods, and, finite element method\newline
+  - can be used to construct generic finite element codes, where methods and the problem's dimension can be changed very easily\newline
+  - uses MPI for parallelization, though it is stated that "a certain number of procedures are still remaining sequential" \cite{getfemppMPI}
+  - imports e.g. gmsh mesh files\newline
+  - used in project like IceTools \cite{icetools} (open source model for glaciers), EChem++ \cite{echempp} (Problem Solving Environment for Electochemistry) and SimNIBS \cite{simnibs} (software for Simulation of Non-invasive Brain Stimulation)
+  \subsubsection{MFEM}\cite{mfem}
+  - The Modular Finite Element Method (MFEM) library acts as a toolbox that provides the building blocks for developing finite element algorithms\newline
+  - it has a wide range of mesh types, e.g. triangular and quadrilateral 2D elements, curved boundary elements or topologically periodic meshes\newline
+  - supports MPI-based parallelism throughout the library\newline
+  - variety of built-in solvers\newline
+  - written in highly portable C++ and extensible due to separation of mesh, finite element and linear algebra abstractions\newline
+  - hypre library is tightly integrated within MFEM, for example the use of high-performance preconditioners
+  - The object oriented design of the library as well as the separation of the different parts of the library like the mesh functions, the finite elements, and, the linear algebra, focusing on adapt the code to a variety of applications
+  - use in several publications \cite{mfemPubs}
+  \subsubsection{libMesh}\cite{libmesh}
+  - actively developed and active user community\newline
+  - wide variety of mesh file formats to import from (e.g. gmsh, vtk, xda, )\newline
+  - seamlessly integrated parallel functionality with MPI\newline
+  - seamlessly interfaces optional external libraries like PETSc or ParMETIS\newline
+  - complete documentation and documented source code available\newline
+  - "framework for the numerical simulation of PDE using arbitrary unstructured discretizations on serial and parallel platforms".\newline
+  - "provide support for adaptive mesh refinement (AMR) computations in parallel"\newline
+  - supports a variety of 1D, 2D, and 3D geometric and finite element types\newline
+  - created at The University of Texas at Austin in the CFDLab in March 2002. Contributions have come from developers at the Technische Universität Hamburg-Harburg Institute of Modelling and Computation, CFDLab associates at the PECOS Center at UT-Austin, the Computational Frameworks Group at Idaho National Laboratory, NASA Lyndon B. Johnson Space Center, and MIT.
+% \subsection{Comparison}
+\newpage

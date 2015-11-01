@@ -1,0 +1,32 @@
+\section{Validation}
+The code was tested with several problems to validate its correctness and state where and why there are differing results to the existing (commercial) FEM codes
+ \subsection{Test A: Membrane Displacement with Tri-3}
+ Sprungbrett bestehend aus 8 Elementen; links fest eingespannt, rechts Kraft in y-Richtung an beiden Randknoten\newline
+ Sprungbrett bestehend aus 32 Elementen in Fischgrätmuster angeordnet; selbe BCs aber andere Kraftwerte\newline
+ test\_c.xda, test\_d.xda - beides korrekt
+ \subsection{Test B: Membrane Displacement with Quad-4}
+ Sprungbrett bestehend aus 3 Elementen mit BC wie in Test A aber einzelne Kraft auf oberen rechten Knoten in neg. y-Richtung\newline
+ selbes Mesh wie in test\_d.xda nur eben mit 16 Elementen. Selbe BCs, selbe Kraftwerte\newline
+ test\_e.xda, test\_f.xda - beides korrekt
+ \subsection{Test C: Plate Displacement with Tri-3}
+ Platte an allen 4 Seiten eingespannt. Einzelne Kraft im Zentrum in neg. z-Richtung\newline
+ Alternativ mit anderen Parametern test\_g\newline
+ test\_a\_triN.xda, test\_g\_triAB\_N.xda - korrekt, noch nicht getestet
+ \subsection{Test D: Plate Displacement with Quad-4}
+ Selbes mesh wie Test C nur eben mit Quadelementen\newline
+ test\_a\_quadN.xda, test\_g\_quad\_N.xda - korrekt, noch nicht getestet
+ \subsection{Test E: Shell Displacement with Tri-3}
+ Ein H-Trägerbalken. Am einen Ende fest eingespannt. Am anderen Ende wird oben eine Kraft am äußeren Knoten in den Balken hinein in flacher Ebene gegeben, gleichzeitig wird unten an der gegenüberliegenden Seite eine Kraft in entgegengesetzter Richtung gegeben\newline
+ test\_j\_tri.xda - korrekt
+ \subsection{Test F: Shell Displacement with Quad-4}
+ Gleich wie Test E nur eben Quadelemente\newline
+ test\_j\_quad.xda - korrekt
+ \subsection{Test G: Convergence (increasing number of elements)}
+ ??? theoretisch mit Test C/D bereits durchführbar mit N=2,4,8,16,32,64,128
+ \subsection{Test H: MPI (increasing number of processes)}
+ ??? theoretisch alle Tests, z.B. E/F mit Prozessoranzahl = 1,2,4,8,16. In dem Fall ist natürlich die Zeit interessant und ob die Ergebnisse jeweils alle gleich sind
+ \subsection{Test I: Coupling with preCICE}
+ ???
+% \subsection{Test J: Time dependence + mass matrix and damping matrix}
+% ???
+\newpage
