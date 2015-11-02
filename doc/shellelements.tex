@@ -1,5 +1,10 @@
 \section{Shell Elements}
 Mathematical fundamentals of shell elements divided into the two parts and the coordinate transformation
+ 
+ 
+ 
+ 
+ 
  \subsection{Introduction to Linear Elasticity Problems}
  - \cite{steinke2005finite} ch3.1 (S.61)\newline
  - Einführung von Vektoren und Matrizen (Verschiebungsvektor, Tensoren bzw. Vektoren der Dehnungen und Spannungen)\newline
@@ -58,6 +63,13 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
  0 & 0 & \frac{1-\nu}{2}
  \end{pmatrix}
  \end{equation}
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  \subsection{Plane Element}
  First part of shell element: plane part. derivation of this part with two exemplary finite element types
   \subsubsection{Problem Definition}\label{sec:PlaneProbDef}
@@ -152,6 +164,13 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   \Pi = 1/2 \int_{V}\vec{\epsilon}^T\vec{\sigma}dV - \vec{u}^T \vec{F},
   \end{equation}
   with the first term being the elastic strain energy and the second term the single forces.
+  
+  
+  
+  
+  
+  
+  
   
   \subsubsection{Tri-3 Plane Element}
   mathematical derivation of three node triangular plane element \textbf{discretization}\\
@@ -283,7 +302,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   \frac{\partial}{\partial x}\\ \frac{\partial}{\partial y}
   \end{pmatrix},
   \end{align}
-  where $\underline{J}$ represents the Jacobian, $\nabla$ the partial derivatives in Cartesian coordinates and $\tilde{\nabla}$ the partial derivatives in triangular coordinates. To get the derivatives in Cartesian form the upper equation must be multiplied with the inverse Jacobian $\underline{J}^{-1}$:
+  where $\underline{J}$ represents the Jacobian matrix, $\nabla$ the partial derivatives in Cartesian coordinates and $\tilde{\nabla}$ the partial derivatives in triangular coordinates. To get the derivatives in Cartesian form the upper equation must be multiplied with the inverse Jacobian matrix $\underline{J}^{-1}$:
   \begin{equation}
   \underline{J}^{-1} = \frac{1}{|\underline{J}|} \begin{pmatrix}
   \frac{\partial y}{\partial L_2} & -\frac{\partial y}{\partial L_1} \\
@@ -296,7 +315,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   x &= x_1L_1 + x_2L_2 + x_3L_3 = (x_1-x_3)L_1 + (x_2-x_3)L2 + x_3\\
   y &= y_1L_1 + y_2L_2 + y_3L_3 = (y_1-y_3)L_1 + (y_2-y_3)L2 + y_3 \nonumber
   \end{align}
-  Considering equation \ref{eq:triCoord<->CartCoord} the Jacobian can now be calculated
+  Considering equation \ref{eq:triCoord<->CartCoord} the Jacobian matrix can now be calculated:
   \begin{equation}
   J = \begin{pmatrix}
   \frac{\partial x}{\partial L_1} = x_1-x_3 = x_{13} & \frac{\partial y}{\partial L_1} = y_1-y_3 = y_{13}\\
@@ -306,14 +325,14 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   x_{23} & y_{23}
   \end{pmatrix}
   \end{equation}
-  and hence the inverse Jacobian:
+  and hence the inverse Jacobian matrix:
   \begin{equation}\label{eq:t3invJac}
   \underline{J}^{-1} = \frac{1}{2 A_\triangle} \begin{pmatrix}
   y_{23} & -y_{13}\\
   -x_{23} & x_{13}
   \end{pmatrix}
   \end{equation}
-  The determinant of the Jacobian is two times the area of the triangle. With the help of equation \ref{eq:t3invJac}, \ref{eq:t3NablaTilde} can be reorganized
+  The determinant of the Jacobian matrix is two times the area of the triangle. With the help of equation \ref{eq:t3invJac}, \ref{eq:t3NablaTilde} can be reorganized
   \begin{equation}
   \nabla = \underline{J}^{-1} \tilde{\nabla}
   \end{equation}
@@ -375,18 +394,200 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   \begin{equation}
   \underline{K} = t \int_A \underline{B}^T\underline{D}\;\underline{B}\;dA = t A_\triangle \underline{B}^T\underline{D}\;\underline{B}
   \end{equation}
+  
+  
+  
   \subsubsection{Quad-4 Plane Element}
-  - mathematical derivation of four node quadrilateral plane element\newline
-  - see Steinke \cite{steinke2005finite} page 237-250 + Cook \cite{cook2002concepts} page 202-208\\
-  - isoparametrisches viereckselement (7.5.1) + bild\\
-  - bild von original- und bildebene\\
-  - eigenschaften der ansatzfunktion + formfunktionen\\
-  - verschiebungen von uv mit formfunktionen und u darstellen\\
-  - jacobi-matrix aufstellen, inverse und determinante nicht so genau (bzw. einfach, weil J eh nur 2x2 ist)\\
-  - dehnungs-verschiebungs-beziehung AUS ANDERER QUELLE, DA IN \cite{steinke2005finite} UNZUFRIEDENSTELLEND BESCHRIEBEN\\
-  - stefigkeitsmatrix $K = int_V(B^TDBdV) = t*int_V(B^TDBdA) = t*int_-1^1 int_-1^1(B^TDB|J|dsdr)$ + erwähnen, dass |J| Flächeninhalt angibt (ref finden)
+  %- mathematical derivation of four node quadrilateral plane element\newline
+  Sometimes it can be beneficial to use quadrilateral elements when describing a mesh. In contrast to triangles which always lie, due to their simple shape, in a plane, quadrilateral can have more complex forms. Such cases include for example: The fourth nodes does not lie in the plane defined by the other three or the shape is not convex. It is difficult to deal with such forms and one could be tempted to restrict the element to have rectangular shapes only, because these are easy to formulate and work with. But they are impractical when complicated geometry is to be modeled, especially if details should be emphasized in fine graduation.
+    
+  %- see Steinke \cite{steinke2005finite} page 237-250 + Cook \cite{cook2002concepts} page 202-208\\
+  One solution to this problem is the use of isoparametric elements. They can be non-rectangular. The trick is to use reference coordinates which map the physical element into a reference element that is a square. Thus, the physical element can have a more general shape, but a coordinate transformation and numerical integration is needed which brings in more mathematical complexity \cite{cook2002concepts}.
+  
+  %- isoparametrisches viereckselement (7.5.1) + bild\\
+  %- bild von original- und bildebene Bild 7.17 steinke oder 6.2-1. cook\\
+  In this section quadrilateral isoparametric elements consisting of four nodes are described, but one can expand it to eight or nine node elements. Figure \ref{fig:platzhalter} shows the two abstraction layers: On the left side the original element is shown in physical space, on the right side the reference element is shown. The square has a side length of $2$. The coordinate system with the $\xi$ and $\eta$ axis has its origin in the center of the square. Also note the numbering of the nodes is again counter-clockwise.
+  \begin{figure}
+  	\centering
+  	\includegraphics[width=0.7\linewidth]{figures/platzhalter}
+  	\caption[kurze Unter-Überschrift]{lange Unter-Überschrift}
+  	\label{fig:platzhalter}
+  \end{figure}
+  
+  %- eigenschaften der ansatzfunktion + formfunktionen\\
+  Similarly to the triangular element, interpolating the displacement field as well as the element geometry is done by shape functions. They are defined in reference coordinates. The displacement of a point within the element can be expressed by the displacements at the nodes and shape functions $\underline{N}$. Also, the position of that point can be expressed in terms of the (global) nodal positions and shape functions $\underline{\tilde{N}}$. The element is called \textit{isoparametric} if $\underline{N}$ is identical to $\underline{\tilde{N}}$. If $\underline{\tilde{N}}$ is of lower degree than $\underline{N}$, the element is called \textit{subparametric} and \textit{superparametric} if it is the other way around \cite{cook2002concepts}.
+  
+  %- verschiebungen von uv mit formfunktionen und u darstellen\\
+  Every node has two degrees of freedom: A displacement $u$ along the x-axis and a displacement $v$ along the y-axis. To find the shape functions it does not matter which variable to choose, so the following basis function was used for $\phi$ which can either represent $u$ or $v$ \cite{steinke2005finite}:
+  \begin{equation}\label{eq:q4basis}
+  \phi(\xi,\eta) = a_0 + a_1\xi + a_2\eta + a_3\xi\eta = \begin{pmatrix}
+  1&\xi&\eta&\xi\eta
+  \end{pmatrix}\begin{pmatrix}
+  a_0\\a_1\\a_2\\a_3
+  \end{pmatrix} = \vec{x}^T\vec{a}
+  \end{equation}
+  The interpolation conditions at the nodes are as follows:
+  \begin{align}
+  \phi(-1,-1) &= \phi_1 \rightarrow \phi_1 = a_0 -a_1 -a_2 +a_3 \nonumber\\
+  \phi(1,-1) &= \phi_2 \rightarrow \phi_2 = a_0 +a_1 -a_2 -a_3 \nonumber\\
+  \phi(1,1) &= \phi_3 \rightarrow \phi_3 = a_0 +a_1 +a_2 +a_3 \nonumber\\
+  \phi(-1,1) &= \phi_4 \rightarrow \phi_4 = a_0 -a_1 +a_2 -a_3
+  \end{align}
+  or in matrix notation:
+  \begin{align}
+  \underline{A}\vec{a} &= \vec{\phi} \nonumber\\
+  \begin{pmatrix}
+  1 &-1&-1& 1\\
+  1 & 1&-1&-1\\
+  1 & 1& 1& 1\\
+  1 &-1& 1&-1
+  \end{pmatrix} \begin{pmatrix}
+  a_0\\a_1\\a_2\\a_3
+  \end{pmatrix} &= \begin{pmatrix}
+  \phi_1\\\phi_2\\\phi_3\\\phi_4
+  \end{pmatrix}
+  \end{align}
+  Inversion of $\underline{A}$ yields the coefficients $a_i$:
+  \begin{equation}
+  \vec{a} = \underline{A}^{-1}\vec{\phi} = \frac{1}{4} \begin{pmatrix}
+  1&1&1&1\\
+  -1&1&1&-1\\
+  -1&-1&1&1\\
+  1&-1&1&-1
+  \end{pmatrix} \begin{pmatrix}
+  \phi_1\\\phi_2\\\phi_3\\\phi_4
+  \end{pmatrix}
+  \end{equation}
+  If the last equation is inserted into \ref{eq:q4basis} one gets the shape functions $\vec{N}$ for the quadrilateral element:
+  \begin{align}
+  \phi &= \vec{x}^T\underline{A}^{-1}\vec{\phi} \nonumber\\
+    &= \vec{N}^T\vec{\phi} \nonumber\\
+    &= \frac{1}{4} \begin{pmatrix}
+    1&\xi&\eta&\xi\eta
+    \end{pmatrix} \begin{pmatrix}
+    1&1&1&1\\
+    -1&1&1&-1\\
+    -1&-1&1&1\\
+    1&-1&1&-1
+    \end{pmatrix} \vec{\phi} \nonumber\\
+    &= \begin{pmatrix}
+    \frac{1}{4}(1-\xi)(1-\eta)&\frac{1}{4}(1+\xi)(1-\eta)&\frac{1}{4}(1+\xi)(1+\eta)&\frac{1}{4}(1-\xi)(1+\eta)
+    \end{pmatrix} \vec{\phi}
+  \end{align}
+  To check the correctness of the four shape function one can evaluate shape function $i$ with $\xi\eta$-coordinates of node $i$. It must evaluate to 1 while at any other node coordinate it must be zero.
+  Now, the displacements can be expressed as follows:
+  \begin{equation}
+  \vec{\tilde{u}} = \begin{pmatrix}
+  u\\v
+  \end{pmatrix} = \underline{N}\vec{u} = \begin{pmatrix}
+  N_1&0&N_2&0&N_3&0&N_4&0\\
+  0&N_1&0&N_2&0&N_3&0&N_4
+  \end{pmatrix} \begin{pmatrix}
+  u_1\\v_1\\u_2\\v_2\\u_3\\v_3\\u_4\\v_4
+  \end{pmatrix}
+  \end{equation}
+  with $\underline{N}$ being the matrix containing the shape functions and $\vec{u}$ being the vector of the nodal displacements.
+  
+  %- jacobi-matrix aufstellen, inverse und determinante nicht so genau (bzw. einfach, weil J eh nur 2x2 ist)\\
+  The assembly of the strain-displacement matrix $\underline{B}$ is more complicated with isoparametric elements. Due to the $\xi\eta$-coordinates one cannot easily describe an operator such as $\partial/\partial x$. The first step to achieve it, is to formulate a function $\phi = \phi(\xi,\eta)$. Like in the derivation on the shape functions $\phi$ can represent $u$ or $v$. Derivatives with respect to $\xi$ and $\eta$ are as follows \cite{cook2002concepts}:
+  \begin{align}
+  \frac{\partial \phi}{\partial \xi} = \frac{\partial \phi}{\partial x} \frac{\partial x}{\partial \xi} + \frac{\partial \phi}{\partial y} \frac{\partial y}{\partial \xi} \nonumber\\
+  \frac{\partial \phi}{\partial \eta} = \frac{\partial \phi}{\partial x} \frac{\partial x}{\partial \eta} + \frac{\partial \phi}{\partial y} \frac{\partial y}{\partial \eta}
+  \end{align}
+  or in matrix notation:
+  \begin{equation}\label{eq:q4derivRS=J*derivXY}
+  \vec{\tilde{\phi}} = \underline{J} \vec{\phi}
+  \end{equation}
+  where $\underline{J}$ is the Jacobian matrix:
+  \begin{equation}
+  \underline{J} = \begin{pmatrix}
+  \sum N_{i,\xi}x_i & \sum N_{i,\xi}y_i\\
+  \sum N_{i,\eta}x_i & \sum N_{i,\eta}y_i
+  \end{pmatrix}
+  \end{equation}
+  where $N_{i,j}$ denotes the derivation of the $i$-th shape function with respect to $j$ and $x_i$ the $i$-th component of the $\vec{x}$ vector. The Jacobian matrix can be written out as follows:
+  \begin{align}
+  \underline{J} &= \frac{1}{4}\begin{pmatrix}
+  -(1-\eta) & (1-\eta) & (1+\eta) & -(1+\eta)\\
+  -(1-\xi) & -(1+\xi) & (1+\xi) & (1-\xi)
+  \end{pmatrix} \begin{pmatrix}
+  x_1 & y_1\\
+  x_2 & y_2\\
+  x_3 & y_3\\
+  x_4 & y_4
+  \end{pmatrix} \nonumber\\
+  &= \begin{pmatrix}
+  (x_{12}+x_{34})\eta - x_{12} + x_{34} & (y_{12} + y_{34})\eta - x_{12} + y_{34}\\
+  (x_{12}+x_{34})\xi  - x_{13} - x_{24} & (y_{12} + y_{34})\xi  - y_{13} + y_{24}
+  \end{pmatrix}
+  \end{align}
+  Next, equation \ref{eq:q4derivRS=J*derivXY} can be rearranged to get the derivatives with respect to $x$ and $y$:
+  \begin{equation}
+  \vec{\phi} = \underline{J}^{-1}\vec{\tilde{\phi}}
+  \end{equation}
+  
+  %- dehnungs-verschiebungs-beziehung
+  With the derivatives calculated, the strain-displacement relation \ref{eq:displ_strain_relation} can be obtained \cite{cook2002concepts}:
+  \begin{align}
+  \vec{\epsilon} &= \begin{pmatrix}
+  \frac{\partial u}{\partial x} \\
+  \frac{\partial v}{\partial y} \\
+  \frac{\partial u}{\partial y} + \frac{\partial v}{\partial x}
+  \end{pmatrix} = \underbrace{\begin{pmatrix}
+  1&0&0&0\\
+  0&0&0&1\\
+  0&1&1&0
+  \end{pmatrix}} \begin{pmatrix}
+  {\partial u}/{\partial x} \\ {\partial u}/{\partial y} \\ {\partial v}/{\partial x} \\ {\partial v}/{\partial y}
+  \end{pmatrix} \\
+  &\qquad\qquad\qquad\qquad\qquad\,\: \underline{L} \nonumber
+  \end{align}
+  \begin{align}
+  \begin{pmatrix}
+  {\partial u}/{\partial x} \\ {\partial u}/{\partial y} \\ {\partial v}/{\partial x} \\ {\partial v}/{\partial y}
+  \end{pmatrix} &= \underbrace{\begin{pmatrix}
+  j_{11} & j_{12} & 0 & 0\\
+  j_{21} & j_{22} & 0 & 0\\
+  0 & 0 & j_{11} & j_{12}\\
+  0 & 0 & j_{21} & j_{22}
+  \end{pmatrix}} \begin{pmatrix}
+  {\partial u}/{\partial \xi} \\ {\partial u}/{\partial \eta} \\ {\partial v}/{\partial \xi} \\ {\partial v}/{\partial \eta}
+  \end{pmatrix}\\
+  &\qquad\qquad\quad\,\: \underline{\hat{J}} \nonumber
+  \end{align}
+  \begin{align}
+  \begin{pmatrix}
+  {\partial u}/{\partial \xi} \\ {\partial u}/{\partial \eta} \\ {\partial v}/{\partial \xi} \\ {\partial v}/{\partial \eta}
+  \end{pmatrix} &= \underbrace{\begin{pmatrix}
+  N_{1,\xi}  & 0 N_{2,\xi}  & 0 & N_{3,\xi}  & 0 & N_{4,\xi}  & 0\\
+  N_{1,\eta} & 0 N_{2,\eta} & 0 & N_{3,\eta} & 0 & N_{4,\eta} & 0\\
+  0 & N_{1,\xi}  & 0 N_{2,\xi}  & 0 & N_{3,\xi}  & 0 & N_{4,\xi}\\
+  0 & N_{1,\eta} & 0 N_{2,\eta} & 0 & N_{3,\eta} & 0 & N_{4,\eta}
+  \end{pmatrix}} \begin{pmatrix}
+  u_1\\v_1\\u_2\\v_2\\u_3\\v_3\\u_4\\v_4
+  \end{pmatrix}\\
+  &\qquad\qquad\qquad\qquad\qquad\quad\; \underline{\hat{N}} \nonumber
+  \end{align}
+  \begin{equation}
+  \underline{B} = \underline{L}\,\underline{\hat{J}}\,\underline{\hat{N}}
+  \end{equation}
+  where $j_{i}$ denotes the $i$-th entry in the inverse Jacobian matrix.
+
+  %- stefigkeitsmatrix $K = int_V(B^TDBdV) = t*int_V(B^TDBdA) = t*int_-1^1 int_-1^1(B^TDB|J|dsdr)$ + erwähnen, dass |J| Flächeninhalt angibt (ref finden)
+  Together with the functional equation \ref{eq:t3functional} and the material matrix $\underline{D}$ \ref{eq:sigma=D*eps}, the stiffness matrix for the quadrilateral isoparametric element can be written as:
+  \begin{equation}
+  \underline{K} = \int_V \underline{B}^T \underline{D}\,\underline{B}\, dV = t\int_A \underline{B}^T \underline{D}\,\underline{B}\, dA = t\int_{-1}^{1}\int_{-1}^{1} \underline{B}^T \underline{D}\,\underline{B}\, |\underline{J}| d\xi d\eta
+  \end{equation}
+  For the four node element a Gaussian quadrature needs 2x2 Gauss integration points to satisfy the above equation \cite{steinke2005finite}. These four points are located at $\xi_i = \pm \frac{\sqrt{3}}{3}$ and $\eta_i = \pm \frac{\sqrt{3}}{3}$ with weight factors $\omega_i = 1$. The equation for the stiffness matrix can then be written in discretized form as follows:
+  \begin{equation}
+  \underline{K} = t \sum_{i=1}^{2} \sum_{j=1}^{2} \omega_i \omega_j \underline{B}(\xi_i,\eta_j)^T \underline{D}\, \underline{B}(\xi_i,\eta_j) |\underline{J}(\xi_i,\eta_j)|
+  \end{equation}
+ 
  \subsection{Plate Bending Element}
  Second part of shell element: plate part. derivation of this part with two exemplary finite element types
+  
+  
+  
   \subsubsection{Problem Definition}
   \cite{steinke2005finite} ch8.1\\
   - bild wie bei \ref{sec:MprobDef}\\
@@ -399,6 +600,9 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   - auf verschiedene randbedingungen der platte eingehen\\
   - funktional der platte\\
   - forderungen an plattenelement
+  
+  
+  
   \subsubsection{Tri-3 Plate Element} \cite{steinke2005finite}\cite{specht1988modified}
   - mathematical derivation of three node triangular plane element\newline
   - see Steinke \cite{steinke2005finite} page 275-282 + \cite{specht1988modified} for reference of element\\
@@ -408,6 +612,9 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   - entwicklung der formfunktionen\\
   - krümmungs-verschiebungs-beziehung\\
   - steifigkeitsmatrix
+  
+  
+  
   \subsubsection{Quad-4 Plate Element}
   - mathematical derivation of four node quadrilateral plane element\newline
   - see Zienkiewicz \cite{zienkiewicz2000finite} page 174-177,219-222  \cite{zienkiewicz1977fem} ???  \textbf{\cite{batoz1982evaluation} page 1658-1662}\\
@@ -420,6 +627,9 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   - jacobi-matrix, -inverse, determinante\\
   - krümmungs-verschiebungs-beziehung\\
   - steifigkeitsmatrix
+ 
+ 
+ 
  \subsection{Coordinate Transformation} %\cite{steinke}
  \textit{erster Entwurf}\newline
  see \cite{nguyen2008smoothed}; genau: \cite{zienkiewicz2000finite}\\
@@ -456,6 +666,9 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
     \tilde{x}_x & \tilde{x}_y & \tilde{x}_z\\ \tilde{y}_x & \tilde{y}_y & \tilde{y}_z\\ \tilde{z}_x & \tilde{z}_y & \tilde{z}_z
     \end{pmatrix}
     \]
+ 
+ 
+ 
  \subsection{Shell Element}
  The combination of the two previous parts and the transformations results in the final shell element\newline
  - bild wie bei 8.7 von scheibe und platte und kombination zu schale + erklärungen, welche unbekannten und kräfte man bei welchem teil hat\\
