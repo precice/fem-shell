@@ -15,28 +15,28 @@
 \contentsline {subsubsection}{\numberline {3.2.3}Quad-4 Plane Element}{19}
 \contentsline {subsection}{\numberline {3.3}Plate Bending Element}{23}
 \contentsline {subsubsection}{\numberline {3.3.1}Problem Definition}{23}
-\contentsline {subsubsection}{\numberline {3.3.2}Tri-3 Plate Element}{24}
-\contentsline {subsubsection}{\numberline {3.3.3}Quad-4 Plate Element}{24}
-\contentsline {subsection}{\numberline {3.4}Coordinate Transformation}{24}
-\contentsline {subsection}{\numberline {3.5}Shell Element}{25}
-\contentsline {section}{\numberline {4}FEM Code Implementation}{27}
-\contentsline {subsection}{\numberline {4.1}Introduction to libMesh}{27}
-\contentsline {subsection}{\numberline {4.2}libMesh FEM}{27}
-\contentsline {subsection}{\numberline {4.3}Parallelization with MPI}{28}
-\contentsline {section}{\numberline {5}Coupling with preCICE}{29}
-\contentsline {subsection}{\numberline {5.1}Coupling}{29}
-\contentsline {subsubsection}{\numberline {5.1.1}Introduction to coupling}{29}
-\contentsline {subsubsection}{\numberline {5.1.2}Coupling methods}{29}
-\contentsline {subsection}{\numberline {5.2}preCICE}{29}
-\contentsline {subsection}{\numberline {5.3}Implementation}{29}
-\contentsline {section}{\numberline {6}Validation}{30}
-\contentsline {subsection}{\numberline {6.1}Test A: Membrane Displacement with Tri-3}{30}
-\contentsline {subsection}{\numberline {6.2}Test B: Membrane Displacement with Quad-4}{30}
-\contentsline {subsection}{\numberline {6.3}Test C: Plate Displacement with Tri-3}{30}
-\contentsline {subsection}{\numberline {6.4}Test D: Plate Displacement with Quad-4}{30}
-\contentsline {subsection}{\numberline {6.5}Test E: Shell Displacement with Tri-3}{30}
-\contentsline {subsection}{\numberline {6.6}Test F: Shell Displacement with Quad-4}{30}
-\contentsline {subsection}{\numberline {6.7}Test G: Convergence (increasing number of elements)}{31}
-\contentsline {subsection}{\numberline {6.8}Test H: MPI (increasing number of processes)}{31}
-\contentsline {subsection}{\numberline {6.9}Test I: Coupling with preCICE}{31}
-\contentsline {section}{\numberline {7}Conclusion}{32}
+\contentsline {subsubsection}{\numberline {3.3.2}Tri-3 Plate Element}{29}
+\contentsline {subsubsection}{\numberline {3.3.3}Quad-4 Plate Element}{33}
+\contentsline {subsection}{\numberline {3.4}Coordinate Transformation}{33}
+\contentsline {subsection}{\numberline {3.5}Shell Element}{34}
+\contentsline {section}{\numberline {4}FEM Code Implementation}{36}
+\contentsline {subsection}{\numberline {4.1}Introduction to libMesh}{36}
+\contentsline {subsection}{\numberline {4.2}libMesh FEM}{36}
+\contentsline {subsection}{\numberline {4.3}Parallelization with MPI}{37}
+\contentsline {section}{\numberline {5}Coupling with preCICE}{38}
+\contentsline {subsection}{\numberline {5.1}Coupling}{38}
+\contentsline {subsubsection}{\numberline {5.1.1}Introduction to coupling}{38}
+\contentsline {subsubsection}{\numberline {5.1.2}Coupling methods}{38}
+\contentsline {subsection}{\numberline {5.2}preCICE}{38}
+\contentsline {subsection}{\numberline {5.3}Implementation}{38}
+\contentsline {section}{\numberline {6}Validation}{39}
+\contentsline {subsection}{\numberline {6.1}Test A: Membrane Displacement with Tri-3}{39}
+\contentsline {subsection}{\numberline {6.2}Test B: Membrane Displacement with Quad-4}{39}
+\contentsline {subsection}{\numberline {6.3}Test C: Plate Displacement with Tri-3}{39}
+\contentsline {subsection}{\numberline {6.4}Test D: Plate Displacement with Quad-4}{39}
+\contentsline {subsection}{\numberline {6.5}Test E: Shell Displacement with Tri-3}{39}
+\contentsline {subsection}{\numberline {6.6}Test F: Shell Displacement with Quad-4}{39}
+\contentsline {subsection}{\numberline {6.7}Test G: Convergence (increasing number of elements)}{40}
+\contentsline {subsection}{\numberline {6.8}Test H: MPI (increasing number of processes)}{40}
+\contentsline {subsection}{\numberline {6.9}Test I: Coupling with preCICE}{40}
+\contentsline {section}{\numberline {7}Conclusion}{41}

@@ -333,7 +333,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   \end{pmatrix}
   \end{equation}
   The determinant of the Jacobian matrix is two times the area of the triangle. With the help of equation \ref{eq:t3invJac}, \ref{eq:t3NablaTilde} can be reorganized
-  \begin{equation}
+  \begin{equation}\label{eq:nabla=invJ*nabla-tilde}
   \nabla = \underline{J}^{-1} \tilde{\nabla}
   \end{equation}
   and this finally yields to the new version of the differential operator $\underline{L}$ \cite{steinke2005finite}:
@@ -589,31 +589,340 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   
   
   \subsubsection{Problem Definition}
-  \cite{steinke2005finite} ch8.1\\
-  - bild wie bei \ref{sec:MprobDef}\\
-  - hier wird die kirchhoff-platten-theorie verwendet\\
-  - voraussetzungen der kirchhoff-platte\\
-  - größen der platte: durchbiegung w + verdrehungen dw/dx bzw. dw/dy\\
-  - dehnungs-verschiebungs-beziehung\\
-  - stoffgleichung (krümmungs-momenten-beziehung) -> führt auf Dp und Querkräfte Qx,Qy\\
-  - gleichgewichtsbeziehung der platte (p ist flächenlast; näher untersuchen)\\
-  - auf verschiedene randbedingungen der platte eingehen\\
-  - funktional der platte\\
-  - forderungen an plattenelement
+  %\cite{steinke2005finite} ch8.1
+  % bild wie bei \ref{sec:MprobDef}
+  \begin{figure}
+  	\centering
+  	\includegraphics[width=0.7\linewidth]{figures/platzhalter}
+  	\caption[kurze Unter-Überschrift]{lange Unter-Überschrift}
+  	\label{fig:platzhalter}
+  \end{figure}
+  In contrast to a plane, where the load is located planar with respect to the plane, the load is perpendicular to the mid place at a plate. Therefore plate element problems are important for supporting structures of bridges or ceilings and floors in buildings, for example. In Figure \ref{fig:platzhalter} one can see a generalized plate object. It has a main dimension of $l$ and a constant thickness $t$. With the assumption that $t \ll l$, the problem becomes two dimensional and, instead of the whole object, only the middle plane between the two surface areas will be considered. The object has a local coordinate system with its xy-plane the mid plane and its z-axis perpendicular to this plane. The surface areas are located at $z = \pm t/2$. As stated in the beginning, the load is applied in z-direction, i.e. normal to the mid-surface.
   
+  % hier wird die kirchhoff-platten-theorie verwendet
+  In this work Kirchhoff's theory of thin plates is used. For thick plates or laminated plates, the theory of Reissner-Mindlin is more applicable. The main difference is that with Reissner-Mindlin plates one takes the shear deformations into account. Thus, the normal to the mid-surface remains straight but not necessarily perpendicular to it; instead of a Kirchhoff plate: Here, the normal remains normal to the mid-surface even after deformation.
   
+  % voraussetzungen der kirchhoff-platte
+  As a short summarize the following conditions must be satisfied for a Kirchhoff plate \cite{steinke2005finite}:
+  \begin{itemize}
+  	\item The thickness $t$ must be much smaller than the main dimension $l$: $t \ll l$.
+  	\item Straight lines normal to the mid-surface remain straight after deformation.
+  	\item Straight lines normal to the mid-surface remain normal to the mid-surface after deformation.
+  	\item There is only a small amount of deformation $w$, i.e. $w < t$ and it holds $w \ne w(z)$.
+  	\item The plate is symmetrical to the mid-surface and changes in thickness must be very small.
+  	\item Normal stresses in z-direction $\sigma_{zz}$ will be neglected.
+  \end{itemize}
   
-  \subsubsection{Tri-3 Plate Element} \cite{steinke2005finite}\cite{specht1988modified}
-  - mathematical derivation of three node triangular plane element\newline
-  - see Steinke \cite{steinke2005finite} page 275-282 + \cite{specht1988modified} for reference of element\\
-  - 8.4.4 beschreibt probleme mit einigen dreiecksplattenelementen, deshalb für meine arbeit element von specht \cite{specht1988modified}\\
-  - ansatzfunktion nach specht\\
-  - interpolationsbedingungen\\
-  - entwicklung der formfunktionen\\
-  - krümmungs-verschiebungs-beziehung\\
-  - steifigkeitsmatrix
+  % größen der platte: durchbiegung w + verdrehungen dw/dx bzw. dw/dy
+  With \cite{klein2013fem} and \cite{steinke2005finite} the following displacement terms can be formulated:
+  \begin{align}
+  w &= w(x,y) \\
+  u &= -z \frac{\partial w}{\partial x}\\
+  v &= -z \frac{\partial w}{\partial y}
+  \end{align}
+  The deformation $w$ suffices to explain the whole displacement vector. The two derivatives in the equations above describe the torsions around the x- and y-axis.
+
+  % dehnungs-verschiebungs-beziehung
+  Similar to the plane element, the Kirchhoff plate element can have a plane strain or plane stress, respectively \cite{steinke2005finite}, i.e. equation \ref{eq:displ_strain_relation} can be applied here, too:
+  \begin{align}
+  \vec{\hat{u}} &= \begin{pmatrix}
+  u\\v
+  \end{pmatrix} = -z \begin{pmatrix}
+  \frac{\partial w}{\partial x}\\ \frac{\partial w}{\partial y}
+  \end{pmatrix} = -z \nabla w \nonumber\\
+  \vec{\epsilon} &= \underline{L} \vec{\hat{u}} = -z \underline{L} \nabla w = -z \vec{\Delta} w = -z \vec{\kappa} \label{eq:eps=-z*kappa}\\
+  \vec{\Delta} &= \underline{L} \nabla = \begin{pmatrix}
+  \frac{\partial}{\partial x} & 0\\
+  0 & \frac{\partial}{\partial y}\\
+  \frac{\partial}{\partial y} & \frac{\partial}{\partial x}
+  \end{pmatrix} \begin{pmatrix}
+  \frac{\partial}{\partial x} & \frac{\partial}{\partial y}
+  \end{pmatrix} = \begin{pmatrix}
+  \frac{\partial^2}{\partial x^2}\\
+  \frac{\partial^2}{\partial y^2}\\
+  2\frac{\partial^2}{\partial x\partial y}
+  \end{pmatrix} \nonumber\\
+  \vec{\kappa} &= \vec{\Delta}w = \begin{pmatrix}
+  \frac{\partial^2w}{\partial x^2}\\
+  \frac{\partial^2w}{\partial y^2}\\
+  2\frac{\partial^2w}{\partial x\partial y}
+  \end{pmatrix} \label{eq:kappa=Delta*w}
+  \end{align}
   
+  % stoffgleichung (krümmungs-momenten-beziehung) -> führt auf Dp und Querkräfte Qx,Qy
+  Referring \cite{klein2013fem} ($\sigma_{zz} = 0, \tau_{xz} = \tau_{yz} = 0$), equation \ref{eq:stress-strain-relation} can be filled with the above information:
+  \begin{align}\label{eq:sigma=-z*D*kappa}
+  \vec{\sigma} &= \underline{D} \vec{\epsilon} = -z \underline{D} \vec{\kappa} \nonumber\\
+               &= -\frac{E z}{1-\nu^2} \begin{pmatrix}
+               1&\nu&0\\
+               \nu&1&0\\
+               0&0&\frac{1-\nu}{2}
+               \end{pmatrix} \begin{pmatrix}
+               \kappa_x\\\kappa_y\\2\kappa_{xy}
+               \end{pmatrix}
+  \end{align}
+  The integration of the stresses $\vec{\sigma}$ over the thickness results in the vector of moments $\vec{M}^T = \left(M_{xx}\ \;M_{yy}\ \;M_{xy}\right)$ \cite{steinke2005finite}:
+  \begin{equation}\label{eq:M=-Dp*kappa}
+  \vec{M} = \int_{-t/2}^{t/2} z\vec{\sigma} dz = -\int_{-t/2}^{t/2} z^2 \underline{D} \vec{\kappa} dz = -\underline{D} \vec{\kappa} \int_{-t/2}^{t/2} z^2 dz = -\frac{t^3}{12} \underline{D} \vec{\kappa} = -\underline{D}_p \vec{\kappa}
+  \end{equation}
+  The above equation relates the moments with the curvatures of the plate. The integrals over the transverse stresses $\sigma_{xz}$ and $\sigma_{yz}$ lead to the following shear forces, as described in \cite{steinke2005finite}:
+  \begin{align}
+  Q_x &= \int_{-t/2}^{t/2}\sigma_{xz} dz = \int_{-t/2}^{t/2} \sigma_{xz}^{\max} \left(1-4\left(\frac{z}{t}\right)^2\right)dz = \frac{2}{3} \sigma_{xz}^{\max} t \nonumber\\
+  &= \frac{2}{3} \sigma_{xz}(z=0) t
+  \end{align}
+  \begin{align}
+  Q_y &= \int_{-t/2}^{t/2}\sigma_{yz} dz = \int_{-t/2}^{t/2} \sigma_{yz}^{\max} \left(1-4\left(\frac{z}{t}\right)^2\right)dz = \frac{2}{3} \sigma_{yz}^{\max} t \nonumber\\
+  &= \frac{2}{3} \sigma_{yz}(z=0) t
+  \end{align}
+  The transverse stress is distributed quadratically over the thickness t, i.e. they have their maximum at $z=0$ and vanish at $z = \pm t/2$. The equilibrium of forces in z-direction leads to:
+  \begin{equation}\label{eq:dQx+dQy+p=0}
+  \frac{\partial Q_x}{\partial x} + \frac{\partial Q_y}{\partial y} + p = 0
+  \end{equation}
+  with $p$ the load applied perpendicular to the mid-surface. Additionally the equilibrium of moments around the x- and y-axis:\\
+  \begin{align}\label{eq:dMxx+dMxy+Qx=0}
+  \frac{\partial M_{xx}}{\partial x} + \frac{\partial M_{xy}}{\partial y} + Q_x &= 0 \nonumber\\
+  \frac{\partial M_{yy}}{\partial y} + \frac{\partial M_{xy}}{\partial x} + Q_y &= 0
+  \end{align}
+  % gleichgewichtsbeziehung der platte (p ist flächenlast; näher untersuchen)
+  Putting equation \ref{eq:dMxx+dMxy+Qx=0} into \ref{eq:dQx+dQy+p=0} results in:
+  \begin{equation}\label{eq:Delta^T*M=p}
+  \frac{\partial^2 M_{xx}}{\partial x^2} + \frac{\partial^2 M_{yy}}{\partial y^2} + 2\frac{\partial^2 M_{xy}}{\partial x\partial y} = \vec{\Delta}^T \vec{M} = p
+  \end{equation}
+  Now, one can insert the kinematic equation \ref{eq:kappa=Delta*w} into equation \ref{eq:M=-Dp*kappa} and then into the equilibrium relation \ref{eq:Delta^T*M=p}:
+  \begin{align}
+  \vec{\kappa} &= \vec{\Delta}w \nonumber\\
+  \vec{M} &= -\underline{D}_p \vec{\kappa} = -\underline{D}_p \vec{\Delta} w \nonumber\\
+  \vec{\Delta}^T \vec{M} = -\vec{\Delta}^T \underline{D}_p \vec{\Delta} w = p
+  \end{align}
+  The last equation leads to the partial differential equation of the plate bending \cite{klein2013fem}:
+  \begin{equation}
+  \frac{\partial^4 w}{\partial x^4} + \frac{\partial^4 w}{\partial y^4} + 2\frac{\partial^4 w}{\partial x^2 \partial y^2} = -\frac{12(1-\nu^2)}{E t^3} p = \frac{p}{k}
+  \end{equation}
+  with $k$ denoted as \textit{plate stiffness}.
   
+  % auf verschiedene randbedingungen der platte eingehen
+  \begin{figure} % Bild 8.5 steinke
+  	\centering
+  	\includegraphics[width=0.7\linewidth]{figures/platzhalter}
+  	\caption[kurze Unter-Überschrift]{lange Unter-Überschrift}
+  	\label{fig:platzhalter}
+  \end{figure}
+  Let $P$ be a point on the continuous boundary of the plate with a local Cartesian coordinate system as described in \cite{steinke2005finite} (see Figure \ref{fig:platzhalter}): The $n$ coordinate is perpendicular to the boundary surface, the $s$ axis tangential to it. The third axis equals the global z-axis of the plate. There are three essential and three natural boundary conditions defined for $P$: The displacement $w$, the drills $\theta_n = \partial w/\partial s, \theta_s = -\partial w/\partial n$, the shear force $Q_n$ and the moments $M_{ns}$ and $M_{nn}$. Since this leads to an inconsistency with the differential equation above, \cite{steinke2005finite} stated that Kirchhoff introduced new forces:
+  \begin{equation}
+  V_n = Q_n - \frac{\partial M_{ns}}{\partial s}
+  \end{equation}
+  With them, only the four conditions for $w, \theta_s, V_n$ and $M_{nn}$ occur.
+  The plate can be mounted in different ways:
+  \begin{itemize}
+  	\item clamped: $w = 0, \theta_s = -\partial w/\partial n = 0$
+  	\item simple supported: $w = 0, M_{nn} = 0$
+  	\item symmetrical edge: $\theta_s = -\partial w/\partial n = 0, V_n = 0$
+  \end{itemize}
+
+  % funktional der platte
+  The plate's functional as described in \cite{steinke2005finite} is given below:
+  \begin{equation}
+  \frac{1}{2} \int_V \vec{\epsilon}^T \vec{\sigma}\, d\:\!V
+  \end{equation}
+  One can insert equation \ref{eq:eps=-z*kappa} and \ref{eq:sigma=-z*D*kappa} into the functional:
+  \begin{equation}
+  \frac{1}{2} \int_V \vec{\epsilon}^T \vec{\sigma}\, d\:\!V = \frac{1}{2}\int_V \vec{\kappa}^T \underline{D} \vec{\kappa} z^2\, d\!V = \frac{1}{2} \int_A \vec{\kappa}^T \underline{D}_p \vec{\kappa}\, d\!A
+  \end{equation}
+  Together with the potential of the external forces the overall potential of the Kirchhoff plate is:
+  \begin{equation}\label{eq:plateFunctional}
+  \Pi = \frac{1}{2}\int_A \vec{\kappa}^T \underline{D}_p \vec{\kappa}\, dA
+  - \int_A p\ w\, d\!A
+  - \int_{\Gamma}\left(V_n w - M_{nn} \theta_s\right)\,d\:\!\Gamma
+  \end{equation}
+  
+  % forderungen an plattenelement
+  Klein \cite{klein2013fem} states that for the plate element discretization additional conditions must be satisfied. They are: The bending $w(x,y)$ as well as the normal derivative $\partial w/\partial n$ at the element's boundary must be continuous to the neighboring elements. This would be the case if the bending and the normal derivative are explicitly determined by the nodal parameters at the border. Further, Klein lists requirements for a plate element ansatz:
+  \begin{itemize}
+  	\item Totality of the displacement approach in order to guarantee good convergence.
+  	\item The terms $1, x, y, x^2, xy, y^2$ should be included to get variable strains, curvatures and rigid body motion.
+  \end{itemize}
+  Steinke \cite{steinke2005finite} expands the requirements as follows:
+  \begin{itemize}
+  	\item Compatibility of the displacement variable at the element's boundary (conformity condition): If the steadiness of the deformation $w$ and its first derivatives is not satisfied the bending surface between two elements can have a sharp bend at which the elements are overlapping at one side and diverge on the opposite side. If such a behavior is shown, the element is called \textit{non-conforming}.
+  	\item Rigid body motions must not create strains and stresses in the element. This requires a constant term in the basis function for the translative part of the motion and a linear term for the rotatory.
+  	\item The basis function must provide constant plain strain and plain stress: If the element converges in its size until it becomes a point, a constant state of bending must be describable in this situation. Since the bending is described as second order derivatives of $w$, the basis function must include quadratic terms.
+  \end{itemize}
+  The following sections show details of two discretizations of plate elements: A triangular element with three nodes and a quadrilateral element with four nodes.
+  
+  \subsubsection{Tri-3 Plate Element} %\cite{steinke2005finite}\cite{specht1988modified}
+  % mathematical derivation of three node triangular plane element\newline
+  % see Steinke \cite{steinke2005finite} page 275-282 + \cite{specht1988modified} for reference of element\\
+  % 8.4.4 beschreibt probleme mit einigen dreiecksplattenelementen, deshalb für meine arbeit element von specht \cite{specht1988modified}
+  There exists many different types of triangular plate elements, for example Batoz et al. \cite{batoz1980study}, Tocher \cite{tocher1963analysis} or Specht \cite{specht1988modified}. The three node triangular element from \cite{tocher1963analysis} has three degrees of freedom (d.\.o.\.f) ($w, \theta_x, \theta_y$) per node. His basis function was a complete cubic polynomial. The term $xy$ was left out, because the polynomial has one coefficient more than the element has d.\.o.\.f. This leads to the problem that no constant state of bending can be described (non-conforming element) and this leads to wrong results at convergence \cite{steinke2005finite}. Therefore, Steinke challenges the practical use of this element.
+  A possible way to use a complete cubic polynomial would be to add another node in the center of mass of the triangle and assign the only degree of freedom $w$ to it \cite{steinke2005finite}. But the problem of non-conformity persist, as the nodal twists don't suffice to describe the twists along the element's edges, which are quadric. Here, additional nodes on the edges would be needed.
+  To get a conforming element one can choose a basis function with a complete polynomial of order five. It has 21 coefficients and d.o.f. They are distributed as follows: Every node has six d.o.f $(w, \partial w/\partial x, \partial w/\partial y, \partial^2 w/\partial x^2, \partial^2 w/\partial y^2, \partial^2 w/\partial x\partial y)$ and the mid node of every edge gets the degree of freedom $\partial w/\partial n$. This results in continuous element edge twists, conformity and convergence. The problem: 21 d.o.f. per element leads to high computational effort and second order derivatives at the boundaries are needed. Hence, Steinke advices against using it in practice \cite{steinke2005finite}.
+  
+  % ansatzfunktion nach specht\\
+  In this work an element from \cite{specht1988modified} were implemented which is also described in \cite{steinke2005finite}. It has three nodes and also three d.o.f. per node: The deformation $w$ and the two twists $\theta_x$ and $\theta_y$. The basis function for the deformation $w$ is as follows:
+  \begin{align}
+  w = &a_0 L_1 + a_1 L_2 + a_2 L_3 + a_3 L_1L_2 + a_4 L_2L_3 + a_5 L_3L_1 \nonumber\\
+    & + a_6\left(L_2L_1^2 + \frac{1}{2}L_1L_2L_3 \left(3(1-\mu_3)L_1 - (1+3\mu_3)L_2 + (1+3\mu_3)L_3\right)\right) \nonumber\\
+    & + a_7\left(L_3L_2^2 + \frac{1}{2}L_1L_2L_3 \left(3(1-\mu_1)L_2 - (1+3\mu_1)L_3 + (1+3\mu_1)L_1\right)\right) \nonumber\\
+    & + a_8\left(L_1L_3^2 + \frac{1}{2}L_1L_2L_3 \left(3(1-\mu_2)L_3 - (1+3\mu_2)L_1 + (1+3\mu_2)L_2\right)\right)
+  \end{align}
+  with
+  \begin{align}
+  \mu_1 &= \frac{S_{21} - S_{31}}{S_{32}} \nonumber\\
+  \mu_2 &= \frac{S_{32} - S_{21}}{S_{31}} \nonumber\\
+  \mu_3 &= \frac{S_{31} - S_{32}}{S_{21}} \\
+  S_{32} &= x_{32}^2 + y_{32}^2 \nonumber\\
+  S_{31} &= x_{31}^2 + y_{31}^2 \nonumber\\
+  S_{21} &= x_{21}^2 + y_{21}^2
+  \end{align}
+  $S_{ij}$ denoted the square of the length of the edge between node $i$ and $j$.
+  This can be written is vector form:
+  \begin{align}\label{eq:platet3w=x*a}
+  w &= \vec{x}^T \vec{a} \nonumber\\
+  \vec{x} &= \begin{pmatrix}
+  L_1 \\ L_2 \\ L_3 \\ L_1L_2 \\ L_2L_3 \\ L_3L_1\\
+  \left(L_2L_1^2+\frac{1}{2}L_1L_2L_3\left(3(1-\mu_3)L_1-(1+3\mu_3)L_2+(1+3\mu_3)L_3\right)\right)\\
+  \left(L_3L_2^2+\frac{1}{2}L_1L_2L_3\left(3(1-\mu_1)L_2-(1+3\mu_1)L_3+(1+3\mu_1)L_1\right)\right)\\
+  \left(L_1L_3^2+\frac{1}{2}L_1L_2L_3\left(3(1-\mu_2)L_3-(1+3\mu_2)L_1+(1+3\mu_2)L_2\right)\right)
+  \end{pmatrix} \nonumber\\
+  \vec{a}^T &= \begin{pmatrix}
+  a_0 & a_1 & a_2 & a_3 & a_4 & a_5 & a_6 & a_7 & a_8
+  \end{pmatrix}
+  \end{align}
+  
+  % interpolationsbedingungen
+  The twists $\theta_x$ and $\theta_y$ are yet described in Cartesian coordinates. They must be transformed into triangular coordinates with the help of equation \ref{eq:t3NablaTilde}:
+  \begin{equation}
+  \vec{\theta} = \begin{pmatrix}
+  \theta_x\\\theta_y
+  \end{pmatrix} = \begin{pmatrix}
+  0 & 1 \\ -1 & 0
+  \end{pmatrix} \nabla w = \begin{pmatrix}
+  0 & 1 \\ -1 & 0
+  \end{pmatrix} \underline{J}^{-1} \tilde{\nabla} \vec{x}^T \vec{a} = \underline{G} \vec{a}
+  \end{equation}
+  with $\underline{J}^{-1}$ the inverse Jacobian matrix and $\tilde{\nabla}$ the nabla operator in triangular coordinates. The matrix $\underline{G}$:
+  \begin{equation}
+  \underline{G} = \frac{1}{2 A_\triangle} \begin{pmatrix}
+  x_{32} & x_{13} \\ y_{32} & y_{13}
+  \end{pmatrix} \begin{pmatrix}
+  \frac{\partial x_1}{\partial L_1} & \frac{\partial x_2}{\partial L_1} & \cdots & \frac{\partial x_9}{\partial L_1} \\
+  \frac{\partial x_1}{\partial L_2} & \frac{\partial x_2}{\partial L_2} & \cdots & \frac{\partial x_9}{\partial L_2}
+  \end{pmatrix}
+  \end{equation}
+  Next, the interpolation conditions at the three nodes for the three unknowns can be set. In Figure \ref{fig:platzhalter} one can see the triangular coordinates of the three nodes. Following the notation of \cite{steinke2005finite}:
+  \begin{align}
+  \underbrace{\begin{pmatrix}
+  	\vec{x}^T(1,0)\\G_1(1,0)\\G_2(1,0)\\
+  	\vec{x}^T(0,1)\\G_1(0,1)\\G_2(0,1)\\
+  	\vec{x}^T(0,0)\\G_1(0,0)\\G_2(0,0)
+  	\end{pmatrix}} \vec{a} &= \underbrace{\begin{pmatrix}
+  	w_1\\\theta_{x_1}\\\theta_{y_1}\\
+  	w_2\\\theta_{x_2}\\\theta_{y_2}\\
+  	w_3\\\theta_{x_3}\\\theta_{y_3}
+  	\end{pmatrix}}\\
+  \underline{A}\qquad\quad &\qquad\ \vec{w}
+  \end{align}
+  where $\underline{G}_i$ is the $i$-th row of matrix $\underline{G}$.
+  The unknown coefficients $a_i$ can be computed by inverting the matrix $\underline{A}$: $\vec{a} = \underline{A}^{-1} \vec{w}$:
+  \begin{equation}
+  \underline{A}^{-1} = \begin{pmatrix}
+  1& 0& 0& 0& 0& 0& 0& 0& 0\\
+  0& 0& 0& 1& 0& 0& 0& 0& 0\\
+  0& 0& 0& 0& 0& 0& 1& 0& 0\\
+  -1& 0& 0& 1& y_{12}& x_{21}& 0& 0& 0\\
+  0& 0& 0& -1& 0& 0& 1& y_{23}& x_{32}\\
+  1& y_{31}& x_{13}& 0& 0& 0& -1& 0& 0\\
+  2& y_{21}& x_{12}& -2& y_{21}& x_{12}& 0& 0& 0\\
+  0& 0& 0& 2& y_{32}& x_{23}& -2& y_{32}& x_{23}\\
+  -2& y_{13}& x_{31}& 0& 0& 0& 2& y_{13}& x_{31}
+  \end{pmatrix}
+  \end{equation}
+  where $x_{ij}$ and $y_{ij}$ denotes the differences of the node's coordinates $x_i-x_j$ and $y_i-y_j$.
+  Now, the coefficients can be inserted into equation \ref{eq:platet3w=x*a}:
+  \begin{equation}\label{eq:w=NT*vecw}
+  w = \vec{x}^T \vec{a} = \vec{x}^T \underline{A}^{-1} \vec{w} = \vec{N}^T \vec{w}
+  \end{equation}
+  The vector $\vec{N}$ containing the shape functions $N_i$ can then be calculated as follows:
+  \begin{equation}
+  \vec{N} = \left(\underline{A}^{-1}\right)^T \vec{x}
+  \end{equation}
+  
+  % entwicklung der formfunktionen\\
+  Since the shape functions following a pattern, due to the regular order in the matrix $\underline{A}^{-1}$, one can summarize the nine shape functions into three groups; one for every node:
+  \begin{align}
+  N_i &= \begin{cases}
+  \chi_i - \chi_{i+3} + \chi_{k+3} + 2\left(\chi_{i+6} - \chi_{k+6}\right) & \text{for d.o.f. } w\\
+  -y_{ki}\left(\chi_{k+6} - \chi_{k+3}\right) + y_{ji} \chi_{i+6} & \text{for d.o.f. } \theta_x\\
+  x_{ki}\left(\chi_{k+6} - \chi_{k+3}\right) - x_{ji} \chi_{i+6} & \text{for d.o.f. } \theta_y
+  \end{cases}
+  \end{align}
+  The variables $\chi_i$ denotes the $i$-th component of the vector $\vec{x}$, the indexes $i,j,k$ under $\chi$ are cyclic permutations of $1,2,3$. $x_{ij}$ and $y_{ij}$ denote the coordinate differences $x_i - x_j$ and $y_i - y_j$. The index under $N$ is incremented in such a way, that $N_1, N_4, N_7$ describes the d.o.f. $w$, $N_2, N_5, N_8$ describes the d.o.f. $\theta_x$ and $N_3, N_6, N_9$ describes the d.o.f. $\theta_y$.
+  Similar to the plane elements, one can check the correctness of the shape functions by evaluating them at the triangular coordinates of the three triangle's nodes. For example, shape function $N_7$ will evaluate to 1 for the coordinates $(L_1 = 0, L_2 = 0)$ (node 3) and will be zero for $(L_1 = 1, L_2 = 0)$ (node 1) and $(L_1 = 0, L_2 = 1)$ (node 2).
+  
+  % krümmungs-verschiebungs-beziehung\\
+  The displacement-strain relation \ref{eq:eps=-z*kappa} introduced for the plate element contains an operator living in the Cartesian space. It has to be converted into triangular coordinates. With equation \ref{eq:nabla=invJ*nabla-tilde} ($\nabla = \underline{J}^{-1}\tilde{\nabla}$) one can describe a second order derivative operator $\Delta$:
+  \begin{align}
+  \Delta &= \nabla \nabla^T = \underline{J}^{-1}\tilde{\nabla}\left(\underline{J}^{-1}\tilde{\nabla}\right)^T = \underline{J}^{-1} \tilde{\nabla} \tilde{\nabla}^T \left(\underline{J}^{-1}\right)^T = \underline{J}^{-1} \tilde{\Delta} \left(\underline{J}^{-1}\right)^T\\
+  \Delta &= \begin{pmatrix}
+  \frac{\partial^2}{\partial x^2} & \frac{\partial^2}{\partial x \partial y}\\
+  \frac{\partial^2}{\partial y \partial x} & \frac{\partial^2}{\partial y^2}
+  \end{pmatrix} \rightarrow \vec{\Delta} = \begin{pmatrix}
+  \frac{\partial^2}{\partial x^2} \\
+  \frac{\partial^2}{\partial y^2} \\
+  2\frac{\partial^2}{\partial x \partial y}
+  \end{pmatrix} \nonumber\\
+  \vec{\Delta} &= \frac{1}{4 A_\triangle^2} \begin{pmatrix}
+  y_{32}^2 & y_{31}^2 & y_{23} y_{31}\\
+  x_{32}^2 & x_{31}^2 & x_{13} x_{32}\\
+  2 x_{32} y_{23} & 2 x_{13} y_{31} & x_{32} y_{31} + x_{31} y_{32}
+  \end{pmatrix} \begin{pmatrix}
+  \frac{\partial^2}{\partial L_1^2} \\
+  \frac{\partial^2}{\partial L_2^2} \\
+  2\frac{\partial^2}{\partial L_1 \partial L_2}
+  \end{pmatrix} \nonumber\\
+  \vec{\Delta} &= \underline{Y} \vec{\tilde{\Delta}}
+  \end{align}
+  Next, equation \ref{eq:eps=-z*kappa} can be rewritten for triangular coordinates:
+  \begin{equation}
+  \vec{\epsilon} = -z \vec{\Delta} w = -z \underline{Y} \vec{\tilde{\Delta}} w = -z \vec{\kappa}
+  \end{equation}
+  And additionally, with the help of equation \ref{eq:w=NT*vecw}, this yields a new version of equation \ref{eq:kappa=Delta*w}:
+  \begin{equation}\label{eq:kappa=YBw}
+  \vec{\kappa} = \vec{\Delta} w = \underline{Y} \vec{\tilde{\Delta}} \vec{N}^T \vec{w} = \underline{Y}\:\underline{\tilde{B}} \vec{w} = \underline{B} \vec{w}
+  \end{equation}
+  \begin{equation}
+  \underline{\tilde{B}} = \vec{\tilde{\Delta}} \vec{N}^T = \begin{pmatrix}
+  \frac{\partial^2 N_1}{\partial L_1^2} & \frac{\partial^2 N_2}{\partial L_1^2} & \cdots & \frac{\partial^2 N_9}{\partial L_1^2}\\
+  \frac{\partial^2 N_1}{\partial L_2^2} & \frac{\partial^2 N_2}{\partial L_2^2} & \cdots & \frac{\partial^2 N_9}{\partial L_2^2}\\
+  2\,\frac{\partial^2 N_1}{\partial L_1 \partial L_2} & 2\,\frac{\partial^2 N_2}{\partial L_1 \partial L_2} & \cdots & 2\,\frac{\partial^2 N_9}{\partial L_1 \partial L_2}
+  \end{pmatrix}
+  \end{equation}
+  
+  % steifigkeitsmatrix
+  With the help of equation \ref{eq:kappa=YBw}, the first term (denoted as $\Pi_1$) of the plate element's functional \ref{eq:plateFunctional} can be written out:
+  \begin{align}
+  \Pi_1 &= \frac{1}{2} \int_A \vec{\kappa}^T \underline{D}_p \vec{\kappa}\ d\!A \nonumber\\
+        &= \frac{1}{2} \vec{w}^T \int_A \underline{B}^T \underline{D}_p \underline{B}\ d\!A \vec{w} \nonumber\\
+        &= \frac{1}{2} \vec{w}^T \underline{K} \vec{w}
+  \end{align}
+  where $\underline{K}$ describes the stiffness matrix for the three node triangular plate element. The stiffness matrix must be integrated in triangular coordinates. This will be done by a Gaussian quadrature with the Gauss points located at: $(L_{1_1} = 1/6, L_{2_1} = 1/6), (L_{1_2} = 2/3, L_{2_2} = 1/6), (L_{1_3} = 1/6, L_{2_3} = 2/3)$ and weights $\omega_i = 1/6$ for all three points. For an exact integration one would accumulate four sampling points, but \cite{steinke2005finite} states that this leads to an element, that is too stiff; with only three samplings a more natural element results.
+  \begin{equation}
+  \underline{K} = 2 A_\triangle \sum_{i=1}^{3} \omega_i \underline{B}^T(L_{1_i}, L_{2_i}) \underline{D}_p \underline{B}(L_{1_i}, L_{2_i})
+  \end{equation}
+  The plate's functional \ref{eq:plateFunctional} has two more terms including the surface load $p$ and edge loads $V_n$. These two can now be written as follows (see also \cite{steinke2005finite}):
+  \begin{equation}
+  \int_A p\ w\ d\!A = \vec{w}^T \vec{F}_p = \vec{w}^T p \int_A \vec{N}\ d\!A = 2 \vec{w}^T A_\triangle p \int_{0}^{1}\left(\int_{0}^{1-L_1} \vec{N}\ d\,\!L_2\right)\ d\,\!L_1
+  \end{equation}
+  where $\vec{F}_p$ is a $1\!\times\!9$ vector containing forces and moments emerging from the surface load $p$.
+  As an example, an edge load $V_n$ is applied to edge $S_{13}$. This can be described as follows \cite{steinke2005finite}:
+  \begin{equation}
+  \int_{\Gamma_V} V_n\:w\ d\,\!\Gamma = \int_{\Gamma_V} V_n \vec{w}^T \vec{N}(L_2 = 0)\ d\,\!\Gamma
+  \end{equation}
+  with $d\,\!\Gamma = S_{13} d\,\!L_1$. With $V_n$ being constant all over the edge:
+  \begin{equation}
+  \int_{\Gamma_V} V_n \vec{w}^T \vec{N}(L_2 = 0)\ d\,\!\Gamma = \vec{w}^T S_{13} V_n \int_{0}^{1} \vec{N}\ d\,\!L_1 = \vec{w}^T \vec{F}_v
+  \end{equation}
+  The edge load applies forces and moments contained in $\vec{F}_v$ to the nodes forming that edge. The above equation can be applied to every other edge.
   
   \subsubsection{Quad-4 Plate Element}
   - mathematical derivation of four node quadrilateral plane element\newline
