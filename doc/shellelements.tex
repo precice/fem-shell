@@ -809,6 +809,12 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   \frac{\partial x_1}{\partial L_2} & \frac{\partial x_2}{\partial L_2} & \cdots & \frac{\partial x_9}{\partial L_2}
   \end{pmatrix}
   \end{equation}
+  \begin{figure} % selbes Bild wie weiter oben
+  	\centering
+  	\includegraphics[width=0.7\linewidth]{figures/platzhalter}
+  	\caption[kurze Unter-Überschrift]{lange Unter-Überschrift}
+  	\label{fig:platzhalter}
+  \end{figure}
   Next, the interpolation conditions at the three nodes for the three unknowns can be set. In Figure \ref{fig:platzhalter} one can see the triangular coordinates of the three nodes. Following the notation of \cite{steinke2005finite}:
   \begin{align}
   \underbrace{\begin{pmatrix}
@@ -900,7 +906,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   
   % steifigkeitsmatrix
   With the help of equation \ref{eq:kappa=YBw}, the first term (denoted as $\Pi_1$) of the plate element's functional \ref{eq:plateFunctional} can be written out:
-  \begin{align}
+  \begin{align}\label{eq:t3_pi1=0.5wTKw}
   \Pi_1 &= \frac{1}{2} \int_A \vec{\kappa}^T \underline{D}_p \vec{\kappa}\ d\!A \nonumber\\
         &= \frac{1}{2} \vec{w}^T \int_A \underline{B}^T \underline{D}_p \underline{B}\ d\!A \vec{w} \nonumber\\
         &= \frac{1}{2} \vec{w}^T \underline{K} \vec{w}
@@ -925,19 +931,185 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   The edge load applies forces and moments contained in $\vec{F}_v$ to the nodes forming that edge. The above equation can be applied to every other edge.
   
   \subsubsection{Quad-4 Plate Element}
-  - mathematical derivation of four node quadrilateral plane element\newline
-  - see Zienkiewicz \cite{zienkiewicz2000finite} page 174-177,219-222  \cite{zienkiewicz1977fem} ???  \textbf{\cite{batoz1982evaluation} page 1658-1662}\\
-  - formulierung als DKQ element\\
-  - \textbf{!! formatierung an meine anpassen, da sehr unterschiedlich zu anderen referenzen !!}\\
-  - dkq basiert auf diskretisierung der stress-energie, unter vernachlässigung der transverse shear strain energy (gl.(1) s.4)\\
-  - krümmungsvektor, Db angeben\\
-  - considerations für dkq formulierung\\
-  - formfunktionen, koeffizienten\\
-  - jacobi-matrix, -inverse, determinante\\
-  - krümmungs-verschiebungs-beziehung\\
-  - steifigkeitsmatrix
- 
- 
+  % mathematical derivation of four node quadrilateral plane element
+  % see Zienkiewicz \cite{zienkiewicz2000finite} page 174-177,219-222 \cite{batoz1982evaluation page 1658-1662}
+  % formulierung als DKQ element
+  % !! formatierung an meine anpassen, da sehr unterschiedlich zu anderen referenzen !!
+  The element implemented in this work is the so-called \textit{DKQ} element, introduced by Batoz et al. \cite{batoz1982evaluation}. It is a four node, 12 degrees-of-freedom quadrilateral element for thin plates. It is based on a generalization of the \textit{Discrete Kirchhoff Triangular} (DKT) element which is a three node, 9 d.o.f. triangular element. Like the triangular element of the previous section, the DKQ element's nodes have all three d.o.f.: The displacement $w$ and the rotations $\theta_x$ and $\theta_y$ around the element's local $x$- and $y$-axis. Figure \ref{fig:platzhalter} shows an example of such an element.
+  \begin{figure} % Bild 1 batoz
+  	\centering
+  	\includegraphics[width=0.7\linewidth]{figures/platzhalter}
+  	\caption[kurze Unter-Überschrift]{lange Unter-Überschrift}
+  	\label{fig:platzhalter}
+  \end{figure}
+
+  % dkq basiert auf diskretisierung der stress-energie, unter vernachlässigung der transverse shear strain energy (gl.(1) s.4)
+  The formulation of the DKQ element by Batoz et al. \cite{batoz1982evaluation} uses the discrete Kirchhoff technique. It is based on the discretization of the strain energy and neglects the transverse shear energy. This results in the following functional:
+  \begin{equation}
+  \Pi = \frac{1}{2} \int_A \vec{\kappa}^T \underline{D}_p \vec{\kappa}\ d\!A
+  \end{equation}
+  where $\underline{D}_p$ is the material matrix as defined previously (equation \ref{eq:M=-Dp*kappa}) and $\vec{\kappa}$ denotes:
+  \begin{equation}
+  \vec{\kappa} = \begin{pmatrix}
+  \frac{\partial \beta_x}{\partial x}\\
+  \frac{\partial \beta y}{\partial y}\\
+  \frac{\partial \beta_x}{\partial y} + \frac{\partial \beta_y}{\partial x}
+  \end{pmatrix}
+  \end{equation}
+  $\beta_i$ is the rotation of the normal to the undeformed mid-surface in $x$-$z$-plane and $y$-$z$-plane, respectively. For $\Pi$ only $C^0$ continuity is required \cite{batoz1982evaluation}. Further, Batoz et al. states that $\beta_x$ and $beta_y$ must be related to $w$ in such a way, that the final element satisfies the following requirements:
+  \begin{itemize}
+  	\item The nodal variables must be $w$, $\theta_x$ and $\theta_y$ with respect to $x$ and $y$ at the four element's nodes ($\theta_x = \partial w/\partial y, \theta_y=-\partial w/\partial x$)
+  	\item The Kirchhoff boundary conditions must be satisfied.
+  \end{itemize}
+      
+  % krümmungsvektor, Db angeben 
+  % considerations für dkq formulierung
+  Two incomplete cubic polynomial expressions define $\beta_x$ and $\beta_y$:
+  \begin{align}
+  \beta_x &= \sum_{i=1}^{8} N_i \beta_{x_i}\\
+  \beta_y &= \sum_{i=1}^{8} N_i \beta_{y_i}
+  \end{align}
+  $N_i(\xi,\eta)$ are here the shape functions with isoparametric coordinates $\xi$ and $\eta$. They are the same as of the eight node Serendipity element, described for example in \cite{zienkiewicz2000finite} and seen in Figure \ref{fig:platzhalter}. The shape functions of this element are achieved by products of linear lagrangian polynomials of the form $\frac{1}{4}(\xi+1)(\eta+1)$. For the eight node element the following shape functions result:
+  \begin{align}
+  N_1(\xi, \eta) &= \frac{1}{4}(1-\xi)(1-\eta)(-\xi-\eta-1) \nonumber\\
+  N_2(\xi, \eta) &= \frac{1}{4}(1+\xi)(1-\eta)(\xi-\eta-1) \nonumber\\
+  N_3(\xi, \eta) &= \frac{1}{4}(1+\xi)(1+\eta)(\xi+\eta-1) \nonumber\\
+  N_4(\xi, \eta) &= \frac{1}{4}(1-\xi)(1+\eta)(-\xi+\eta-1) \nonumber\\
+  N_5(\xi, \eta) &= \frac{1}{2}(1-\xi^2)(1-\eta) \nonumber\\
+  N_6(\xi, \eta) &= \frac{1}{2}(1+\xi)(1-\eta^2) \nonumber\\
+  N_7(\xi, \eta) &= \frac{1}{2}(1-\xi^2)(1+\eta) \nonumber\\
+  N_8(\xi, \eta) &= \frac{1}{2}(1-\xi)(1-\eta^2) \nonumber
+  \end{align}
+  \begin{figure} % Bild 8.9 (a) \cite{zienkiewicz2000finite}
+  	\centering
+  	\includegraphics[width=0.7\linewidth]{figures/platzhalter}
+  	\caption[kurze Unter-Überschrift]{lange Unter-Überschrift}
+  	\label{fig:platzhalter}
+  \end{figure}
+  $\beta_{x_i}$ and $\beta_{y_i}$ are transitory nodal variables at the four nodes and mid-sides of the element.
+  Next, Batoz et al. introduces the Kirchhoff assumptions at the corner nodes (cf. Figure \ref{fig:platzhalter} for the following):
+  \begin{align}
+  \begin{pmatrix}
+  \beta_{x_i} + \partial w/\partial x_i \\
+  \beta_{y_i} + \partial w/\partial y_i
+  \end{pmatrix} = \begin{pmatrix}
+  0\\0
+  \end{pmatrix},\qquad i = 1,2,3,4
+  \end{align}
+  and at the mid-nodes:
+  \begin{align}
+  \beta_{s_k} + \partial w/\partial s_k = 0,\qquad k = 5,6,7,8
+  \end{align}
+  where $s$ denotes the coordinate along the element boundary and $\partial w/\partial s_k$ is the derivative of the displacement $w$ with respect to the mid-node $k$:
+  \begin{equation}
+  \frac{\partial w}{\partial s_k} = -\frac{3}{2 l_{ij}}(w_i-w_j) - \frac{1}{4}\left(\frac{\partial w}{\partial s_i} + \frac{\partial w}{\partial s_j}\right)
+  \end{equation}
+  with $k = 5,6,7,8$ being the mid-node of side $ij = 12, 23, 34, 41$ and $l_{ij}$ denotes the length of side $ij$.
+  $\beta_n$ varies linearly along the sides:
+  \begin{equation}
+  \beta_{n_k} = \frac{1}{2}\left(\beta_{n_i} + \beta_{n_j}\right) = -\frac{1}{2} \left(\frac{\partial w}{\partial n_i} + \frac{\partial w}{\partial n_j}\right)
+  \end{equation}
+  with $k$ same as before.
+  % formfunktionen, koeffizienten
+  $\beta_x$ and $\beta_y$ can be rewritten as follows:
+  \begin{align}
+  \beta_x &= \vec{H^x(\xi,\eta)}^T \vec{w}\\
+  \beta_y &= \vec{H^y(\xi,\eta)}^T \vec{w}\\
+  \vec{w}^T &= \begin{pmatrix}
+  w_1&\theta_{x_1}&\theta_{y_1}&w_2&\theta_{x_2}&\theta_{y_2}&w_3&\theta_{x_3}&\theta_{y_3}
+  \end{pmatrix} \nonumber
+  \end{align}
+  with
+  \begin{align}
+  \vec{H^x}^T &= \begin{pmatrix}
+  H_1^x & \dots & H_{12}^x
+  \end{pmatrix} \nonumber\\
+  H_{\left[1,4,7,10\right]}^x &= \frac{3}{2}\left(a_{\left[5,6,7,8\right]} N_{\left[5,6,7,8\right]} - a_{\left[8,5,6,7\right]} N_{\left[8,5,6,7\right]}\right) \nonumber\\
+  H_{\left[2,5,8,11\right]}^x &= b_{\left[5,6,7,8\right]} N_{\left[5,6,7,8\right]} + b_{\left[8,5,6,7\right]} N_{\left[8,5,6,7\right]} \nonumber\\
+  H_{\left[3,6,9,12\right]}^x &= N_{\left[1,2,3,4\right]} - c_{\left[5,6,7,8\right]} N_{\left[5,6,7,8\right]} - c_{\left[8,5,6,7\right]} N_{\left[8,5,6,7\right]} \nonumber\\
+  \vec{H^y}^T &= \begin{pmatrix}
+  H_1^y & \dots & H_{12}^y
+  \end{pmatrix} \nonumber\\
+  H_{\left[1,4,7,10\right]}^y &= \frac{3}{2}\left(d_{\left[5,6,7,8\right]} N_{\left[5,6,7,8\right]} - d_{\left[8,5,6,7\right]} N_{\left[8,5,6,7\right]}\right) \nonumber\\
+  H_{\left[2,5,8,11\right]}^y &= -N_{\left[1,2,3,4\right]} + e_{\left[5,6,7,8\right]} N_{\left[5,6,7,8\right]} + e_{\left[8,5,6,7\right]} N_{\left[8,5,6,7\right]} \nonumber\\
+  H_{\left[3,6,9,12\right]}^y &= -b_{\left[5,6,7,8\right]} N_{\left[5,6,7,8\right]} - b_{\left[8,5,6,7\right]} N_{\left[8,5,6,7\right]} \nonumber
+  \end{align}
+  The function notation $H_{\left[i,j,k,l\right]}^x$ groups four functions together. The first function of the group gets the first index of the squared brackets, the second function the second index, and so on. The coefficients $a,b,c,d$ and $e$ are as follows:
+  \begin{align}
+  a_k &= -\frac{x_{ij}}{l_{ij}^2} \nonumber\\
+  b_k &= \frac{3}{4} \frac{x_{ij} y_{ij}}{l_{ij}^2} \nonumber\\
+  c_k &= \frac{ \frac{x_{ij}^2}{4} - \frac{y_{ij}^2}{2} }{l_{ij}^2} \nonumber\\
+  d_k &= -\frac{y_{ij}}{l_{ij}^2} \nonumber\\
+  e_k &= \frac{ \frac{y_{ij}^2}{4} - \frac{x_{ij}^2}{2} }{l_{ij}^2} \nonumber
+  \end{align}
+  where $k = 5,6,7,8$ for the sides $ij = 12, 23, 34, 41$, $x_{ij} = x_i - x_j$, $y_{ij} = y_i - y_j$ and $l_{ij}^2 = x_{ij}^2 + y_{ij}^2$. For more details about the derivation of these coefficients and functions $H^x$ and $H^y$ see Batoz et al. \cite{batoz1982evaluation}.
+  
+  % jacobi-matrix, -inverse, determinante
+  Next, the Jacobian matrix $\underline{J}$ can be assembled, that is:
+  \begin{equation}
+  \underline{J} = \frac{1}{4} \begin{pmatrix}
+  (x_{12}+x_{34})\eta - x_{12} + x_{34} & (y_{12} + y_{34})\eta - x_{12} + y_{34}\\
+  (x_{12}+x_{34})\xi  - x_{13} - x_{24} & (y_{12} + y_{34})\xi  - y_{13} + y_{24}
+  \end{pmatrix} = \begin{pmatrix}
+  J_{11} & J_{12}\\ J_{21} & J_{22}
+  \end{pmatrix}
+  \end{equation}
+  With its determinant and inverse:
+  \begin{align}
+  \left|\underline{J}\right| &= J_{11} J_{22} - J_{12} J_{21}\\
+  \underline{J}^{-1} &= \frac{1}{\left|\underline{J}\right|} \begin{pmatrix}
+  J_{22} & -J_{12}\\ -J_{21} & J_{11}
+  \end{pmatrix} = \begin{pmatrix}
+  j_{11} & j_{12}\\ j_{21} & j_{22}
+  \end{pmatrix}
+  \end{align}
+  
+  % krümmungs-verschiebungs-beziehung
+  The strain-displacement matrix can now be obtained:
+  \begin{equation}
+  \underline{B} = \begin{pmatrix}
+  \vec{H_x^x}\\\vec{H_y^y}\\\vec{H_y^x}+\vec{H_x^y}
+  \end{pmatrix} = \begin{pmatrix}
+  j_{11} & j_{12} & 0 & 0\\
+  0 & 0 & j_{21} & j_{22}\\
+  j_{21} & j_{22} & j_{11} & j_{12}\\
+  \end{pmatrix} \begin{pmatrix}
+  \vec{H_\xi^x}\\\vec{H_\eta^x}\\\vec{H_\xi^y}\\\vec{H_\eta^y}
+  \end{pmatrix}
+  \end{equation}
+  The expressions $vec{H_\xi^x}, \vec{H_\eta^x}, \vec{H_\xi^y}$ and $\vec{H_\eta^y}$ are vectors containing the derivatives of the corresponding components of the vectors $\vec{H^x}$ and $\vec{H^y}$ with respect to $\xi$ and $\eta$, respectively.
+  And the matrix $\underline{B}$ can then be inserted into the displacement-strain relation, like equation \ref{eq:kappa=YBw}:
+  \begin{equation}
+  \vec{\kappa} = \underline{B} \vec{w}
+  \end{equation}
+  
+  % steifigkeitsmatrix
+  Next, $\vec{\kappa} = \underline{B} \vec{w}$ can be used in the functional to get the first term like equation \ref{eq:t3_pi1=0.5wTKw}:
+  \begin{align}
+  \Pi_1 &= \frac{1}{2} \int_A \vec{\kappa}^T \underline{D}_p \vec{\kappa}\ d\!A \nonumber\\
+  &= \frac{1}{2} \vec{w}^T \int_A \underline{B}^T \underline{D}_p \underline{B}\ d\!A \vec{w}\nonumber\\
+  &= \frac{1}{2} \vec{w}^T \underline{K} \vec{w} \nonumber
+  \end{align}
+  with the stiffness matrix of the DKQ element $\underline{K}$:
+  \begin{align}
+  \underline{K} &= \int_A \underline{B}^T \underline{D}_p \underline{B}\ d\!A \nonumber\\
+  &= \int_{-1}^{1} \int_{-1}^{1} \underline{B}^T \underline{D}_p \underline{B}\ \left|\underline{J}\right|\ d\,\!\xi d\,\!\eta
+  \end{align}
+  
+  The stiffness matrix can be numerically integration with a $2\!\times\!2$ Gaussian integration scheme. Batoz et al. states that four sampling points are enough, although a $3\!\times\!3$ point scheme would be necessary for exact integration on a rectangular element \cite{batoz1982evaluation}. Those four sampling points are located at $\xi_i = \pm \frac{\sqrt{3}}{3}$ and $\eta_i = \pm \frac{\sqrt{3}}{3}$ with weight factor $\omega_i = 1$ equivalent to all four. The equation for the stiffness matrix can then be written in discretized form as follows:
+  \begin{equation}
+  \underline{K} = \sum_{i=1}^{2} \sum_{j=1}^{2} \omega_i \omega_j \underline{B}(\xi_i,\eta_j)^T \underline{D}_p \underline{B}(\xi_i,\eta_j) \left|\underline{J}(\xi_i,\eta_j)\right|
+  \end{equation}
+  When all nodal values $\vec{w}$ are known, the moments $\vec{M}$ at point $(x,y)$ in the element can be calculated:
+  \begin{equation}
+  \vec{M}(x,y) = \underline{D}_p \underline{B}(x,y) \vec{w}
+  \end{equation}
+  with
+  \begin{equation}
+  \vec{M} = \begin{pmatrix}
+  M_x\\M_y\\M_xy
+  \end{pmatrix}
+  \end{equation}
  
  \subsection{Coordinate Transformation} %\cite{steinke}
  \textit{erster Entwurf}\newline
