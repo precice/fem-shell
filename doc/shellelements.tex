@@ -6,11 +6,10 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
  
  
  \subsection{Introduction to Linear Elasticity Problems}
- - \cite{steinke2005finite} ch3.1 (S.61)\newline
- - Einführung von Vektoren und Matrizen (Verschiebungsvektor, Tensoren bzw. Vektoren der Dehnungen und Spannungen)\newline
- - Verknüpfung der Versch. mit den Dehnungen + Stoffgesetz (kinematische Beziehung)\newline
- - ???
- 
+ % \cite{steinke2005finite} ch3.1 (S.61)\newline
+ % Einführung von Vektoren und Matrizen (Verschiebungsvektor, Tensoren bzw. Vektoren der Dehnungen und Spannungen)\newline
+ % Verknüpfung der Versch. mit den Dehnungen + Stoffgesetz (kinematische Beziehung)\newline
+ % ???
  In the following the fundamental equations of linear elasticity will be considered. Here, the spatial case is used for demonstration, but every lower dimensional problem can easily be derived from it.
  The following definitions will be used in this thesis:
  \begin{equation}
@@ -76,11 +75,11 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   %- Bild ähnlich ch7.1 mit xy-Ausdehnung, Dicke t, Mittelfläche, Rand, KoSys; Streckenlast q0 und Volumenkraft g aber weglassen\newline
   \begin{figure}
 \centering
-\includegraphics[width=0.7\linewidth]{figures/platzhalter}
-\caption[kurze Unter-Überschrift]{lange Unter-Überschrift}
-\label{fig:platzhalter}
+\includegraphics[width=0.97\linewidth]{figures/plane}
+\caption{Schematic view of a plane object}
+\label{fig:plane}
 \end{figure}
-  In figure \ref{fig:platzhalter} an object is shown which extends to the x and y axis as its primary direction. The extend in z-direction is smaller and denoted by thickness $t$. The mid place located in between the top and bottom surface areas has the coordinate $z=0$. Its local z-axis equals the normal vector of the mid place. Such an object is called \textit{plane} in the following.
+  In Figure \ref{fig:plane} an object is shown which extends to the x and y axis as its primary direction. The extend in z-direction is smaller and denoted by thickness $t$. The mid-surface located in between the top and bottom surface areas has the coordinate $z=0$. Its local z-axis equals the normal vector of the mid place. Such an object is called \textit{plane} in the following.
   
   %- Bed. für ebenen Spannungszustand (eb. Dehnungszustand erwähnen und auf Ref (z.B. Zienkiewicz) verweisen)\newline
   There are two different problem definitions regarding plane elements: Plane stress and plane strain. The directions of displacements $u$ and $v$ along the orthogonal local x and y axis defining its displacement field is a common feature of both problems. Also, both have in common, that only strains and stresses in the xy plane have to be considered: Instead of nine, only three components remain. While in the case of plane stress all other stress components are zero, in plane strain the stress in direction perpendicular to the xy plane is non-zero. In this thesis only plane stress will be discussed in further detail. More information about plane strain is given in \cite{zienkiewicz2000finite}. %TODO weitere referenz mit details dazu
@@ -173,23 +172,22 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   
   
   \subsubsection{Tri-3 Plane Element}
-  mathematical derivation of three node triangular plane element \textbf{discretization}\\
-  see Steinke \cite{steinke2005finite} page 215-221\\
-  % Bild von trianguliertem Körper\\
+  %mathematical derivation of three node triangular plane element \textbf{discretization}\\
+  %see Steinke \cite{steinke2005finite} page 215-221\\
+  \begin{figure}% Bild von trianguliertem Körper
+%  	\centering
+  	\includegraphics[width=1.0\linewidth]{figures/plane_triangulation}
+  	\caption{Subdividing plane object with triangular elements}
+  	\label{fig:plane_triangulation}
+  \end{figure}
+  In section \ref{sec:PlaneProbDef} the plane's functional was derived. Now the focus is on the functional's discretization. Figure \ref{fig:plane_triangulation} shows a general, planar object defined to be placed in the xy-plane. The first discretization step is to divide the object into single triangles approximating the shape of it. This process is called triangulation. Every one of these triangles then represents a finite element with one node at every corner. The finer the triangulation is done the better the object and its boundary are matched by its discrete complement, but also the more finite elements have to be considered in later calculations.
   \begin{figure}
   	\centering
-  	\includegraphics[width=0.7\linewidth]{figures/platzhalter}
-  	\caption[kurze Unter-Überschrift]{lange Unter-Überschrift}
-  	\label{fig:platzhalter}
+  	\includegraphics[width=1.0\linewidth]{figures/plane_triangle}
+  	\caption{Three node triangular element with its coordinates, nodal displacements and nodal forces}
+  	\label{fig:plane_triangle}
   \end{figure}
-  In section \ref{sec:PlaneProbDef} the plane's functional was derived. Now the focus is on the functional's discretization. Figure \ref{fig:platzhalter} shows a general, planar object defined to be placed in the xy-plane. The first discretization step is to divide the object into single triangles approximating the shape of it. This process is called triangulation. Every one of these triangles then represents a finite element with one node at every corner. The finer the triangulation is done the better the object and its boundary are matched by its discrete complement, but also the more finite elements have to be considered in later calculations.
-  \begin{figure}
-  	\centering
-  	\includegraphics[width=0.7\linewidth]{figures/platzhalter}
-  	\caption[kurze Unter-Überschrift]{lange Unter-Überschrift}
-  	\label{fig:platzhalter}
-  \end{figure}
-  One triangular finite element is shown in Figure \ref{fig:platzhalter}. It is defined by the coordinates $(x_i,y_i)$ of its three nodes. Since the element is located in the xy-plane, the z-coordinate is of no interest and will be ignored. At every node, forces can be applied denoted with $F_{x_i}$ and $F_{y_i}$. Accordingly, every node can be displaced. The movement along the x-axis is denoted with $u_i$, or with $v_i$ along the y-axis respectively. Note, that the node numbering is in counter-clockwise direction. This definition will be kept throughout the thesis, and is important to remember when implementing the FEM-code in order to reduce errors.
+  One triangular finite element is shown in Figure \ref{fig:plane_triangle}. It is defined by the coordinates $(x_i,y_i)$ of its three nodes. Since the element is located in the xy-plane, the z-coordinate is of no interest and will be ignored. At every node, forces can be applied denoted with $F_{x_i}$ and $F_{y_i}$. Accordingly, every node can be displaced. The movement along the x-axis is denoted with $u_i$, or with $v_i$ along the y-axis respectively. Note, that the node numbering is in counter-clockwise direction. This definition will be kept throughout the thesis, and is important to remember when implementing the FEM-code in order to reduce errors.
   In this thesis only triangles defined by three nodes are discussed. There are many more finite elements forming triangles, such as six node triangles or even seven node triangles. The main difference between these types of elements are the order of shape functions. More details about higher order triangular finite elements can be found in %TODO \cite
   
   % ansatzfunktion (abgewandelt statt phi, u und v separat)\\
@@ -208,13 +206,13 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   a_0 \\ a_1 \\ a_2
   \end{pmatrix} = \vec{x}^T \vec{a},
   \end{equation}
-  both defined in triangular coordinates (see figure \ref{fig:platzhalter}).
-  % dreieckskoordinaten (ähnlich bild 2.7 auf s.39(53))
-  \begin{figure}
+  both defined in triangular coordinates (see figure \ref{fig:tri_coords}).
+  
+  \begin{figure}% dreieckskoordinaten (ähnlich bild 2.7 auf s.39(53))
   	\centering
-  	\includegraphics[width=0.7\linewidth]{figures/platzhalter}
-  	\caption[kurze Unter-Überschrift]{lange Unter-Überschrift}
-  	\label{fig:platzhalter}
+  	\includegraphics[width=0.9\linewidth]{figures/triangular_coords}
+  	\caption{Triangular coordinates $L_1,L_2,L_3$ and sampling point $P$ within the triangular element}
+  	\label{fig:tri_coords}
   \end{figure}
   % interpolationsbedingunen führen auf Formfunktionen\\
   To get the unknown coefficients $a_i$, values for the triangular coordinates are set. This creates a system of linear equations:
@@ -309,7 +307,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   \frac{-\partial x}{\partial L_2} & \frac{\partial x}{\partial L_1}
   \end{pmatrix}
   \end{equation}
-  The conversion between triangular and Cartesian coordinates can be summarized as follows (see Figure \ref{fig:platzhalter} and \cite{steinke2005finite}):
+  The conversion between triangular and Cartesian coordinates can be summarized as follows (see Figure \ref{fig:tri_coords} and \cite{steinke2005finite}):
   \begin{align}\label{eq:triCoord<->CartCoord}
   L_1 + L_2 + L_3 &= 1 \rightarrow L_3 = 1-L_1-L_2 \nonumber\\
   x &= x_1L_1 + x_2L_2 + x_3L_3 = (x_1-x_3)L_1 + (x_2-x_3)L2 + x_3\\
@@ -405,13 +403,12 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   One solution to this problem is the use of isoparametric elements. They can be non-rectangular. The trick is to use reference coordinates which map the physical element into a reference element that is a square. Thus, the physical element can have a more general shape, but a coordinate transformation and numerical integration is needed which brings in more mathematical complexity \cite{cook2002concepts}.
   
   %- isoparametrisches viereckselement (7.5.1) + bild\\
-  %- bild von original- und bildebene Bild 7.17 steinke oder 6.2-1. cook\\
-  In this section quadrilateral isoparametric elements consisting of four nodes are described, but one can expand it to eight or nine node elements. Figure \ref{fig:platzhalter} shows the two abstraction layers: On the left side the original element is shown in physical space, on the right side the reference element is shown. The square has a side length of $2$. The coordinate system with the $\xi$ and $\eta$ axis has its origin in the center of the square. Also note the numbering of the nodes is again counter-clockwise.
-  \begin{figure}
+  In this section quadrilateral isoparametric elements consisting of four nodes are described, but one can expand it to eight or nine node elements. Figure \ref{fig:coord_trafo} shows the two abstraction layers: On the left side the original element is shown in physical space, on the right side the reference element is shown. The square has a side length of $2$. The coordinate system with the $\xi$ and $\eta$ axis has its origin in the center of the square. Also note the numbering of the nodes is again counter-clockwise.
+  \begin{figure}%- bild von original- und bildebene Bild 7.17 steinke oder 6.2-1. cook
   	\centering
-  	\includegraphics[width=0.7\linewidth]{figures/platzhalter}
-  	\caption[kurze Unter-Überschrift]{lange Unter-Überschrift}
-  	\label{fig:platzhalter}
+  	\includegraphics[width=0.97\linewidth]{figures/coord_trafo}
+  	\caption{Coordinate transformation of four node quadrilateral element with physical space on the left side and reference space on the right side}
+  	\label{fig:coord_trafo}
   \end{figure}
   
   %- eigenschaften der ansatzfunktion + formfunktionen\\
@@ -590,14 +587,13 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   
   \subsubsection{Problem Definition}
   %\cite{steinke2005finite} ch8.1
-  % bild wie bei \ref{sec:MprobDef}
-  \begin{figure}
+  \begin{figure} % bild wie bei \ref{sec:MprobDef}
   	\centering
-  	\includegraphics[width=0.7\linewidth]{figures/platzhalter}
-  	\caption[kurze Unter-Überschrift]{lange Unter-Überschrift}
-  	\label{fig:platzhalter}
+  	\includegraphics[width=0.9\linewidth]{figures/plate}
+  	\caption{Schematic drawing of a Kirchhoff plate with its main dimension $l$, thickness $t$ and loading $p$ normal to the mid-surface}
+  	\label{fig:plate}
   \end{figure}
-  In contrast to a plane, where the load is located planar with respect to the plane, the load is perpendicular to the mid place at a plate. Therefore plate element problems are important for supporting structures of bridges or ceilings and floors in buildings, for example. In Figure \ref{fig:platzhalter} one can see a generalized plate object. It has a main dimension of $l$ and a constant thickness $t$. With the assumption that $t \ll l$, the problem becomes two dimensional and, instead of the whole object, only the middle plane between the two surface areas will be considered. The object has a local coordinate system with its xy-plane the mid plane and its z-axis perpendicular to this plane. The surface areas are located at $z = \pm t/2$. As stated in the beginning, the load is applied in z-direction, i.e. normal to the mid-surface.
+  In contrast to a plane, where the load is located planar with respect to the plane, the load is perpendicular to the mid place at a plate. Therefore plate element problems are important for supporting structures of bridges or ceilings and floors in buildings, for example. In Figure \ref{fig:plate} one can see a generalized plate object. It has a main dimension of $l$ and a constant thickness $t$. With the assumption that $t \ll l$, the problem becomes two dimensional and, instead of the whole object, only the middle plane between the two surface areas will be considered. The object has a local coordinate system with its xy-plane the mid plane and its z-axis perpendicular to this plane. The surface areas are located at $z = \pm t/2$. As stated in the beginning, the load is applied in z-direction, i.e. normal to the mid-surface.
   
   % hier wird die kirchhoff-platten-theorie verwendet
   In this work Kirchhoff's theory of thin plates is used. For thick plates or laminated plates, the theory of Reissner-Mindlin is more applicable. The main difference is that with Reissner-Mindlin plates one takes the shear deformations into account. Thus, the normal to the mid-surface remains straight but not necessarily perpendicular to it; instead of a Kirchhoff plate: Here, the normal remains normal to the mid-surface even after deformation.
@@ -703,11 +699,11 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   % auf verschiedene randbedingungen der platte eingehen
   \begin{figure} % Bild 8.5 steinke
   	\centering
-  	\includegraphics[width=0.7\linewidth]{figures/platzhalter}
-  	\caption[kurze Unter-Überschrift]{lange Unter-Überschrift}
-  	\label{fig:platzhalter}
+  	\includegraphics[width=0.97\linewidth]{figures/plate_boundary}
+  	\caption{Part of a plate's boundary with its essential and natural boundary conditions}
+  	\label{fig:plate_boundary}
   \end{figure}
-  Let $P$ be a point on the continuous boundary of the plate with a local Cartesian coordinate system as described in \cite{steinke2005finite} (see Figure \ref{fig:platzhalter}): The $n$ coordinate is perpendicular to the boundary surface, the $s$ axis tangential to it. The third axis equals the global z-axis of the plate. There are three essential and three natural boundary conditions defined for $P$: The displacement $w$, the drills $\theta_n = \partial w/\partial s, \theta_s = -\partial w/\partial n$, the shear force $Q_n$ and the moments $M_{ns}$ and $M_{nn}$. Since this leads to an inconsistency with the differential equation above, \cite{steinke2005finite} stated that Kirchhoff introduced new forces:
+  Let $P$ be a point on the continuous boundary of the plate with a local Cartesian coordinate system as described in \cite{steinke2005finite} (see Figure \ref{fig:plate_boundary}): The $n$ coordinate is perpendicular to the boundary surface, the $s$ axis tangential to it. The third axis equals the global z-axis of the plate. There are three essential and three natural boundary conditions defined for $P$: The displacement $w$, the drills $\theta_n = \partial w/\partial s, \theta_s = -\partial w/\partial n$, the shear force $Q_n$ and the moments $M_{ns}$ and $M_{nn}$. Since this leads to an inconsistency with the differential equation above, \cite{steinke2005finite} stated that Kirchhoff introduced new forces:
   \begin{equation}
   V_n = Q_n - \frac{\partial M_{ns}}{\partial s}
   \end{equation}
@@ -809,13 +805,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   \frac{\partial x_1}{\partial L_2} & \frac{\partial x_2}{\partial L_2} & \cdots & \frac{\partial x_9}{\partial L_2}
   \end{pmatrix}
   \end{equation}
-  \begin{figure} % selbes Bild wie weiter oben
-  	\centering
-  	\includegraphics[width=0.7\linewidth]{figures/platzhalter}
-  	\caption[kurze Unter-Überschrift]{lange Unter-Überschrift}
-  	\label{fig:platzhalter}
-  \end{figure}
-  Next, the interpolation conditions at the three nodes for the three unknowns can be set. In Figure \ref{fig:platzhalter} one can see the triangular coordinates of the three nodes. Following the notation of \cite{steinke2005finite}:
+  Next, the interpolation conditions at the three nodes for the three unknowns can be set (cf. Figure \ref{fig:tri_coords}). Following the notation of \cite{steinke2005finite}:
   \begin{align}
   \underbrace{\begin{pmatrix}
   	\vec{x}^T(1,0)\\G_1(1,0)\\G_2(1,0)\\
@@ -935,12 +925,12 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   % see Zienkiewicz \cite{zienkiewicz2000finite} page 174-177,219-222 \cite{batoz1982evaluation page 1658-1662}
   % formulierung als DKQ element
   % !! formatierung an meine anpassen, da sehr unterschiedlich zu anderen referenzen !!
-  The element implemented in this work is the so-called \textit{DKQ} element, introduced by Batoz et al. \cite{batoz1982evaluation}. It is a four node, 12 degrees-of-freedom quadrilateral element for thin plates. It is based on a generalization of the \textit{Discrete Kirchhoff Triangular} (DKT) element which is a three node, 9 d.o.f. triangular element. Like the triangular element of the previous section, the DKQ element's nodes have all three d.o.f.: The displacement $w$ and the rotations $\theta_x$ and $\theta_y$ around the element's local $x$- and $y$-axis. Figure \ref{fig:platzhalter} shows an example of such an element.
+  The element implemented in this work is the so-called \textit{DKQ} element, introduced by Batoz et al. \cite{batoz1982evaluation}. It is a four node, 12 degrees-of-freedom quadrilateral element for thin plates. It is based on a generalization of the \textit{Discrete Kirchhoff Triangular} (DKT) element which is a three node, 9 d.o.f. triangular element. Like the triangular element of the previous section, the DKQ element's nodes have all three degrees of freedom: The displacement $w$ and the rotations $\theta_x$ and $\theta_y$ around the element's local $x$- and $y$-axis. Figure \ref{fig:dkq} shows an example of such an element.
   \begin{figure} % Bild 1 batoz
   	\centering
-  	\includegraphics[width=0.7\linewidth]{figures/platzhalter}
-  	\caption[kurze Unter-Überschrift]{lange Unter-Überschrift}
-  	\label{fig:platzhalter}
+  	\includegraphics[width=0.97\linewidth]{figures/dkq}
+  	\caption{12 node quadrilateral plate element DQK}
+  	\label{fig:dkq}
   \end{figure}
 
   % dkq basiert auf diskretisierung der stress-energie, unter vernachlässigung der transverse shear strain energy (gl.(1) s.4)
@@ -969,7 +959,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   \beta_x &= \sum_{i=1}^{8} N_i \beta_{x_i}\\
   \beta_y &= \sum_{i=1}^{8} N_i \beta_{y_i}
   \end{align}
-  $N_i(\xi,\eta)$ are here the shape functions with isoparametric coordinates $\xi$ and $\eta$. They are the same as of the eight node Serendipity element, described for example in \cite{zienkiewicz2000finite} and seen in Figure \ref{fig:platzhalter}. The shape functions of this element are achieved by products of linear lagrangian polynomials of the form $\frac{1}{4}(\xi+1)(\eta+1)$. For the eight node element the following shape functions result:
+  $N_i(\xi,\eta)$ are here the shape functions with isoparametric coordinates $\xi$ and $\eta$. They are the same as of the eight node Serendipity element, described for example in \cite{zienkiewicz2000finite} and seen in Figure \ref{fig:serendipity}. The shape functions of this element are achieved by products of linear lagrangian polynomials of the form $\frac{1}{4}(\xi+1)(\eta+1)$. For the eight node element the following shape functions result:
   \begin{align}
   N_1(\xi, \eta) &= \frac{1}{4}(1-\xi)(1-\eta)(-\xi-\eta-1) \nonumber\\
   N_2(\xi, \eta) &= \frac{1}{4}(1+\xi)(1-\eta)(\xi-\eta-1) \nonumber\\
@@ -982,12 +972,12 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   \end{align}
   \begin{figure} % Bild 8.9 (a) \cite{zienkiewicz2000finite}
   	\centering
-  	\includegraphics[width=0.7\linewidth]{figures/platzhalter}
+  	\includegraphics[width=0.97\linewidth]{figures/serendipity}
   	\caption[kurze Unter-Überschrift]{lange Unter-Überschrift}
-  	\label{fig:platzhalter}
+  	\label{fig:serendipity}
   \end{figure}
   $\beta_{x_i}$ and $\beta_{y_i}$ are transitory nodal variables at the four nodes and mid-sides of the element.
-  Next, Batoz et al. introduces the Kirchhoff assumptions at the corner nodes (cf. Figure \ref{fig:platzhalter} for the following):
+  Next, Batoz et al. introduces the Kirchhoff assumptions at the corner nodes (cf. Figure \ref{fig:serendipity} for the following):
   \begin{align}
   \begin{pmatrix}
   \beta_{x_i} + \partial w/\partial x_i \\
