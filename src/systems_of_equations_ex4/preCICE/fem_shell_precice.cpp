@@ -20,26 +20,20 @@ int main (int argc, char** argv)
     // Initialize libMesh and any dependent libaries
     LibMeshInit init (argc, argv);
 
-    // Initialize the cantilever mesh
-    const unsigned int dim = 2;
-
     // Skip this program if libMesh was compiled as 1D-only.
-    libmesh_example_requires(dim <= LIBMESH_DIM, "2D support");
+    libmesh_example_requires(2 <= LIBMESH_DIM, "2D support");
 
     read_parameters(argc, argv);
 
     // Create a 2D mesh distributed across the default MPI communicator.
-    Mesh mesh(init.comm(), dim);
+    Mesh mesh(init.comm(), 2);
     mesh.allow_renumbering(false);
-    if (mesh.allow_renumbering())
-        std::cout << "mesh erlaubt renumbering\n";
     mesh.read(in_filename);
     // TODO (MPI): schauen, ob und wie man automatisches partioning besser machen kann und vor allen zu welchem Zeitpunkt
 
     if (in_filename.find(".msh") != std::string::npos) // if we load a GMSH mesh file, we need to execute a preparation step
     {
-        std::cout << "we use gmsh\n";
-        //mesh.prepare_for_use(true, false);// skip renumbering, skip find neighbors (depricated)
+        mesh.prepare_for_use(true, false);// skip renumbering, skip find neighbors (depricated)
     }
 
     // Print information about the mesh to the screen.
@@ -48,14 +42,32 @@ int main (int argc, char** argv)
     /*********************
      *   preCICE stuff   *
      *********************/
-    std::string dummyName = "STRUCTURE";
+    std::string solverName = "STRUCTURE";
 
-    SolverInterface interface(dummyName, global_processor_id(), global_n_processors());
+    SolverInterface interface(solverName, global_processor_id(), global_n_processors());
     interface.configure(config_filename);
     std::cout << "preCICE configured..." << std::endl;
 
     //init data
-    int n_nodes = mesh.n_local_nodes();
+    MeshBase::const_node_iterator no = mesh.local_nodes_begin();
+    const MeshBase::const_node_iterator end_no = mesh.local_nodes_end();
+    int n_nodes = 0;
+    BoundaryInfo info = mesh.get_boundary_info();
+    info.build_node_list_from_side_list();
+    std::vector<const Node*> preCICEnodes;
+    for (; no != end_no; ++no)
+    {
+        const Node *nd = *no;
+        if (info.has_boundary_id(nd,2) || info.has_boundary_id(nd,20) || info.has_boundary_id(nd,21))
+        {
+            std::cout << "node (" << nd->id() << ") has preCICE BC-id\n";
+            preCICEnodes.push_back(nd);
+        }
+    }
+    n_nodes = preCICEnodes.size();
+
+    std::cout << "n_nodes = " << n_nodes << "\n";
+
     double *displ;
     int dimensions = interface.getDimensions();
     displ  = new double[dimensions*n_nodes];  // Second dimension (only one cell deep) stored right after the first dimension: see SolverInterfaceImpl::setMeshVertices
@@ -70,16 +82,15 @@ int main (int argc, char** argv)
     int *vertexIDs;
     vertexIDs = new int[n_nodes];
 
-    MeshBase::const_node_iterator no = mesh.local_nodes_begin();
-    const MeshBase::const_node_iterator end_no = mesh.local_nodes_end();
-    for (int i = 0 ; no != end_no; ++no,++i)
+    std::vector<const Node*>::iterator iter = preCICEnodes.begin();
+    for (int i = 0 ; iter != preCICEnodes.end(); ++iter,++i)
     {
+        const Node *nd = *iter;
         for (int dims = 0; dims < dimensions; dims++)
         {
             displ[i*dimensions+dims]  = 1.0;
             forces[i*dimensions+dims] = 0.0;
         }
-        Node *nd = *no;
         grid[i*dimensions]   = (*nd)(0);
         grid[i*dimensions+1] = (*nd)(1);
         grid[i*dimensions+2] = (*nd)(2);
@@ -88,11 +99,12 @@ int main (int argc, char** argv)
 
     int t = 0;
     interface.setMeshVertices(meshID, n_nodes, grid, vertexIDs);
-    no = mesh.local_nodes_begin();
-    for (int i = 0 ; no != end_no; ++no,++i)
+
+    iter = preCICEnodes.begin();
+    for (int i = 0 ; iter != preCICEnodes.end(); ++iter,++i)
     {
-        std::cout << "lm-id: " << (*no)->id() << ", vertexID: " << vertexIDs[i] << "\n";
-        std::pair<dof_id_type, int> pair( (*no)->id(), vertexIDs[i] );
+        std::cout << "libmesh-id: " << (*iter)->id() << ", vertexID: " << vertexIDs[i] << "\n";
+        std::pair<dof_id_type, int> pair( (*iter)->id(), vertexIDs[i] );
         id_map.insert(pair);
     }
 
@@ -139,6 +151,7 @@ int main (int argc, char** argv)
     // nodes with bc_id = 0
     std::set<boundary_id_type> boundary_ids;
     boundary_ids.insert(1);
+    boundary_ids.insert(21);
     // Create a vector storing the variable numbers which the BC applies to
     std::vector<unsigned int> variables(6);
     variables[0] = u_var; variables[1] = v_var; variables[2] = w_var;
@@ -151,6 +164,7 @@ int main (int argc, char** argv)
 
     std::set<boundary_id_type> boundary_ids2;
     boundary_ids2.insert(0);
+    boundary_ids2.insert(20);
     std::vector<unsigned int> variables2(3);
     variables2[0] = u_var; variables2[1] = v_var; variables2[2] = w_var;
     ConstFunction<Number> cf2(0.0);
@@ -177,36 +191,36 @@ int main (int argc, char** argv)
             interface.fulfilledAction(actionWriteIterationCheckpoint());
         }
 
-        // here happens the magic of finding new displacements:
-        //for (int i = 0; i <= N; i++ ) { displ[i]   = 4.0 / ((2.0 - sigma[i])*(2.0 - sigma[i])); }
-        equation_systems.reinit();
+        // here happens "the magic" of finding new displacements:
+        equation_systems.update();//equation_systems.reinit();
         equation_systems.solve();
+
+        std::cout << global_processor_id() << "," << global_n_processors() << "\n";
 
         std::vector<Number> sols;
         equation_systems.build_solution_vector(sols);
         if (global_processor_id() > 0)
             sols.reserve(mesh.n_nodes()*6);
-        mesh.comm().broadcast(sols);
+        if (global_n_processors() > 1)
+            mesh.comm().broadcast(sols);
 
-        // be sure that only the master process (id = 0) act on the solution, since the rest of the processes only see their own partial solution
-        //if (global_processor_id() == 0)
-        //{
-        MeshBase::const_node_iterator no = mesh.local_nodes_begin();
-        const MeshBase::const_node_iterator end_no = mesh.local_nodes_end();
-        for (int i = 0 ; no != end_no; ++no,++i)
+        std::vector<const Node*>::iterator iter = preCICEnodes.begin();
+        for (int i = 0 ; iter != preCICEnodes.end(); ++iter,++i)
         {
-            int id = (*no)->id();
+            int id = (*iter)->id();
             displ[i*dimensions] = sols[6*id];
             displ[i*dimensions+1] = sols[6*id+1];
             displ[i*dimensions+2] = sols[6*id+2];
+            // add displacements to mesh:
+            //Node *nd = *no;
+            //(*nd)(0) += sols[6*i];
+            //(*nd)(1) += sols[6*i+1];
+            //(*nd)(2) += sols[6*i+2];
         }
 
         interface.writeBlockVectorData(displID, n_nodes, vertexIDs, displ);
         interface.advance(0.5); // Advance by dt = 1.0
         interface.readBlockVectorData(forceID, n_nodes, vertexIDs, forces);
-
-        //for (int i = 0; i < mesh.n_local_nodes(); i++)
-        //    std::cout << forces[i*3+2] << ", ";
 
         if (interface.isActionRequired(actionReadIterationCheckpoint()))
         {
@@ -224,7 +238,14 @@ int main (int argc, char** argv)
                 MeshBase::const_node_iterator no = mesh.nodes_begin();
                 const MeshBase::const_node_iterator end_no = mesh.nodes_end();
                 for (int i = 0 ; no != end_no; ++no,++i)
+                {
                    std::cout << "uvw_" << i << " = " << sols[6*i] << ", " << sols[6*i+1] << ", " << sols[6*i+2] << "\n";
+                   // add displacements to mesh:
+                   //Node *nd = *no;
+                   //(*nd)(0) += sols[6*i];
+                   //(*nd)(1) += sols[6*i+1];
+                   //(*nd)(2) += sols[6*i+2];
+                }
                 std::cout << "]\n" << std::endl;
             }
 
@@ -245,13 +266,13 @@ void read_parameters(int argc, char **argv)
     if (argc < 8)
     {
         err << "Usage: " << argv[0] << " -d -nu -e -t -mesh -out -config\n"
-            << "-d: Debug-Mode (1=on, 0=off (default))\n"
-            << "-nu: Possion-Number nu (0.4 default)\n"
-            << "-e: Elasticity Modulus E (1000000.0 default)\n"
+            << "-d: Debugging outputs (1=on, 0=off (default))\n"
+            << "-nu: Possion's ratio (required)\n"
+            << "-e: Elastic modulus E (required)\n"
             << "-t: Thickness (1.0 default)\n"
-            << "-mesh: Input mesh file (*.xda or *.msh)\n"
-            << "-out: Output file name (without extension)\n"
-            << "-config: preCICE configuration file\n";
+            << "-mesh: Input mesh file (*.xda or *.msh, required)\n"
+            << "-out: Output file name (without extension, required)\n"
+            << "-config: preCICE configuration file (required)\n";
 
         libmesh_error_msg("Error, must choose valid parameters.");
     }
@@ -264,24 +285,34 @@ void read_parameters(int argc, char **argv)
 
     if ( command_line.search(1, "-nu") )
         nu = command_line.next(0.3);
+    else
+        libmesh_error_msg("ERROR: Poisson's ratio nu not specified!");
 
     if ( command_line.search(1, "-e") )
         em = command_line.next(1.0e6);
+    else
+        libmesh_error_msg("ERROR: Elastic modulus E not specified!");
 
     if ( command_line.search(1, "-t") )
         thickness = command_line.next(1.0);
+    else
+        libmesh_error_msg("ERROR: Mesh thickness t not specified!");
 
     if ( command_line.search(1, "-mesh") )
-        in_filename = command_line.next("1_tri.xda");
+        in_filename = command_line.next("mesh.xda");
+    else
+        libmesh_error_msg("ERROR: Mesh file not specified!");
 
     if ( command_line.search(1, "-out") )
         out_filename = command_line.next("out");
 
     if ( command_line.search(1, "-config") )
         config_filename = command_line.next("config");
+    else
+        libmesh_error_msg("ERROR: preCICE configuration file not specified!");
 
-    std::cout << "Run program with parameters: d= " << (debug?"true":"false") << ", nu= " << nu << ", em= " << em << ", t= " << thickness;
-    std::cout << ", in-file= " << in_filename << ", out-file= " << out_filename << ", config-file= " << config_filename << "\n";
+    std::cout << "Run program with parameters: debug-messages = " << (debug?"true":"false") << ", nu = " << nu << ", E = " << em << ", t = " << thickness;
+    std::cout << ", in-file = " << in_filename << ", out-file = " << out_filename << ", config-file = " << config_filename << "\n";
 }
 
 void initMaterialMatrices()

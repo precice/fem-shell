@@ -33,6 +33,7 @@ int main (int argc, char **argv)
         cout << endl;
         cout << "Usage: " << argv[0] <<  " configurationFileName N tau" << endl;
         cout << endl;
+        cout << "configurationFileName: preCICE XML-configuration file" << endl;
         cout << "N:     Number of mesh elements, needs to be equal for fluid and structure solver." << endl;
         cout << "tau:   Dimensionless time step size." << endl;
         return -1;
@@ -100,23 +101,25 @@ int main (int argc, char **argv)
     {
         for (int k = 0; k < N; k++)
         {
-            double x = (k%sqrtN) * tileSize;
-            double y = (k/sqrtN) * tileSize;
+            double x = 5.0 + (k%sqrtN) * tileSize;
+            double y = 2.5 + (k/sqrtN) * tileSize;
             grid[k*dimensions]   = x;
             grid[k*dimensions+1] = y;
             grid[k*dimensions+2] = -0.1;
+            //cout << k << ": [" << x << ", " << y << "]\n";
         }
     }
     else
     {
         for (int k = 0; k < N; k++)
         {
-            double x = ((k+13)%sqrtN) * tileSize;
-            double y = ((k+13)/sqrtN) * tileSize;
+            double x = 5.0 + ((k+13)%sqrtN) * tileSize;
+            double y = 2.5 + ((k+13)/sqrtN) * tileSize;
             //cout << x << ", " << y << "| ";
             grid[k*dimensions]   = x;
             grid[k*dimensions+1] = y;
             grid[k*dimensions+2] = -0.1;
+            //cout << 13+k << ": [" << x << ", " << y << "]\n";
         }
     }
 
@@ -151,7 +154,7 @@ int main (int argc, char **argv)
         }
 
         if (rank == 0)
-            f[12*3+2] = 1.0;
+            f[5*3+2] = 1.0; //f[12*3+2] = 1.0;
         //for (int i = 0; i < N; i++)
         //    f[i*dimensions+2] = 1.0;
 
