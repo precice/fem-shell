@@ -50,61 +50,96 @@ int main (int argc, char** argv)
  In fact, this is the base construction of nearly every libMesh program. It starts with including libMesh components that are needed by the program, e.g. \textit{mesh.h, equation\_systems.h, fe.h}. Then, the library needs to be initialized (line 10). This is necessary because it may depend on a number of other external libraries like MPI and PETSc that require initialization before use. On the other hand, if the \texttt{\textbf{LibMeshInit}} object goes out of scope, the other libraries are finalized automatically by libMesh. Next, a mesh is created (lines 12-14) on the default MPI communicator (even if the program is executed single-threaded). The mesh can either be read from file or created by internal mesh generation tools. In line 16 an equation systems object is created. It can contain multiple different systems. Here, only one linear implicit system is added to the object (line 16). Each system can contain multiple variables of different approximation orders (see lines 20/21). Many systems require a user-defined function that will assemble the (linear) system (lines 6 and 23). Now, the data structures for equation system must be initialized which is done in line 25. The solving of the systems is done in line 27 of the code. This one line of code calls the assemble function defined earlier and invokes the default numerical solver. If the external library PETSc is installed, the solver can be controlled from the command line by the user. After solving the system, the solution can be written to file; here, for example, the results are written to a VTK-formatted plot file (line 29).
  
  \subsection{Implementation Details}
- details about the implementation with the libmesh FEM framework %TODO
- 
- 
+ details about the implementation with the libmesh FEM framework \\%TODO
+ - short overview: stand-alone-version: gets input parameters from user and mesh file and produces results stored in output file
+
  
   \subsubsection{Initialization}
    \begin{itemize}
-   	\item loading of parameters
-   	\item setting up libmesh (evtl. uninteressant und es kann weg, oder es muss noch mehr hier rein)
+   	\item loading of parameters: which parameters are needed by the user\\
+   	- possion's ratio $\nu$ required, no default value\\
+   	- elastic modulus $E$ required, no default value\\
+   	- mesh thickness $t$ required, no default value\\
+   	- debugging messages, default false\\
+   	- mesh file required, no default file, type msh oder xda, xdr, see next section for more details\\
+   	- output file, if not given, no output is made
+   	
+   	\item special parameters for petsc:\\
+   	- solver-type\\
+   	- preconditioner-type
    \end{itemize}
    
    
    
   \subsubsection{Mesh file import}
    \begin{itemize}
-   	\item wie sieht mesh file aus
-   	\item welche typen werden akzeptiert
-   	\item welche ids für bcs müssen verwendet werden
+   	\item wie sieht mesh file aus, was muss definiert sein:\\
+   	- vertices mit coordinates\\
+   	- elements\\
+   	- boundary conditions
+   	
+   	\item beispiel im libmesh-format xda
+   	
+   	\item welche typen werden akzeptiert: xda, gmsh implementiert; weitere als erweiterung denkbar
+   	
+   	\item welche ids für bcs müssen verwendet werden: auflistung der bc-id und ihre bedeutung\\
+   	- 0: clamped/simple supported\\
+   	- 1: simply supported/clamped\\
+   	- 2: inner node, part of preCICE interface region (only used by preCICE coupled variant)\\
+   	- 20: same as 0 but additionally part of preCICE interface region (only used...)\\
+   	- 21: same as 1 but additionally part of preCICE ...
+   	
+   	\item especially for standalone-case: force file\\
+   	- structure with short example matching the mesh-example\\
+   	- entries defined in global coordinate system like vertices, too
    \end{itemize}
    
    
    
   \subsubsection{System setup}
    \begin{itemize}
-   	\item erstellen des linearimplicitsystems
-   	\item erstellen der variablen
-   	\item der bcs (grundsätzlich auf die beiden bc-typen eingehen, wie das in libmesh gelöst wurde)
-   	\item des solvers usw.
+  	\item setting up libmesh\\
+   	- LinearImplicitSystem, erklärung aus doxygen\\
+   	- 6 variablen erstellen\\
+    - set boundary condition types, DirichletBoundary class\\
+	  nochmal auf theorieteil eingehen
    \end{itemize}
    
    
    
   \subsubsection{Matrix and vector assembly}
    \begin{itemize}
-   	\item hier wird auf die erstellung der lokalen und globalen stiffnessmatrix eingegangen
-   	\item integral mit gauss-quadratur lösen
-   	\item das auslesen der forces und der entsprechende eintrag in der rhs gesetzt
-   	\item das mitverfolgen der bereits bearbeiteten knoten mittels unordered\_set
+    \item material matrices: D\_m und D\_p
+    
+   	\item creation of local and global stiffness matrix
+   	
+   	\item integral with gauss-quadrature
+   	
+   	\item read corresponding entry from force array and set it in the right-hand-side vector
+
+   	\item storing already processed nodes with unordered\_set-structure
    \end{itemize}
    
    
    
   \subsubsection{Solving the system}
    \begin{itemize}
-   	\item das lösen an sich ist eine code-zeile
-   	\item hier kann man aber schreiben, mit was libmesh umgehen kann an lösern,
-    \item welche einstellmöglichkeiten es gibt (error-eps, \#iters).
-    \item und es geht drum, wie man an die tatsächlichen werte für die displacements kommt und was daraus am ende wird
+   	\item solving part is just one line. calls the assemble-function and the defined solver (e.g. if PETSc is installed)
+   	
+   	%\item hier kann man aber schreiben, mit was libmesh umgehen kann an lösern,
+    
+    \item which settings are possible (error-eps, \#iters)
+    
+    \item build\_solution\_vector
    \end{itemize}
    
    
    
   \subsubsection{Output}
-   für die standalone-version noch ein absatz zur ausgabe in exodus2/vtk-file
- 
- 
+   - for standalone-version output as exodus2-file\\
+   - exodus2 can be read by ParaView, parallel vtk-output is not supported by libMesh
+   
+   - according to the user command line parameter, output file is written to specified file or not at all
  
  
  

@@ -1102,41 +1102,90 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   \end{equation}
  
  \subsection{Coordinate Transformation} %\cite{steinke}
- \textit{erster Entwurf}\newline
- see \cite{nguyen2008smoothed}; genau: \cite{zienkiewicz2000finite}\\
- The nodes and elements in the mesh are defined in global three dimensional space. The elements need to be transformed into local two dimensional space in order to be able to calculate their local stiffness matrix. This local stiffness matrix must then be transformed back into the global system.
- Transform arbitrary 3D triangle onto xy-Plane:
- % Bild von Dreieck mit ABC, globalem KoSys, lokalem KoSys mit Ursprung in A, x-Achse auf Vektor AB usw.\newline
- - given triangle with vertices $A=(a_x, a_y, a_z), B=(b_x, b_y, b_z)$ and $C=(c_x, c_y, c_z)$ ordered in counter-clockwise direction\newline
- - let $U$ be the vector from node $A$ to $B$: $U = B-A = (b_x-a_x, b_y-a_y,b_z-a_z)$ and let $V$ be the vector from node $A$ to $C$: $V = C-A = (c_x-a_x,c_y-a_y,c_z-a_z)$\newline
- - First local unit vector $\tilde{x} = \frac{1}{\left|U\right|}U$\newline
- - Second local unit vector $\tilde{z} = U \times V \longrightarrow \tilde{z} = \frac{1}{\tilde{z}}\tilde{z}$\newline
- - Third local unit vector $\tilde{y} = \tilde{z} \times \tilde{x}$\newline
- - Define transformation matrix $T$ as follows: \[T = \begin{pmatrix}
- \tilde{x}^T\\ \tilde{y}^T\\ \tilde{z}^T
- \end{pmatrix}
- = \begin{pmatrix}
-  \tilde{x}_x & \tilde{x}_y & \tilde{x}_z\\ \tilde{y}_x & \tilde{y}_y & \tilde{y}_z\\ \tilde{z}_x & \tilde{z}_y & \tilde{z}_z
-  \end{pmatrix}\]
-  - Assembly of element's stiffness needs derivatives. Therefore every triangle can be translated in such a way, that node $A$ lies in the global origin.\newline
-  - It follows: $\tilde{A} = \left(0\ 0\ 0\right)^T, \tilde{B} = \left(\tilde{b}_x\ 0\ 0\right)^T, \tilde{C} = \left(\tilde{c}_x\ \tilde{c}_y\ 0\right)^T$\newline
-  - Node $A$ will not be changed by the transformation with $T$, $B$ will be projected onto the local x-axis due to the definition of it as the vector between $A$ and $B$ and $C$ will be projected onto the local $xy$-plane.\newline
-  - One can see that the z component vanishes by transforming into local space\newline
-  \newline
-  % Bild von bel. Viereck mit ABCD, IJKL, globalem KoSys, lokalem KoSys mit Ursprung auf Schnittpunkt der gestrichelten Linien von JL und IK\newline
-  - given quadrilateral with vertices $A=(a_x, a_y, a_z), B=(b_x,b_y,b_z), C=(c_x,c_y,c_z), D=(d_x,d_y,d_z)$ ordered in counter-clockwise direction\newline
-  - let $I$ be the midpoint of the edge $AB$ as follows: $I = A+\frac{1}{2}(B-A)$. Analogously let $J$,$K$ and $L$ be the midpoints of the edges $BC$, $CD$ and $DA$: $J = B+\frac{1}{2}(C-B), K = C+\frac{1}{2}(D-C), L = D+\frac{1}{2}(A-D)$\newline
-  - let $U$ be the vector from node $L$ to $J$: $U = J-L = (j_x-l_x,j_y-l_y,j_z-l_z)$ and let $V$ be the vector from node $I$ to $K$: $V = K-I = (k_x-i_x,k_y-i_y,k_z-i_z)$\newline
-  - First local unit vector $\tilde{x} = \frac{1}{\left\|U\right|}U$\newline
-  - Second local unit vector $\tilde{z} = U \times V \longrightarrow \tilde{z} = \frac{1}{\left|\tilde{z}\right|}\tilde{z}$\newline
-  - Third local unit vector $\tilde{y} = \tilde{z} \times \tilde{x}$\newline
-  - Define transformation matrix $T$ as follows: \[T = \begin{pmatrix}
-   \tilde{x}^T\\ \tilde{y}^T\\ \tilde{z}^T
+  %see \cite{nguyen2008smoothed}; genau: \cite{zienkiewicz2000finite}\\
+  The nodes and elements in the mesh are defined in a global three dimensional coordinate system. The elements need to be transformed into a two dimensional local coordinate system in order to be able to calculate their local stiffness matrices. This local stiffness matrix must then be transformed back into the global system before adding it to the global stiffness matrix. This section describes the building of the transformation matrix, that will be used in the following section for the addressed transformation steps.
+  First the transformation of an arbitrary triangle defined in 3D space is described.
+ 
+  % Bild von Dreieck mit ABC, globalem KoSys, lokalem KoSys mit Ursprung in A, x-Achse auf Vektor AB usw.\newline
+  
+  Given a triangle with vertices $\vec{a} = (a_x, a_y, a_z), \vec{b} = (b_x, b_y, b_z)$ and $\vec{c} = (c_x, c_y, c_z)$ ordered in counter-clockwise direction. Let $\vec{u}$ be the vector from node $\vec{a}$ to $\vec{b}$: $\vec{u} = \vec{b}-\vec{a} = (b_x - a_x, b_y - a_y,b_z - a_z)$ and let $\vec{v}$ be the vector from node $\vec{a}$ to $\vec{c}$: $\vec{a} = \vec{c}-\vec{a} = (c_x - a_x, c_y - a_y, c_z - a_z)$
+  First local unit vector:
+  \begin{equation}
+   \vec{\tilde{x}} = \frac{1}{\left|\vec{u}\right|}\vec{u} \nonumber
+  \end{equation}
+  Second local unit vector:
+  \begin{align}
+   \vec{\tilde{z}} &= \vec{u} \times \vec{v} \nonumber\\
+   \vec{\tilde{z}} &\leftarrow \frac{1}{\vec{\tilde{z}}}\vec{\tilde{z}} \nonumber
+  \end{align}
+  Third local unit vector:
+  \begin{equation}
+   \vec{\tilde{y}} = \vec{\tilde{z}} \times \vec{\tilde{x}} \nonumber
+  \end{equation}
+  Define transformation matrix $\underline{T}$ as follows:
+  \begin{equation}
+   \underline{T} = \begin{pmatrix}
+   \vec{\tilde{x}}^T\\ \vec{\tilde{y}}^T\\ \vec{\tilde{z}}^T
+   \end{pmatrix} = \begin{pmatrix}
+   \vec{\tilde{x}}_x & \vec{\tilde{x}}_y & \vec{\tilde{x}}_z\\ \vec{\tilde{y}}_x & \vec{\tilde{y}}_y & \vec{\tilde{y}}_z\\ \vec{\tilde{z}}_x & \vec{\tilde{z}}_y & \vec{\tilde{z}}_z
    \end{pmatrix}
-   = \begin{pmatrix}
-    \tilde{x}_x & \tilde{x}_y & \tilde{x}_z\\ \tilde{y}_x & \tilde{y}_y & \tilde{y}_z\\ \tilde{z}_x & \tilde{z}_y & \tilde{z}_z
-    \end{pmatrix}
-    \]
+  \end{equation}
+  Assembly of element's stiffness matrix needs partial derivatives. In order to get these derivatives with less computational effort, every triangle can be translated in such a way, that node $\vec{a}$ lies in the global origin before transforming it to local coordinates. It follows:
+  \begin{align}
+   \vec{\tilde{a}} &= \begin{pmatrix}
+   0 & 0 & 0
+   \end{pmatrix}^T \nonumber\\
+   \vec{\tilde{b}} &= \begin{pmatrix}
+   \vec{\tilde{b}}_x & 0 & 0
+   \end{pmatrix}^T \nonumber\\
+   \vec{\tilde{c}} = \begin{pmatrix}
+   \vec{\tilde{c}}_x & \vec{\tilde{c}}_y & 0
+   \end{pmatrix}^T
+  \end{align}
+  Node $\vec{a}$ will not be changed by the transformation with $T$, $\vec{b}$ will be projected onto the local $x$-axis that is defined to be the normalized vector between $\vec{a}$ and $\vec{b}$. Node $\vec{c}$ will be projected onto the local $xy$-plane. One can see that the $z$ component vanishes by transforming into local space, thus generating the wished two dimensional space.
+ 
+  % Bild von bel. Viereck mit ABCD, IJKL, globalem KoSys, lokalem KoSys mit Ursprung auf Schnittpunkt der gestrichelten Linien von JL und IK\newline
+   
+  The other element described in this work is the quadrilateral. Let an arbitrary quadrilateral with vertices $\vec{A} = (a_x, a_y, a_z), \vec{B} = (b_x, b_y, b_z), \vec{C} = (c_x, c_y, c_z), \vec{D} = (d_x, d_y, d_z)$ ordered in counter-clockwise direction be given. Next, let $\vec{I}$ be the midpoint of the edge $\overline{AB}$:
+  \begin{equation}
+   \vec{I} = \vec{A} + \frac{1}{2}\left( \vec{B}-\vec{A}\right) \nonumber 
+  \end{equation}
+  Analogously let $\vec{J}, \vec{K}$ and $\vec{L}$ be the midpoints of the edges $\overline{BC}, \overline{CD}$ and $\overline{DA}$:
+  \begin{align}
+   \vec{J} &= \vec{B} + \frac{1}{2}\left( \vec{C}-\vec{B}\right) \nonumber\\
+   \vec{K} &= \vec{C} + \frac{1}{2}\left( \vec{D}-\vec{C}\right) \nonumber\\
+   \vec{L} &= \vec{D} + \frac{1}{2}\left( \vec{A}-\vec{D}\right) \nonumber
+  \end{align}
+  Let then $\vec{u}$ be the vector from node $\vec{L}$ to $\vec{J}$ and $\vec{v}$ be the vector from node $\vec{I}$ to $\vec{K}$:
+  \begin{align}
+   \vec{u} &= \vec{J}-\vec{L} = \begin{pmatrix}
+   j_x-l_x & j_y-l_y & j_z-l_z
+   \end{pmatrix} \nonumber\\
+   \vec{v} &= \vec{K}-\vec{I} = \begin{pmatrix}
+   k_x-i_x & k_y-i_y & k_z-i_z
+   \end{pmatrix} \nonumber
+  \end{align}
+  First local unit vector:
+  \begin{equation}
+   \vec{\tilde{x}} = \frac{1}{\left|\vec{u}\right|}\vec{u} \nonumber
+  \end{equation}
+  Second local unit vector:
+  \begin{align}
+   \vec{\tilde{z}} &= \vec{u} \times \vec{v} \nonumber\\
+   \vec{\tilde{z}} &\leftarrow \frac{1}{\vec{\tilde{z}}}\vec{\tilde{z}} \nonumber
+  \end{align}
+  Third local unit vector:
+  \begin{equation}
+   \vec{\tilde{y}} = \vec{\tilde{z}} \times \vec{\tilde{x}} \nonumber
+  \end{equation}
+  Define transformation matrix $T$ as follows:
+  \begin{equation}
+   \underline{T} = \begin{pmatrix}
+   \vec{\tilde{x}}^T\\ \vec{\tilde{y}}^T\\ \vec{\tilde{z}}^T
+   \end{pmatrix} = \begin{pmatrix}
+   \vec{\tilde{x}}_x & \vec{\tilde{x}}_y & \vec{\tilde{x}}_z\\ \vec{\tilde{y}}_x & \vec{\tilde{y}}_y & \vec{\tilde{y}}_z\\ \vec{\tilde{z}}_x & \vec{\tilde{z}}_y & \vec{\tilde{z}}_z
+   \end{pmatrix}
+  \end{equation}
  
  
  
