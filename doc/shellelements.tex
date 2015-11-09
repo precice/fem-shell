@@ -5,7 +5,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
  
  
  
- \subsection{Introduction to Linear Elasticity Problems}
+ \subsection{Introduction to Linear Elastic Problems}
  % \cite{steinke2005finite} ch3.1 (S.61)\newline
  % Einführung von Vektoren und Matrizen (Verschiebungsvektor, Tensoren bzw. Vektoren der Dehnungen und Spannungen)\newline
  % Verknüpfung der Versch. mit den Dehnungen + Stoffgesetz (kinematische Beziehung)\newline
@@ -1141,13 +1141,146 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
  
  
  \subsection{Shell Element}
- The combination of the two previous parts and the transformations results in the final shell element\newline
- - bild wie bei 8.7 von scheibe und platte und kombination zu schale + erklärungen, welche unbekannten und kräfte man bei welchem teil hat\\
- - erklärung, warum man hier einfach Plane und Plate unabhängig voneinander berechnen und dann zusammenwerfen darf\\
- - gesamtsteifigkeitsmatrix besteht aus blöcken (3x3 bei tri3, 4x4 bei quad4), Ku=F (gleichung 718 bei \cite{steinke2005finite})
- - Sei $K_m$ die lokale Steifigkeitsmatrix vom Membran/Plane-Teil und $K_p$ die vom Plate-bending-Teil\\
- - Kij weisst in der Spalte theta\_z und Zeile theta\_z $(k_ij)_66$ eine null auf -> erklärung und warum schlecht. ANDERE REFERENZ ERKLÄRT, WAS WIR DESHALB MACHEN (1/1000 der diagonalwerte)\\
- - Dann muss die (Rück-)Transformationsmatrix $T$ erstellt werden, da SKM im lokalen KoSys definiert ist, aber in die globale Systemmatrix einsortiert werden muss\\
- - Je nachdem ob 3 oder 4 Knotenelement (Tri-3/Quad-4) sieht $K$ und $T$ natürlich anders aus\newline
- - Wir transformieren blockweise von lokal nach global zurück ($K_{ij}, 1 \leq i,j \leq 3(4)$)\newline
+ % The combination of the two previous parts and the transformations results in the final shell element\newline
+ Shell elements combine the potential of both, plane and plate elements. Every time a thin walled structure like a car body, dome structure or container with multiaxial pressures is to be simulated, shell elements provide a good solution. In this work only the so-called flat shell elements are described and used in the implementation. Details about curved shell elements, shells of revolution and general shells can be found in Cook et al. \cite{cook2002concepts}. Flat shell elements have a state of bending and membrane stress that can be described by superposition of the plane and plate element \cite{klein2013fem}. Figure \ref{fig:shell_triangle} shows the superposition of plane and plate elements to a flat shell element. The degrees of freedom of plane and plate at every node are combined at the node of the shell element. Obviously the plane and plate element must be of the same finite element's type, for example three node triangular or eight node quadrilateral.
+ \begin{figure} % bild wie bei 8.7 von scheibe und platte und kombination zu schale + erklärungen, welche unbekannten und kräfte man bei welchem teil hat
+ 	\centering
+ 	\includegraphics[width=0.97\linewidth]{figures/shell_triangle}
+ 	\caption{Creation of a triangular flat shell element by superimposing a triangular plane and a triangular plate element. The elements are described in the same local coordinate system with their degrees of freedom shown exemplary at one node per element.}
+ 	\label{fig:shell_triangle}
+ \end{figure}
+ The plane has displacements $u$ and $v$ with dedicated forces $F_x$ and $F_y$. The plate has the deformation $w$ with assigned normal force $F_z$ and the two twists $\theta_x$ and $\theta_y$ with assigned moments $M_x$ and $M_y$. Through the linking of the elements the shell element node has now five natural degrees of freedom. An additional twist around the local z-axis $\theta_z$ will be introduced \cite{steinke2005finite}, increasing the number to six degrees of freedom per node. In vector notation the resulting displacement vector $\vec{u}_i$ of a shell element's node $i$ is:
+ \begin{align}\label{eq:shell_u_i}
+ \vec{u} &= \underbrace{\begin{pmatrix}
+ 	u\\v\\w\\\theta_x\\\theta_y\\\theta_z
+ 	\end{pmatrix}} = \underbrace{\begin{pmatrix}
+ 	u\\v\\0\\0\\0\\0
+ 	\end{pmatrix}} + \underbrace{\begin{pmatrix}
+ 	0\\0\\w\\\theta_x\\\theta_y\\0
+ 	\end{pmatrix}} + \begin{pmatrix}
+ 0\\0\\0\\0\\0\\\theta_z
+ \end{pmatrix}\\
+ &\quad\;\; \text{shell}\ \quad\; \text{plane}\ \quad\! \text{plate}
+ \end{align}
+ 
+ % gesamtsteifigkeitsmatrix besteht aus blöcken (3x3 bei tri3, 4x4 bei quad4), Ku=F (gleichung 718 bei \cite{steinke2005finite})
+ For the two different finite elements in this work - the three node triangular element and the four node quadrilateral element - the stiffness matrix for the shell element is described by a block matrix of either $3\!\times\!3$ submatrices for the triangular case or $4\!\times\!4$ submatrices for the quadrilateral. The following equation shows the latter case as example:
+ \begin{align}\label{eq:shell_K_ij}
+ \underline{K} \vec{u} &= \vec{F} \nonumber\\
+ \begin{pmatrix}
+ \underline{K}_{11} & \underline{K}_{12} & \underline{K}_{13} & \underline{K}_{14}\\
+ \underline{K}_{21} & \underline{K}_{22} & \underline{K}_{23} & \underline{K}_{24}\\
+ \underline{K}_{31} & \underline{K}_{32} & \underline{K}_{33} & \underline{K}_{34}\\
+ \underline{K}_{41} & \underline{K}_{42} & \underline{K}_{43} & \underline{K}_{44}
+ \end{pmatrix} \begin{pmatrix}
+ \vec{u}_1 \\\vec{u}_2 \\\vec{u}_3\\\vec{u}_4
+ \end{pmatrix} &= \begin{pmatrix}
+ \vec{F}_1\\\vec{F}_2\\\vec{F}_3\\\vec{F}_4
+ \end{pmatrix}
+ \end{align}
+ where the vectors $\vec{u}_i$ are the same as in equation \ref{eq:shell_u_i}. The single submatrices $\underline{K}_{ij}$ of $\underline{K}$ were created by the superposition of the stiffness matrices of the plane and the plate:
+ \begin{equation}
+ \underline{K}_{ij} = \left(\underline{\hat{K}}_{ij}\right)_m + \left(\underline{\hat{K}}_{ij}\right)_p
+ \end{equation}
+ The submatrix $\underline{K}_{ij}$ has the following structure:
+ \begin{align}
+ \begin{gmatrix}[p]
+ \circ & \circ & 0     & 0     & 0     & 0 \\
+ \circ & \circ & 0     & 0     & 0     & 0 \\
+ 0     & 0     & \star & \star & \star & 0 \\
+ 0     & 0     & \star & \star & \star & 0 \\
+ 0     & 0     & \star & \star & \star & 0 \\
+ 0     & 0     & 0     & 0     & 0     & 0
+ \colops
+ \mult{0}{u}
+ \mult{1}{v}
+ \mult{2}{w}
+ \mult{3}{\theta_x}
+ \mult{4}{\theta_y}
+ \mult{5}{\theta_z}
+ \rowops
+ \mult{0}{u}
+ \mult{1}{v}
+ \mult{2}{w}
+ \mult{3}{\theta_x}
+ \mult{4}{\theta_y}
+ \mult{5}{\theta_z}
+ \end{gmatrix} &= \begin{gmatrix}[p]
+ \circ & \circ & 0 & 0 & 0 & 0 \\
+ \circ & \circ & 0 & 0 & 0 & 0 \\
+ 0     & 0     & 0 & 0 & 0 & 0 \\
+ 0     & 0     & 0 & 0 & 0 & 0 \\
+ 0     & 0     & 0 & 0 & 0 & 0 \\
+ 0     & 0     & 0 & 0 & 0 & 0
+ \colops
+ \mult{0}{u}
+ \mult{1}{v}
+ \mult{2}{w}
+ \mult{3}{\theta_x}
+ \mult{4}{\theta_y}
+ \mult{5}{\theta_z}
+ \rowops
+ \mult{0}{u}
+ \mult{1}{v}
+ \mult{2}{w}
+ \mult{3}{\theta_x}
+ \mult{4}{\theta_y}
+ \mult{5}{\theta_z}
+ \end{gmatrix} + \begin{gmatrix}[p]
+ 0     & 0     & 0     & 0     & 0     & 0 \\
+ 0     & 0     & 0     & 0     & 0     & 0 \\
+ 0     & 0     & \star & \star & \star & 0 \\
+ 0     & 0     & \star & \star & \star & 0 \\
+ 0     & 0     & \star & \star & \star & 0 \\
+ 0     & 0     & 0     & 0     & 0     & 0
+ \colops
+ \mult{0}{u}
+ \mult{1}{v}
+ \mult{2}{w}
+ \mult{3}{\theta_x}
+ \mult{4}{\theta_y}
+ \mult{5}{\theta_z}
+ \rowops
+ \mult{0}{u}
+ \mult{1}{v}
+ \mult{2}{w}
+ \mult{3}{\theta_x}
+ \mult{4}{\theta_y}
+ \mult{5}{\theta_z}
+ \end{gmatrix}
+ \end{align}
+ % Sei $K_m$ die lokale Steifigkeitsmatrix vom Membran/Plane-Teil und $K_p$ die vom Plate-bending-Teil
+ 
+ % Kij weisst in der Spalte theta\_z und Zeile theta\_z $(k_ij)_66$ eine null auf -> erklärung und warum schlecht. ANDERE REFERENZ ERKLÄRT, WAS WIR DESHALB MACHEN (1/1000 der diagonalwerte)
+ $\left(\underline{\hat{K}}_{ij}\right)_m$ describes the submatrix of the stiffness matrix of the plane element for node $i$ and $j$ and is marked with the $\circ$-symbol, $\left(\underline{\hat{K}}_{ij}\right)_p$ describes the corresponding matrix part of the plate element's stiffness matrix and is symbolized with a $\star$.
+ The degree of freedom $\theta_z$ does not exists in both, the plane and the plate element, and were introduced with the shell element. Therefore $(\underline{K}_{ij})_{66}$ is zero. The sixth degree of freedom is necessary because the missing stiffness regarding a rotation around the axis normal to the element could produce singularities in the overall stiffness matrix. This happens for example, if all neighboring elements of a node lie in the same plane, i.e. they are coplanar. A singularity can lead to a non-solvable system, so this case needs be excluded \cite{steinke2005finite}. One way is to introduce this sixth degree of freedom and give it a value that is so small that it does not influence the displacements and stresses too much. The number of this values varies: Werkle suggests a value of $1/10000$ of the smallest diagonal entry of $\underline{K}_{ij}$ \cite{werkle1995finite}, where Ibrahimbegovic et al. suggests $1/1000$ of the smallest diagonal entriy of $\underline{K}_{ij}$. The value must be small, but big enough to prevent the singularities. Since this value is an approximation, one has to modify it, if the solution is not as expected or one cannot get a solution at all due to the addressed singularities. %TODO ref von ibrahimbegovic überprüfen, ob tatsächlich 1/1000 drin steht; info aus quad_shell_element2.pdf
+ 
+ % Dann muss die (Rück-)Transformationsmatrix $T$ erstellt werden, da SKM im lokalen KoSys definiert ist, aber in die globale Systemmatrix einsortiert werden muss
+ The stiffness matrix for the shell element was constructed in a local coordinate system as described in section \ref{sec:}, \ref{sec:} and \ref{sec:}. The overall stiffness matrix containing information about all elements need to be described in a global coordinate system. Before the element stiffness matrix is added to the global stiffness matrix, it has to be transformed from local to global. This can be achieved by transforming the single blocks of $\underline{K}$ from equation \ref{eq:shell_K_ij} with the relation:
+ \begin{equation}\label{eq:shell_K_ij u_j=F_i}
+ \underline{\check{K}}_{ij} \vec{\check{u}}_j = \vec{\check{F}}_i
+ \end{equation}
+ where ``\;$\check{\ }$\;'' denotes that the matrix and vector are represented in local coordinates. With the help of the transformation matrix $\underline{\tilde{T}}$, the globally described displacement vector $\vec{u}_j$ and load vector $\vec{F}_i$ can be represented in local coordinates:
+ \begin{align}
+ \check{\vec{u}}_j = \underline{\tilde{T}} \vec{u}_j\\
+ \check{\vec{F}}_i = \underline{\tilde{T}} \vec{F}_i
+ \end{align}
+ Since the load vector is to be defined in a global coordinate system and the resulting displacements are to be defined globally, too, equation \ref{eq:shell_K_ij u_j=F_i} will be multiplied by $\underline{\tilde{T}}^T$ from left:
+ \begin{equation}
+ \underline{\tilde{T}}^T \underline{\check{K}}_{ij} \underline{\tilde{T}} \vec{u}_j = \underline{\tilde{T}}^T \underline{\tilde{T}} \vec{F}_i = \vec{F}_i
+ \end{equation}
+ Hence, the two vectors will be represented in global coordinates and only the local element stiffness matrix need to be transformed. The addressed $6\!\times\!6$ transformation matrix $\underline{\tilde{T}}$ is made up of the $3\!\times\!3$ transformation matrix $\underline{T}$ from section \ref{sec:}:
+ \begin{equation}
+ \underline{\tilde{T}} = \begin{pmatrix}
+ \underline{T} & 0\\
+ 0 & \underline{T}
+ \end{pmatrix}
+ \end{equation}
+ 
+ % Je nachdem ob 3 oder 4 Knotenelement (Tri-3/Quad-4) sieht $K$ und $T$ natürlich anders aus
+ In order to get the local element stiffness matrix $\underline{K}$ transformed to the global coordinate system, one has to transform the single submatrices $\underline{K}_{ij}$ as follows:
+ \begin{equation}
+ \underline{K}_{ij} = \underline{\tilde{T}}^T \underline{\check{K}}_{ij} \underline{\tilde{T}}
+ \end{equation}
+ for $1 \leq i,j \leq 3$ in the case of the triangular element and $1 \leq i,j, \leq 4$ for the quadrilateral element, respectively.
  \newpage

@@ -34,20 +34,44 @@ Alexander~H. Jarosch.
 \newblock icetools: a numerical ice flow model download.
 \newblock \url{http://sourceforge.net/projects/icetools/}.
 
+\bibitem[Kir07]{kirk2007adaptive}
+Benjamin~Shelton Kirk.
+\newblock {\em Adaptive Finite Element Simulation of Flow and Transport
+  Applications on Parallel Computers}.
+\newblock PhD thesis, Austin, TX, USA, 2007.
+
+\bibitem[KK98]{karypis1998fast}
+George Karypis and Vipin Kumar.
+\newblock A fast and high quality multilevel scheme for partitioning irregular
+  graphs.
+\newblock {\em SIAM Journal on scientific Computing}, 20(1):359--392, 1998.
+
 \bibitem[Kle13]{klein2013fem}
 Bernd Klein.
-\newblock {\em FEM: Grundlagen und Anwendungen der Finite-Elemente-Methode}.
+\newblock {\em {FEM}: Grundlagen und Anwendungen der Finite-Elemente-Methode}.
 \newblock Springer-Verlag, 2013.
 
-\bibitem[KPSC06]{libmesh}
+\bibitem[KPS13]{kirk2013case}
+B.~S. Kirk, J.~W. Peterson, and R.~H. Stogner.
+\newblock The {libMesh} finite element library: {A} case for object-oriented
+  high-performance computing.
+\newblock In {\em {PRACE Summer School 2013 - Frameworks for Scientific
+  Computing on Supercomputers; Ostrava, Czech Republic}}, June~17--21, 2013.
+\newblock \url{http://ntrs.nasa.gov/search.jsp?R=20130013759}.
+
+\bibitem[KPSC06]{kirk2006libmesh}
 B.~S. Kirk, J.~W. Peterson, R.~H. Stogner, and G.~F. Carey.
 \newblock {\texttt{libMesh}: A C++ Library for Parallel Adaptive Mesh
   Refinement/Coarsening Simulations}.
 \newblock {\em Engineering with Computers}, 22(3--4):237--254, 2006.
 \newblock \url{http://dx.doi.org/10.1007/s00366-006-0049-3}.
 
+\bibitem[las]{laspack2015url}
+{LAS}pack download page.
+\newblock \url{http://www.netlib.org/linalg/}.
+
 \bibitem[mfea]{mfemPubs}
-Mfem - finite element discretization library.
+{MFEM} - finite element discretization library.
 \newblock \url{http://mfem.org/publications/}.
 
 \bibitem[mfeb]{mfem}
@@ -78,6 +102,10 @@ Christophe Prud’Homme, Vincent Chabannes, Vincent Doyeux, Mourad Ismail,
 \newblock In {\em ESAIM: Proceedings}, volume~38, pages 429--455. EDP Sciences,
   2012.
 
+\bibitem[pet]{petsc2015url}
+{PETS}c web page.
+\newblock \url{http://www.mcs.anl.gov/petsc}.
+
 \bibitem[Spe88]{specht1988modified}
 Bernhard Specht.
 \newblock Modified shape functions for the three-node plate bending element
@@ -107,15 +135,14 @@ James~Lionel Tocher.
 \newblock {\em Analysis of plate bending using triangular elements}.
 \newblock PhD thesis, University of California, Berkeley, 1963.
 
+\bibitem[Wer95]{werkle1995finite}
+Horst Werkle.
+\newblock {\em Finite Elemente in der Baustatik}.
+\newblock Springer, 1995.
+
 \bibitem[ZT00]{zienkiewicz2000finite}
 Olgierd~Cecil Zienkiewicz and Robert~Leroy Taylor.
 \newblock {\em The finite element method: Solid mechanics}, volume~2.
 \newblock Butterworth-heinemann, 2000.
-
-\bibitem[ZTZT77]{zienkiewicz1977fem}
-Olgierd~Cecil Zienkiewicz, Robert~Leroy Taylor, Olgierd~Cecil Zienkiewicz, and
-  Robert~Lee Taylor.
-\newblock {\em The finite element method}, volume~3.
-\newblock McGraw-hill London, 1977.
 
 \end{thebibliography}

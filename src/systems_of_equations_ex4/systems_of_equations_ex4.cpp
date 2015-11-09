@@ -966,7 +966,7 @@ void localToGlobalTrafo(ElemType type, DenseMatrix<Real> &trafo, DenseMatrix<Rea
     DenseMatrix<Real> KeSub(6,6);
     DenseMatrix<Real> KeNew(6*nodes,6*nodes);
     DenseMatrix<Real> TSub(6,6);
-    for (int k = 0; k < 2; k++) // copy trafo two times into TSub (cf comment beneath)
+    for (int k = 0; k < 2; k++) // copy trafo two times into TSub (cf. comment beneath)
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
                 TSub(3*k+i,3*k+j) = trafo(i,j);
