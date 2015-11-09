@@ -977,7 +977,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   	\label{fig:serendipity}
   \end{figure}
   $\beta_{x_i}$ and $\beta_{y_i}$ are transitory nodal variables at the four nodes and mid-sides of the element.
-  Next, Batoz et al. introduces the Kirchhoff assumptions at the corner nodes (cf. Figure \ref{fig:serendipity} for the following):
+  Next, Batoz et al. described the Kirchhoff assumptions at the corner nodes (cf. Figure \ref{fig:serendipity} for the following):
   \begin{align}
   \begin{pmatrix}
   \beta_{x_i} + \partial w/\partial x_i \\
@@ -1104,80 +1104,100 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
  \subsection{Coordinate Transformation} %\cite{steinke}
   %see \cite{nguyen2008smoothed}; genau: \cite{zienkiewicz2000finite}\\
   The nodes and elements in the mesh are defined in a global three dimensional coordinate system. The elements need to be transformed into a two dimensional local coordinate system in order to be able to calculate their local stiffness matrices. This local stiffness matrix must then be transformed back into the global system before adding it to the global stiffness matrix. This section describes the building of the transformation matrix, that will be used in the following section for the addressed transformation steps.
-  First the transformation of an arbitrary triangle defined in 3D space is described.
- 
-  % Bild von Dreieck mit ABC, globalem KoSys, lokalem KoSys mit Ursprung in A, x-Achse auf Vektor AB usw.\newline
+  First the transformation of an arbitrary triangle defined in 3D space is described. 
   
-  Given a triangle with vertices $\vec{a} = (a_x, a_y, a_z), \vec{b} = (b_x, b_y, b_z)$ and $\vec{c} = (c_x, c_y, c_z)$ ordered in counter-clockwise direction. Let $\vec{u}$ be the vector from node $\vec{a}$ to $\vec{b}$: $\vec{u} = \vec{b}-\vec{a} = (b_x - a_x, b_y - a_y,b_z - a_z)$ and let $\vec{v}$ be the vector from node $\vec{a}$ to $\vec{c}$: $\vec{a} = \vec{c}-\vec{a} = (c_x - a_x, c_y - a_y, c_z - a_z)$
+  \begin{figure} % Bild von Dreieck mit ABC, globalem KoSys, lokalem KoSys mit Ursprung in A, x-Achse auf Vektor AB usw.\newline
+  	\centering
+  	\includegraphics[width=0.4\linewidth]{figures/triangle}
+  	\caption{Arbitrary triangle with nodes A, B and C, defined in global $xyz$ coordinate system. After transformation a new, local, $\tilde{x}\tilde{y}\tilde{z}$ coordinate system with node A in its origin, is created.}
+  	\label{fig:triangle}
+  \end{figure} 
+  
+  Given a triangle with vertices $\vec{A} = (a_x, a_y, a_z)^T, \vec{B} = (b_x, b_y, b_z)^T$ and $\vec{C} = (c_x, c_y, c_z)^T$ ordered in counter-clockwise direction, as shown in Figure \ref{fig:triangle}. Let $\vec{u}$ be the vector from node $\vec{A}$ to $\vec{B}$ and $\vec{v}$ be the vector from node $\vec{A}$ to $\vec{C}$:
+  \begin{align*}
+  \vec{u} &= \vec{B}-\vec{A} = \begin{pmatrix}
+  b_x - a_x & b_y - a_y & b_z - a_z
+  \end{pmatrix}^T\\
+  \vec{v} &= \vec{C}-\vec{A} = \begin{pmatrix}
+  c_x - a_x & c_y - a_y & c_z - a_z
+  \end{pmatrix}^T
+  \end{align*}
   First local unit vector:
-  \begin{equation}
-   \vec{\tilde{x}} = \frac{1}{\left|\vec{u}\right|}\vec{u} \nonumber
-  \end{equation}
+  \begin{equation*}
+   \vec{\tilde{x}} = \frac{1}{\left|\vec{u}\right|}\vec{u}
+  \end{equation*}
   Second local unit vector:
-  \begin{align}
-   \vec{\tilde{z}} &= \vec{u} \times \vec{v} \nonumber\\
-   \vec{\tilde{z}} &\leftarrow \frac{1}{\vec{\tilde{z}}}\vec{\tilde{z}} \nonumber
-  \end{align}
+  \begin{align*}
+   \vec{\tilde{z}} &= \vec{u} \times \vec{v} \\
+   \vec{\tilde{z}} &\leftarrow \frac{1}{\left|\vec{\tilde{z}}\right|}\vec{\tilde{z}}
+  \end{align*}
   Third local unit vector:
-  \begin{equation}
-   \vec{\tilde{y}} = \vec{\tilde{z}} \times \vec{\tilde{x}} \nonumber
-  \end{equation}
+  \begin{equation*}
+   \vec{\tilde{y}} = \vec{\tilde{z}} \times \vec{\tilde{x}}
+  \end{equation*}
   Define transformation matrix $\underline{T}$ as follows:
   \begin{equation}
    \underline{T} = \begin{pmatrix}
    \vec{\tilde{x}}^T\\ \vec{\tilde{y}}^T\\ \vec{\tilde{z}}^T
    \end{pmatrix} = \begin{pmatrix}
-   \vec{\tilde{x}}_x & \vec{\tilde{x}}_y & \vec{\tilde{x}}_z\\ \vec{\tilde{y}}_x & \vec{\tilde{y}}_y & \vec{\tilde{y}}_z\\ \vec{\tilde{z}}_x & \vec{\tilde{z}}_y & \vec{\tilde{z}}_z
+   \tilde{x}_x & \tilde{x}_y & \tilde{x}_z\\
+   \tilde{y}_x & \tilde{y}_y & \tilde{y}_z\\
+   \tilde{z}_x & \tilde{z}_y & \tilde{z}_z
    \end{pmatrix}
   \end{equation}
-  Assembly of element's stiffness matrix needs partial derivatives. In order to get these derivatives with less computational effort, every triangle can be translated in such a way, that node $\vec{a}$ lies in the global origin before transforming it to local coordinates. It follows:
-  \begin{align}
-   \vec{\tilde{a}} &= \begin{pmatrix}
+  Assembly of element's stiffness matrix needs partial derivatives. In order to get these derivatives with less computational effort, every triangle can be translated in such a way, that node $\vec{A}$ lies in the global origin before transforming it to local coordinates. Node $\vec{A}$ stays at $(0,\ 0,\ 0)$ coordinates which then simplifies getting the derivatives (see section \ref{seq:implementation}). It follows:
+  \begin{align*}
+   \vec{\tilde{A}} &= \begin{pmatrix}
    0 & 0 & 0
-   \end{pmatrix}^T \nonumber\\
-   \vec{\tilde{b}} &= \begin{pmatrix}
-   \vec{\tilde{b}}_x & 0 & 0
-   \end{pmatrix}^T \nonumber\\
-   \vec{\tilde{c}} = \begin{pmatrix}
-   \vec{\tilde{c}}_x & \vec{\tilde{c}}_y & 0
+   \end{pmatrix}^T \\
+   \vec{\tilde{B}} &= \begin{pmatrix}
+   \tilde{b}_x & 0 & 0
+   \end{pmatrix}^T \\
+   \vec{\tilde{C}} &= \begin{pmatrix}
+   \tilde{c}_x & \tilde{c}_y & 0
    \end{pmatrix}^T
-  \end{align}
-  Node $\vec{a}$ will not be changed by the transformation with $T$, $\vec{b}$ will be projected onto the local $x$-axis that is defined to be the normalized vector between $\vec{a}$ and $\vec{b}$. Node $\vec{c}$ will be projected onto the local $xy$-plane. One can see that the $z$ component vanishes by transforming into local space, thus generating the wished two dimensional space.
- 
-  % Bild von bel. Viereck mit ABCD, IJKL, globalem KoSys, lokalem KoSys mit Ursprung auf Schnittpunkt der gestrichelten Linien von JL und IK\newline
-   
-  The other element described in this work is the quadrilateral. Let an arbitrary quadrilateral with vertices $\vec{A} = (a_x, a_y, a_z), \vec{B} = (b_x, b_y, b_z), \vec{C} = (c_x, c_y, c_z), \vec{D} = (d_x, d_y, d_z)$ ordered in counter-clockwise direction be given. Next, let $\vec{I}$ be the midpoint of the edge $\overline{AB}$:
-  \begin{equation}
-   \vec{I} = \vec{A} + \frac{1}{2}\left( \vec{B}-\vec{A}\right) \nonumber 
-  \end{equation}
+  \end{align*}
+  Node $\vec{A}$ will not be changed by the transformation with $\underline{T}$, $\vec{B}$ will be projected onto the local $x$-axis that is defined to be the normalized vector between $\vec{A}$ and $\vec{B}$. Node $\vec{C}$ will be projected onto the local $xy$-plane. One can see that the $z$-component vanishes by transforming into local space, thus generating the wished two dimensional local space.
+  
+  \begin{figure} % Bild von bel. Viereck mit ABCD, IJKL, globalem KoSys, lokalem KoSys mit Ursprung auf Schnittpunkt der gestrichelten Linien von JL und IK\newline
+  	\centering
+  	\includegraphics[width=0.5\linewidth]{figures/quadrilateral}
+  	\caption{Quadrilateral with nodes A, B, C and D, defined in global $xyz$ coordinate system. After transformation a new, local, $\tilde{x}\tilde{y}\tilde{z}$ coordinate system is created.}
+  	\label{fig:quadrilateral}
+  \end{figure}
+  
+  The other element described in this work is the quadrilateral. Let an arbitrary quadrilateral be given with vertices $\vec{A} = (a_x,\ a_y,\ a_z)^T, \vec{B} = (b_x,\ b_y,\ b_z)^T, \vec{C} = (c_x,\ c_y,\ c_z)^T, \vec{D} = (d_x,\ d_y,\ d_z)^T$ ordered in counter-clockwise direction, cf. Figure \ref{fig:quadrilateral}. Next, let $\vec{I}$ be the midpoint of edge $\overline{AB}$:
+  \begin{equation*}
+   \vec{I} = \vec{A} + \frac{1}{2}\left( \vec{B}-\vec{A}\right)
+  \end{equation*}
   Analogously let $\vec{J}, \vec{K}$ and $\vec{L}$ be the midpoints of the edges $\overline{BC}, \overline{CD}$ and $\overline{DA}$:
-  \begin{align}
-   \vec{J} &= \vec{B} + \frac{1}{2}\left( \vec{C}-\vec{B}\right) \nonumber\\
-   \vec{K} &= \vec{C} + \frac{1}{2}\left( \vec{D}-\vec{C}\right) \nonumber\\
-   \vec{L} &= \vec{D} + \frac{1}{2}\left( \vec{A}-\vec{D}\right) \nonumber
-  \end{align}
+  \begin{align*}
+   \vec{J} &= \vec{B} + \frac{1}{2}\left( \vec{C}-\vec{B}\right) \\
+   \vec{K} &= \vec{C} + \frac{1}{2}\left( \vec{D}-\vec{C}\right) \\
+   \vec{L} &= \vec{D} + \frac{1}{2}\left( \vec{A}-\vec{D}\right)
+  \end{align*}
   Let then $\vec{u}$ be the vector from node $\vec{L}$ to $\vec{J}$ and $\vec{v}$ be the vector from node $\vec{I}$ to $\vec{K}$:
-  \begin{align}
+  \begin{align*}
    \vec{u} &= \vec{J}-\vec{L} = \begin{pmatrix}
    j_x-l_x & j_y-l_y & j_z-l_z
-   \end{pmatrix} \nonumber\\
+   \end{pmatrix}^T\\
    \vec{v} &= \vec{K}-\vec{I} = \begin{pmatrix}
    k_x-i_x & k_y-i_y & k_z-i_z
-   \end{pmatrix} \nonumber
-  \end{align}
+   \end{pmatrix}^T
+  \end{align*}
   First local unit vector:
-  \begin{equation}
-   \vec{\tilde{x}} = \frac{1}{\left|\vec{u}\right|}\vec{u} \nonumber
-  \end{equation}
+  \begin{equation*}
+   \vec{\tilde{x}} = \frac{1}{\left|\vec{u}\right|}\vec{u}
+  \end{equation*}
   Second local unit vector:
-  \begin{align}
-   \vec{\tilde{z}} &= \vec{u} \times \vec{v} \nonumber\\
-   \vec{\tilde{z}} &\leftarrow \frac{1}{\vec{\tilde{z}}}\vec{\tilde{z}} \nonumber
-  \end{align}
+  \begin{align*}
+   \vec{\tilde{z}} &= \vec{u} \times \vec{v}\\
+   \vec{\tilde{z}} &\leftarrow \frac{1}{\left|\vec{\tilde{z}}\right|}\vec{\tilde{z}}
+  \end{align*}
   Third local unit vector:
-  \begin{equation}
-   \vec{\tilde{y}} = \vec{\tilde{z}} \times \vec{\tilde{x}} \nonumber
-  \end{equation}
+  \begin{equation*}
+   \vec{\tilde{y}} = \vec{\tilde{z}} \times \vec{\tilde{x}}
+  \end{equation*}
   Define transformation matrix $T$ as follows:
   \begin{equation}
    \underline{T} = \begin{pmatrix}
@@ -1186,18 +1206,22 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
    \vec{\tilde{x}}_x & \vec{\tilde{x}}_y & \vec{\tilde{x}}_z\\ \vec{\tilde{y}}_x & \vec{\tilde{y}}_y & \vec{\tilde{y}}_z\\ \vec{\tilde{z}}_x & \vec{\tilde{z}}_y & \vec{\tilde{z}}_z
    \end{pmatrix}
   \end{equation}
- 
+  Remark: In order to transform a quadrilateral element from 3D to a local two dimensional space, the nodes of the original element must all be situated on a common plane. Otherwise such a transformation cannot be performed. Such shaped quadrilaterals cannot be used as shell elements.
  
  
  \subsection{Shell Element}
  % The combination of the two previous parts and the transformations results in the final shell element\newline
- Shell elements combine the potential of both, plane and plate elements. Every time a thin walled structure like a car body, dome structure or container with multiaxial pressures is to be simulated, shell elements provide a good solution. In this work only the so-called flat shell elements are described and used in the implementation. Details about curved shell elements, shells of revolution and general shells can be found in Cook et al. \cite{cook2002concepts}. Flat shell elements have a state of bending and membrane stress that can be described by superposition of the plane and plate element \cite{klein2013fem}. Figure \ref{fig:shell_triangle} shows the superposition of plane and plate elements to a flat shell element. The degrees of freedom of plane and plate at every node are combined at the node of the shell element. Obviously the plane and plate element must be of the same finite element's type, for example three node triangular or eight node quadrilateral.
+ Shell elements combine the potential of both, plane and plate elements. Every time a thin walled structure like a car body, dome structure or container with multiaxial pressures is to be simulated, shell elements provide a good solution. In this work only the so-called flat shell elements are described and used in the implementation. Details about curved shell elements, shells of revolution and general shells can be found in Cook et al. \cite{cook2002concepts}.
+ 
+ Flat shell elements have a state of bending and membrane stress that can be described by superposition of the plane and plate element \cite{klein2013fem}. Figure \ref{fig:shell_triangle} shows the superposition of plane and plate elements to a flat shell element. The degrees of freedom of plane and plate at every node are combined at the node of the shell element. Obviously the plane and plate element must be of the same finite element's type, for example three node triangular or eight node quadrilateral.
+ 
  \begin{figure} % bild wie bei 8.7 von scheibe und platte und kombination zu schale + erklärungen, welche unbekannten und kräfte man bei welchem teil hat
  	\centering
- 	\includegraphics[width=0.97\linewidth]{figures/shell_triangle}
+ 	\includegraphics[width=0.8\linewidth]{figures/shell_triangle}
  	\caption{Creation of a triangular flat shell element by superimposing a triangular plane and a triangular plate element. The elements are described in the same local coordinate system with their degrees of freedom shown exemplary at one node per element.}
  	\label{fig:shell_triangle}
  \end{figure}
+ 
  The plane has displacements $u$ and $v$ with dedicated forces $F_x$ and $F_y$. The plate has the deformation $w$ with assigned normal force $F_z$ and the two twists $\theta_x$ and $\theta_y$ with assigned moments $M_x$ and $M_y$. Through the linking of the elements the shell element node has now five natural degrees of freedom. An additional twist around the local z-axis $\theta_z$ will be introduced \cite{steinke2005finite}, increasing the number to six degrees of freedom per node. In vector notation the resulting displacement vector $\vec{u}_i$ of a shell element's node $i$ is:
  \begin{align}\label{eq:shell_u_i}
  \vec{u} &= \underbrace{\begin{pmatrix}
@@ -1305,7 +1329,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
  The degree of freedom $\theta_z$ does not exists in both, the plane and the plate element, and were introduced with the shell element. Therefore $(\underline{K}_{ij})_{66}$ is zero. The sixth degree of freedom is necessary because the missing stiffness regarding a rotation around the axis normal to the element could produce singularities in the overall stiffness matrix. This happens for example, if all neighboring elements of a node lie in the same plane, i.e. they are coplanar. A singularity can lead to a non-solvable system, so this case needs be excluded \cite{steinke2005finite}. One way is to introduce this sixth degree of freedom and give it a value that is so small that it does not influence the displacements and stresses too much. The number of this values varies: Werkle suggests a value of $1/10000$ of the smallest diagonal entry of $\underline{K}_{ij}$ \cite{werkle1995finite}, where Ibrahimbegovic et al. suggests $1/1000$ of the smallest diagonal entriy of $\underline{K}_{ij}$. The value must be small, but big enough to prevent the singularities. Since this value is an approximation, one has to modify it, if the solution is not as expected or one cannot get a solution at all due to the addressed singularities. %TODO ref von ibrahimbegovic überprüfen, ob tatsächlich 1/1000 drin steht; info aus quad_shell_element2.pdf
  
  % Dann muss die (Rück-)Transformationsmatrix $T$ erstellt werden, da SKM im lokalen KoSys definiert ist, aber in die globale Systemmatrix einsortiert werden muss
- The stiffness matrix for the shell element was constructed in a local coordinate system as described in section \ref{sec:}, \ref{sec:} and \ref{sec:}. The overall stiffness matrix containing information about all elements need to be described in a global coordinate system. Before the element stiffness matrix is added to the global stiffness matrix, it has to be transformed from local to global. This can be achieved by transforming the single blocks of $\underline{K}$ from equation \ref{eq:shell_K_ij} with the relation:
+ The stiffness matrix for the shell element was constructed in a local coordinate system as described in section \ref{sec:}, \ref{sec:} and \ref{sec:}. The overall stiffness matrix containing information about all elements need to be described in a global coordinate system. Before the element stiffness matrix is added to the global stiffness matrix, it has to be transformed from local to global. This can be achieved by transforming the single blocks of $\underline{K}$ from equation \ref{eq:shell_K_ij} with the relation: %TODO section refs fehlen
  \begin{equation}\label{eq:shell_K_ij u_j=F_i}
  \underline{\check{K}}_{ij} \vec{\check{u}}_j = \vec{\check{F}}_i
  \end{equation}
@@ -1318,7 +1342,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
  \begin{equation}
  \underline{\tilde{T}}^T \underline{\check{K}}_{ij} \underline{\tilde{T}} \vec{u}_j = \underline{\tilde{T}}^T \underline{\tilde{T}} \vec{F}_i = \vec{F}_i
  \end{equation}
- Hence, the two vectors will be represented in global coordinates and only the local element stiffness matrix need to be transformed. The addressed $6\!\times\!6$ transformation matrix $\underline{\tilde{T}}$ is made up of the $3\!\times\!3$ transformation matrix $\underline{T}$ from section \ref{sec:}:
+ Hence, the two vectors will be represented in global coordinates and only the local element stiffness matrix need to be transformed. The addressed $6\!\times\!6$ transformation matrix $\underline{\tilde{T}}$ is made up of the $3\!\times\!3$ transformation matrix $\underline{T}$ from section \ref{sec:}: %todo section ref fehlt
  \begin{equation}
  \underline{\tilde{T}} = \begin{pmatrix}
  \underline{T} & 0\\
