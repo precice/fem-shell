@@ -1,5 +1,5 @@
 \newcommand{\etalchar}[1]{$^{#1}$}
-\begin{thebibliography}{NTRNXB08}
+\begin{thebibliography}{CMPW02}
 
 \bibitem[BBH80]{batoz1980study}
 Jean-Louis Batoz, Klaus-J{\"U}Rgen Bathe, and Lee-Wing Ho.
@@ -70,6 +70,10 @@ B.~S. Kirk, J.~W. Peterson, R.~H. Stogner, and G.~F. Carey.
 {LAS}pack download page.
 \newblock \url{http://www.netlib.org/linalg/}.
 
+\bibitem[lib]{libmeshPubs}
+libmesh publications listing.
+\newblock \url{http://libmesh.github.io/publications.html}.
+
 \bibitem[mfea]{mfemPubs}
 {MFEM} - finite element discretization library.
 \newblock \url{http://mfem.org/publications/}.
@@ -77,12 +81,6 @@ B.~S. Kirk, J.~W. Peterson, R.~H. Stogner, and G.~F. Carey.
 \bibitem[mfeb]{mfem}
 {MFEM}: Modular finite element methods.
 \newblock \url{http://www.mfem.org}.
-
-\bibitem[NTRNXB08]{nguyen2008smoothed}
-N~Nguyen-Thanh, Timon Rabczuk, H~Nguyen-Xuan, and St{\'e}phane~PA Bordas.
-\newblock A smoothed finite element method for shell analysis.
-\newblock {\em Computer Methods in Applied Mechanics and Engineering},
-  198(2):165--177, 2008.
 
 \bibitem[Pat]{oofemPubs}
 Bo{\v{r}}ek Patz{\'{a}}k.
@@ -93,6 +91,11 @@ Bo{\v{r}}ek Patz{\'{a}}k.
 Bo{\v{r}}ek Patz{\'{a}}k.
 \newblock Oofem project home page, 2009.
 \newblock \url{http://www.oofem.org}.
+
+\bibitem[PB01]{patzak2001design}
+B.~Patz{\'a}k and Z.~Bittnar.
+\newblock Design of object oriented finite element code.
+\newblock {\em Advances in Engineering Software}, 32(10):759--767, 2001.
 
 \bibitem[PCD{\etalchar{+}}12]{prud2012feel++}
 Christophe Prud’Homme, Vincent Chabannes, Vincent Doyeux, Mourad Ismail,
@@ -105,6 +108,11 @@ Christophe Prud’Homme, Vincent Chabannes, Vincent Doyeux, Mourad Ismail,
 \bibitem[pet]{petsc2015url}
 {PETS}c web page.
 \newblock \url{http://www.mcs.anl.gov/petsc}.
+
+\bibitem[PR]{getfempp}
+Julien Pommier and Yves Renard.
+\newblock Getfem++ - an open source library based on collaborative development.
+\newblock \url{http://download.gna.org/getfem/html/homepage/index.html}.
 
 \bibitem[Spe88]{specht1988modified}
 Bernhard Specht.
