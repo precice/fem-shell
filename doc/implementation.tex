@@ -12,8 +12,8 @@ contains development of the program code with focus on the assembly of the syste
  
  A wide variety of mesh formats are supported by libMesh to facilitate use of complex geometries. The following is an incomplete list of supported input and output formats: Nemesis, TetGen, I-deas Universal UNV, AVS's ASCII UCD, Visualization Toolkit VTK, libMesh formats XDR/XDA, ExodusII, GMSH, LANL's General Mesh Viewer GMV, GnuPlot (only output), Matlab (only input) \cite{kirk2013case}.
  
- An example program using the libMesh library would look like listing \ref{lst1}.
- \begin{lstlisting}[caption=Example libMesh program,label=lst1]
+ An example program using the libMesh library would look like listing \ref{lst:example-libmesh}.
+ \begin{lstlisting}[caption=Example libMesh program,label=lst:example-libmesh]
 #include "libmesh/libmesh.h"
 #include "libmesh/additional_libmesh_components"
 
@@ -53,46 +53,72 @@ int main (int argc, char** argv)
  details about the implementation with the libmesh FEM framework \\%TODO
  - short overview: stand-alone-version: gets input parameters from user and mesh file and produces results stored in output file
 
+ %\begin{lstlisting}[caption=Example libMesh program,label=lst1]
+ %\end{lstlisting}
  
-  \subsubsection{Initialization}
+  \subsubsection{Initialization}\label{sec:Impl_Detail_Init}
+  The program expects a few parameters set by the user through the command line at start. The ordering of these parameters are not relevant; some are optional. Here is a complete list of all parameters that can be set in the command line:
+  \begin{itemize}
+  	\item \textbf{-nu}: The Poisson's ratio $\nu$ is required by the material matrices. A value in the range $0.0 < \nu \leq 0.5$ is recommended for most scenarios.
+  	\item \textbf{-e}: The elastic modulus or Young's modulus $E$ is also required by the material matrices. Here, a value $E \gg 0$ is recommended.
+  	\item \textbf{-t}: The thickness $t$ of the mesh. It is used at both, the material matrices and the strain-displacement matrices and thus a required parameter to be set by the user.
+  	\item \textbf{-d}: If set to "`1"' additional messages regarding transformation matrix entries, strain-displacement matrices, force load vectors and other internal mathematic structures are put out on the console. This parameter is optional, as it only gives the user more information in case of finding error. Since it slows down the calculation, it should only be set if needed. To turn off the messages, simply ignore the parameter or set it to 0.
+  	\item \textbf{-mesh}: The file name of the mesh file to be imported. A required parameter, because no default mesh is coded into the program to be used. The relative path to the file (+ extension) must be specified. Allowed file formats are: libMesh format \textit{xda} (ASCII) and \textit{xdr} (binary) as well as GMSH format \textit{msh}. For more details, see section \ref{sec:Impl_Detail_MeshFileImport}.
+  	\item \textbf{-out}: The relative path and filename (\textit{without} extension) for the output of the resulting mesh. This parameter is optional. If not set, no output file will be created. The path to the filename must exist, otherwise no file can be created.
+  \end{itemize}
+  
+  If the external library PETSc is installed and libMesh is configured to be able to use it, the user can set additional optional parameters \cite{petsc-user-ref}. In fact, if one uses PETSc, it will look though all command line arguments by itself to find those it can process. The following list is therefore limited to parameters that directly coincide with the need of this program. For more PETSc command line argument see \cite{petsc-user-ref}.
+  \begin{itemize}
+  	\item \textbf{-ksp\_type}: Specifies the Krylov subspace method. Options are: \texttt{richardson}, \texttt{chebyshev}, \texttt{cg}, \texttt{gmres}, \texttt{tcqmr}, \texttt{bcgs}, \texttt{cgs}, \texttt{tfqmr}, \texttt{cr}, \texttt{lsqr}, \texttt{bicg}, \texttt{preonly}.
+  	\item \textbf{-pc\_type}: To employ a particular preconditioning method used with the Krylov space method, the user can select one using this command line argument. Options are: \texttt{none}, \texttt{jacobi}, \texttt{bjacobi}, \texttt{sor}, \texttt{eisenstat}, \texttt{icc}, \texttt{ilu}, \texttt{asm}, \texttt{gasm}, \texttt{gamg}, \texttt{bddc}, \texttt{ksp}, \texttt{composite}, \texttt{lu}, \texttt{cholesky}, \texttt{shell}. 
+  \end{itemize}
+   
+   
+   
+  \subsubsection{Mesh file import}\label{sec:Impl_Detail_MeshFileImport}
+   The mesh geometry needs to be defined in a mesh file. LibMesh can import meshes from many different formats, including its own libMesh formats XDA and XDA, the first one stored in readable ASCII format, the latter one stored as binary code. Another one is the GMSH format \textit{msh}. There are other formats libMesh can import, but only the three mentioned formats are currently supported by the thesis' program.
+   A mesh file must provide the following information in order to be usable be the implementation:
    \begin{itemize}
-   	\item loading of parameters: which parameters are needed by the user\\
-   	- possion's ratio $\nu$ required, no default value\\
-   	- elastic modulus $E$ required, no default value\\
-   	- mesh thickness $t$ required, no default value\\
-   	- debugging messages, default false\\
-   	- mesh file required, no default file, type msh oder xda, xdr, see next section for more details\\
-   	- output file, if not given, no output is made
-   	
-   	\item special parameters for petsc:\\
-   	- solver-type\\
-   	- preconditioner-type
+   	\item A list of vertices. Every vertex must be specified with its $xyz$-coordinates defined in the global coordinate system.
+   	\item A list of elements the mesh consists out of. The elements are normally defined by their type, for example three node triangle or four node quadrilateral, and a list of vertex identifiers representing the nodes of the element.
+   	\item A list of boundary conditions. The program provides two different types of boundary conditions. The type is to be specified in form of identifiers on element's nodes or edges. In the latter case the boundary condition is used on both nodes defining the edge.
+   \end{itemize}
+   Listing \ref{lst:xda} shows a short example of a mesh defined in the xda-format. It represents the unit square with its center at the global origin, composed of two three node triangles. It has different boundary conditions on the bottom and top edge.
+\begin{lstlisting}[caption=Example xda mesh file,label=lst:xda,language=bash,keepspaces=true]
+libMesh-0.7.0+
+2       # number of elements
+4       # number of nodes
+.       # boundary condition specification file
+n/a     # subdomain id specification file
+n/a     # processor id specification file
+n/a     # p-level specification file
+2       # n_elem at level 0, [ type (n0 ... nN-1) ]
+3 0 1 2          # 3 -> triangle with 3 nodes, 0 1 2 -> vertices 0, 1 and 2
+3 1 3 2          #                             1 3 2 -> vertices 1, 3 and 2
+-1.0 -1.0  0.0   # x y z coordinates of vertex 0
+ 1.0 -1.0  0.0   #                      vertex 1
+-1.0  1.0  0.0   #                      vertex 2
+ 1.0  1.0  0.0   #                      vertex 3
+2                # number of boundary conditions
+0 0 1            # 0 -> element 0, 0 -> edge 0 (between vertex 0 and 1), bc-type 1
+1 1 0            # 1 -> element 1, 1 -> edge 1 (between vertex 3 and 2), bc-type 0
+\end{lstlisting}
+   
+   The program features two different types of boundary conditions whose identifier must be set in the mesh file:
+   \begin{itemize}
+   	\item Clamped boundary has the type "`\textbf{0}"'. %todo mathematische erklärung und prüfen ob wirklich 0 oder doch eher 1
+   	\item Simply supported boundary has type "`\textbf{1}"'. %todo dito
    \end{itemize}
    
-   
-   
-  \subsubsection{Mesh file import}
-   \begin{itemize}
-   	\item wie sieht mesh file aus, was muss definiert sein:\\
-   	- vertices mit coordinates\\
-   	- elements\\
-   	- boundary conditions
-   	
-   	\item beispiel im libmesh-format xda
-   	
-   	\item welche typen werden akzeptiert: xda, gmsh implementiert; weitere als erweiterung denkbar
-   	
-   	\item welche ids für bcs müssen verwendet werden: auflistung der bc-id und ihre bedeutung\\
-   	- 0: clamped/simple supported\\
-   	- 1: simply supported/clamped\\
-   	- 2: inner node, part of preCICE interface region (only used by preCICE coupled variant)\\
-   	- 20: same as 0 but additionally part of preCICE interface region (only used...)\\
-   	- 21: same as 1 but additionally part of preCICE ...
-   	
-   	\item especially for standalone-case: force file\\
-   	- structure with short example matching the mesh-example\\
-   	- entries defined in global coordinate system like vertices, too
-   \end{itemize}
+   Because the stand-alone version of the program has no coupled fluid solver which provides it with pressures/forces at the nodes, these values must be imported via file, too. The structure of such a file is fairly simple: Listing \ref{lst:example_f} shows such an example corresponding to the example mesh of listing \ref{lst:xda}. The first line defines the number $n$ of nodes/vertices the mesh has (in this case $n=4$). The second line holds a floating point number representing a global factor that is multiplied by every force component defined below. A value of $1.0$ has no effect on the load values. Lines three to $n+2$ are the $xyz$-components of the single forces put on the corresponding mesh nodes. The ordering is the same as the vertices in the mesh file. The $xyz$-coordinates must also be represented in the global coordinate system. In the example a load is applied on the first and third node. The first load is directed along the negative z-axis, the second load along the positive y-axis. The other two nodes have no forces applied.
+\begin{lstlisting}[caption=Example force file,label=lst:example_f,language=bash,keepspaces=true]
+4
+1.0
+0.0 0.0 -0.65
+0.0 0.0 0.0
+0.0 2.34 0.0
+0.0 0.0 0.0
+\end{lstlisting}
    
    
    

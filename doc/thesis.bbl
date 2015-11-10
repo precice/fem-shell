@@ -1,6 +1,15 @@
 \newcommand{\etalchar}[1]{$^{#1}$}
 \begin{thebibliography}{CMPW02}
 
+\bibitem[BAA{\etalchar{+}}15]{petsc-user-ref}
+Satish Balay, Shrirang Abhyankar, Mark~F. Adams, Jed Brown, Peter Brune, Kris
+  Buschelman, Lisandro Dalcin, Victor Eijkhout, William~D. Gropp, Dinesh
+  Kaushik, Matthew~G. Knepley, Lois Curfman~McInnes, Karl Rupp, Barry~F. Smith,
+  Stefano Zampini, and Hong Zhang.
+\newblock {PETS}c users manual.
+\newblock Technical Report ANL-95/11 - Revision 3.6, Argonne National
+  Laboratory, 2015.
+
 \bibitem[BBH80]{batoz1980study}
 Jean-Louis Batoz, Klaus-J{\"U}Rgen Bathe, and Lee-Wing Ho.
 \newblock A study of three-node triangular plate bending elements.

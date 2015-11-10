@@ -1,41 +1,33 @@
-/*************************************************************
- * todo
- *
- * ***********************************************************/
-
 #include "fem-shell.h"
 
 // Begin the main program.
 int main (int argc, char** argv)
 {
+	// read command line arguments and set global variables
+	read_parameters(argc, argv);
+	
     // Initialize libMesh and any dependent libaries
     LibMeshInit init (argc, argv);
 
-    // Initialize the cantilever mesh
-    const unsigned int dim = 2;
+	// Initialize the mesh
 
     // Skip this program if libMesh was compiled as 1D-only.
-    libmesh_example_requires(dim <= LIBMESH_DIM, "2D support");
-
-    read_parameters(argc, argv);
+    libmesh_example_requires(2 <= LIBMESH_DIM, "2D support");
 
     // Create a 2D mesh distributed across the default MPI communicator.
-    Mesh mesh(init.comm(), dim);
+    Mesh mesh(init.comm(), 2);
     mesh.allow_renumbering(false);
     if (mesh.allow_renumbering())
         std::cout << "mesh erlaubt renumbering\n";
     mesh.read(in_filename);
-    // TODO (MPI): schauen, ob und wie man automatisches partioning besser machen kann und vor allen zu welchem Zeitpunkt
 
     if (in_filename.find(".msh") != std::string::npos) // if we load a GMSH mesh file, we need to execute a preparation step
     {
-        std::cout << "we use gmsh\n";
-        //mesh.prepare_for_use(true, false);// skip renumbering, skip find neighbors (depricated)
+        mesh.prepare_for_use(true, false);// skip renumbering, skip find neighbors (depricated)
     }
 
     // Print information about the mesh to the screen.
-    //if (debug)
-        mesh.print_info();
+    mesh.print_info();
 
     // Load file with forces (only needed for stand-alone version)
     std::filebuf fb;
