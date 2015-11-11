@@ -131,21 +131,20 @@ int main (int argc, char** argv)
     // since the rest of the processes only see their own partial solution
     if (global_processor_id() == 0)
     {
-        std::cout << global_processor_id() << ": Solution: x=[";
+        std::cout << "Solution: u_vec=[";
         MeshBase::const_node_iterator no = mesh.nodes_begin();
         const MeshBase::const_node_iterator end_no = mesh.nodes_end();
-        for (int i = 0 ; no != end_no; ++no,++i)
-           std::cout << "uvw_" << i << " = " << sols[6*i] << ", " << sols[6*i+1] << ", " << sols[6*i+2] << "\n";
-        std::cout << "]\n" << std::endl;
-    }
-    else
-    {
-        MeshBase::const_node_iterator no = mesh.local_nodes_begin();
-        const MeshBase::const_node_iterator end_no = mesh.local_nodes_end();
-        for (int i = 0 ; no != end_no; ++no,++i)
+        for (; no != end_no; ++no)
         {
-            int id = (*no)->id();
-            std::cout << "uvw_" << i << " = " << sols[6*id] << ", " << sols[6*id+1] << ", " << sols[6*id+2] << "\n";
+            Node* nd = *no;
+            int id = nd->id();
+            Real displ_x = sols[6*id];
+            Real displ_y = sols[6*id+1];
+            Real displ_z = sols[6*id+2];
+            std::cout << "uvw_" << id << " = " << displ_x << ", " << displ_y << ", " << displ_z << "\n";
+            (*nd)(0) += displ_x;
+            (*nd)(1) += displ_y;
+            (*nd)(2) += displ_z;
         }
         std::cout << "]\n" << std::endl;
     }
@@ -1121,13 +1120,12 @@ void assemble_elasticity(EquationSystems &es, const std::string &system_name)
 
 void writeOutput(Mesh &mesh, EquationSystems &es)
 {
+    if (!isOutfileSet)
+        return;
+
     // Plot the solution
     std::ostringstream file_name;
-    file_name << out_filename << "_"
-              << std::setw(3)
-              << std::setfill('0')
-              << std::right
-              << ".e";
+    file_name << out_filename << ".e";
 
     ExodusII_IO (mesh).write_equation_systems(file_name.str(), es);
 }
