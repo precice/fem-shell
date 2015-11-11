@@ -972,7 +972,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   \begin{figure} % Bild 8.9 (a) \cite{zienkiewicz2000finite}
   	\centering
   	\includegraphics[width=0.97\linewidth]{figures/serendipity}
-  	\caption[kurze Unter-Überschrift]{lange Unter-Überschrift}
+  	\caption{Eight node quadrilateral element with local $\xi,\eta$-coordinates}
   	\label{fig:serendipity}
   \end{figure}
   $\beta_{x_i}$ and $\beta_{y_i}$ are transitory nodal variables at the four nodes and mid-sides of the element.
@@ -1107,11 +1107,32 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   
   \begin{figure} % Bild von Dreieck mit ABC, globalem KoSys, lokalem KoSys mit Ursprung in A, x-Achse auf Vektor AB usw.\newline
   	\centering
-  	\includegraphics[width=0.4\linewidth]{figures/triangle}
+  	%\includegraphics[width=0.4\linewidth]{figures/triangle}
+  	\setlength\unitlength{0.80cm}
+  	\begin{picture}(8,7)
+  	\thicklines
+  	\put(0,0){\vector(0,1){1}}
+  	\put(1.1,0){$x$}
+  	\put(0,0){\vector(1,0){1}}
+  	\put(0,1.1){$z$}
+  	\put(0,0){\vector(1,1){0.5}}
+  	\put(0.6,0.6){$y$}      
+  	\put(1.75,1.75){\vector(1,0.75){0.8}}
+  	\put(2.65,1.95){$\tilde{x}$}
+  	\put(1.75,1.75){\vector(-1,0.3){0.9}}
+  	\put(0.55,1.75){$\tilde{y}$}
+  	\put(1.75,1.75){\vector(0,1){1.0}}
+  	\put(1.65,2.85){$\tilde{z}$}
+  	\thinlines
+  	\polyline(1.75,1.75)(7,5.8)(0.5,7)(1.75,1.75)
+  	\put(1.5,1.3){$A$}
+  	\put(7.20,5.7){$B$}
+  	\put(0.0,6.9){$C$}
+  	\end{picture}
   	\caption{Arbitrary triangle with nodes A, B and C, defined in global $xyz$ coordinate system. After transformation a new, local, $\tilde{x}\tilde{y}\tilde{z}$ coordinate system with node A in its origin, is created.}
   	\label{fig:triangle}
-  \end{figure} 
-  
+  \end{figure}
+    
   Given a triangle with vertices $\vec{A} = (a_x, a_y, a_z)^T, \vec{B} = (b_x, b_y, b_z)^T$ and $\vec{C} = (c_x, c_y, c_z)^T$ ordered in counter-clockwise direction, as shown in Figure \ref{fig:triangle}. Let $\vec{u}$ be the vector from node $\vec{A}$ to $\vec{B}$ and $\vec{v}$ be the vector from node $\vec{A}$ to $\vec{C}$:
   \begin{align*}
   \vec{u} &= \vec{B}-\vec{A} = \begin{pmatrix}
@@ -1160,7 +1181,36 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   
   \begin{figure} % Bild von bel. Viereck mit ABCD, IJKL, globalem KoSys, lokalem KoSys mit Ursprung auf Schnittpunkt der gestrichelten Linien von JL und IK\newline
   	\centering
-  	\includegraphics[width=0.5\linewidth]{figures/quadrilateral}
+  	%\includegraphics[width=0.5\linewidth]{figures/quadrilateral}
+  	\setlength\unitlength{0.99cm}
+  	\begin{picture}(8,7)
+  	\thicklines
+  	\put(0,0){\vector(0,1){1}}
+  	\put(1.1,0){$x$}
+  	\put(0,0){\vector(1,0){1}}
+  	\put(0,1.1){$z$}
+  	\put(0,0){\vector(1,1){0.5}}
+  	\put(0.6,0.6){$y$}
+  	\put(3.4,2.35){\vector(0.45,0.75){0.6}}
+  	\put(4.1,3.0){$\tilde{x}$}
+  	\put(3.4,2.35){\vector(-0.9,0.2){0.9}}
+  	\put(2.25,2.65){$\tilde{y}$}
+  	\put(3.4,2.35){\vector(0,1){1.0}}
+  	\put(3.3,3.45){$\tilde{z}$}
+  	\thinlines
+  	\polyline(1,1)(4,0.5)(6.5,3.5)(2,4.5)(1,1)
+  	\put(0.5,0.9){$D$}
+  	\put(3.9,0){$A$}
+  	\put(6.6,3.3){$B$}
+  	\put(1.6,4.5){$C$}
+  	\put(2.25,0.2){$L$}
+  	\put(1.0,2.55){$K$}
+  	\put(4.2,4.2){$J$}
+  	\put(5.45,1.7){$I$}
+  	\unitlength=0.99mm
+  	\Dashline(25,7.5)(43,40){1.5}
+  	\Dashline(52,19.5)(15,27.0){1.5}
+  	\end{picture}
   	\caption{Quadrilateral with nodes A, B, C and D, defined in global $xyz$ coordinate system. After transformation a new, local, $\tilde{x}\tilde{y}\tilde{z}$ coordinate system is created.}
   	\label{fig:quadrilateral}
   \end{figure}
@@ -1213,14 +1263,53 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
  Shell elements combine the potential of both, plane and plate elements. Every time a thin walled structure like a car body, dome structure or container with multiaxial pressures is to be simulated, shell elements provide a good solution. In this work only the so-called flat shell elements are described and used in the implementation. Details about curved shell elements, shells of revolution and general shells can be found in Cook et al. \cite{cook2002concepts}.
  
  Flat shell elements have a state of bending and membrane stress that can be described by superposition of the plane and plate element \cite{klein2013fem}. Figure \ref{fig:shell_triangle} shows the superposition of plane and plate elements to a flat shell element. The degrees of freedom of plane and plate at every node are combined at the node of the shell element. Obviously the plane and plate element must be of the same finite element's type, for example three node triangular or eight node quadrilateral.
- 
  \begin{figure} % bild wie bei 8.7 von scheibe und platte und kombination zu schale + erklärungen, welche unbekannten und kräfte man bei welchem teil hat
- 	\centering
- 	\includegraphics[width=0.8\linewidth]{figures/shell_triangle}
+ 	%\centering
+ 	%\includegraphics[width=0.8\linewidth]{figures/shell_triangle}
+ 	\setlength\unitlength{0.9cm}
+ 	\begin{picture}(8.5,13)
+ 	\thicklines
+ 	\put(10.0,3.5){\vector(1,0.5){0.55}}   \put(10.6,3.5){$x$}
+ 	\put(10.0,3.5){\vector(-0.5,1){0.25}}  \put(9.5,3.6){$y$}
+ 	\put(10.0,3.5){\vector(0,1){0.7}}      \put(9.9,4.3){$z$}
+ 	
+ 	\put(5.5,7.0){\vector(1,0.5){0.55}}   \put(6.0,6.9){$u$}
+ 	\put(5.5,7.0){\vector(-0.5,1){0.25}}  \put(4.8,7.3){$v$}
+ 	\put(1.55,8.8){\vector(-1,-0.5){0.55}}\put(1.4,8.45){$F_x$}
+ 	\put(0.7,9.0){\vector(0.5,-1){0.25}}  \put(0.3,8.45){$F_y$}
+ 	
+ 	\put(10.5,7.0){\vector(0,1){0.7}}     \put(10.6,7.3){$w$}
+ 	\put(10.5,7.0){\vector(1,0.5){0.55}}  \put(11.0,6.9){$\theta_x$}
+ 	\put(10.5,7.0){\vector(-0.5,1){0.25}} \put(9.8,7.3){$\theta_y$}
+ 	\put(6.0,9.2){\vector(0,-1){0.7}}     \put(6.1,8.9){$F_z$}
+ 	\put(6.55,8.8){\vector(-1,-0.5){0.55}}\put(6.4,8.45){$M_x$}
+ 	\put(5.7,9.0){\vector(0.5,-1){0.25}}  \put(5.3,8.45){$M_y$}
+ 	
+ 	\put(8.0,2.0){\vector(0,1){0.7}}      \put(8.1,2.3){$w$}
+ 	\put(8.0,2.0){\vector(1,0.5){0.55}}   \put(8.5,1.9){$\theta_x$}
+ 	\put(8.0,2.0){\vector(-0.5,1){0.25}}  \put(7.3,2.3){$\theta_y$}
+ 	\put(3.5,4.2){\vector(0,-1){0.7}}     \put(3.6,3.9){$F_z$}
+ 	\put(4.05,3.8){\vector(-1,-0.5){0.55}}\put(3.9,3.45){$M_x$}
+ 	\put(3.2,4.0){\vector(0.5,-1){0.25}}  \put(2.8,3.45){$M_y$}
+ 	\put(8.6,2.3){\vector(1,0.5){0.55}}   \put(9.0,2.2){$u$}
+ 	\put(7.75,2.5){\vector(-0.5,1){0.25}} \put(7.2,2.6){$v$}
+ 	\put(4.65,4.1){\vector(-1,-0.5){0.55}}\put(4.4,3.75){$F_x$}
+ 	\put(2.95,4.5){\vector(0.5,-1){0.25}} \put(2.6,3.9){$F_y$}
+ 	\put(8.0,2.7){\vector(0,1){0.7}}      \put(8.1,3.0){$(\theta_z)$}
+ 	\put(3.5,4.9){\vector(0,-1){0.7}}     \put(3.6,4.6){$(M_z)$}
+ 	\thinlines
+ 	\polyline(1.0,8.5)(2.5,5.5)(5.5,7.0)(1.0,8.5)
+ 	\put(2.3,5.1){$1$} \put(5.3,6.5){$2$} \put(0.8,8.0){$3$} 
+ 	\polyline(6.0,8.5)(7.5,5.5)(10.5,7.0)(6.0,8.5)
+ 	\put(7.3,5.1){$1$} \put(10.3,6.5){$2$} \put(5.8,8.0){$3$}  
+ 	\polyline(3.5,3.5)(5.0,0.5)(8.0,2.0)(3.5,3.5)
+ 	\put(4.8,0.1){$1$} \put(7.8,1.5){$2$} \put(3.3,3.0){$3$}
+ 	
+ 	\put(6.0,6.0){$+$} \put(2.7,1.5){$=$}
+ 	\end{picture}
  	\caption{Creation of a triangular flat shell element by superimposing a triangular plane and a triangular plate element. The elements are described in the same local coordinate system with their degrees of freedom shown exemplary at one node per element.}
  	\label{fig:shell_triangle}
- \end{figure}
- 
+ \end{figure} 
  The plane has displacements $u$ and $v$ with dedicated forces $F_x$ and $F_y$. The plate has the deformation $w$ with assigned normal force $F_z$ and the two twists $\theta_x$ and $\theta_y$ with assigned moments $M_x$ and $M_y$. Through the linking of the elements the shell element node has now five natural degrees of freedom. An additional twist around the local z-axis $\theta_z$ will be introduced \cite{steinke2005finite}, increasing the number to six degrees of freedom per node. In vector notation the resulting displacement vector $\vec{u}_i$ of a shell element's node $i$ is:
  \begin{align}\label{eq:shell_u_i}
  \vec{u} &= \underbrace{\begin{pmatrix}
