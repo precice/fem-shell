@@ -3,28 +3,21 @@
 // Begin the main program.
 int main (int argc, char** argv)
 {
-	// read command line arguments and set global variables
-	read_parameters(argc, argv);
-	
+    // read command line arguments and initialize global variables
+    read_parameters(argc, argv);
+
     // Initialize libMesh and any dependent libaries
     LibMeshInit init (argc, argv);
 
-	// Initialize the mesh
+    // Initialize the mesh
 
     // Skip this program if libMesh was compiled as 1D-only.
-    libmesh_example_requires(2 <= LIBMESH_DIM, "2D support");
+    libmesh_example_requires(LIBMESH_DIM >= 2, "2D support");
 
     // Create a 2D mesh distributed across the default MPI communicator.
     Mesh mesh(init.comm(), 2);
     mesh.allow_renumbering(false);
-    if (mesh.allow_renumbering())
-        std::cout << "mesh erlaubt renumbering\n";
     mesh.read(in_filename);
-
-    if (in_filename.find(".msh") != std::string::npos) // if we load a GMSH mesh file, we need to execute a preparation step
-    {
-        mesh.prepare_for_use(true, false);// skip renumbering, skip find neighbors (depricated)
-    }
 
     // Print information about the mesh to the screen.
     mesh.print_info();
@@ -32,12 +25,12 @@ int main (int argc, char** argv)
     // Load file with forces (only needed for stand-alone version)
     std::filebuf fb;
     if (in_filename.find(".xda") != std::string::npos ||
+        in_filename.find(".xdr") != std::string::npos ||
         in_filename.find(".msh") != std::string::npos)
         in_filename.resize(in_filename.size()-4);
 
     in_filename += "_f";
 
-    // MPI TODO: 0 lädt und broadcastet an alle anderen
     if (fb.open (in_filename.c_str(),std::ios::in))
     {
         std::istream input(&fb);
@@ -77,35 +70,33 @@ int main (int argc, char** argv)
     // We impose a "clamped" boundary condition on the
     // nodes with bc_id = 0
     std::set<boundary_id_type> boundary_ids;
-    boundary_ids.insert(1);
+    boundary_ids.insert(0);
+
     // Create a vector storing the variable numbers which the BC applies to
-    std::vector<unsigned int> variables(6);
-    variables[0] = u_var; variables[1] = v_var; variables[2] = w_var;
-    variables[3] = tx_var; variables[4] = ty_var; variables[5] = tz_var;
+    std::vector<unsigned int> variables;
+    variables.push_back(u_var);
+    variables.push_back(v_var);
+    variables.push_back(w_var);
+
     // Create a ZeroFunction to initialize dirichlet_bc
     ConstFunction<Number> cf(0.0);
-    DirichletBoundary dirichlet_bc(boundary_ids,variables,&cf);
+    DirichletBoundary dirichlet_bc(boundary_ids, variables, &cf);
+
+    boundary_ids.clear();
+    boundary_ids.insert(1);
+    variables.push_back(tx_var);
+    variables.push_back(ty_var);
+    variables.push_back(tz_var);
+    DirichletBoundary dirichlet_bc2(boundary_ids, variables, &cf);
+
     // We must add the Dirichlet boundary condition _before_ we call equation_systems.init()
     system.get_dof_map().add_dirichlet_boundary(dirichlet_bc);
-
-    std::set<boundary_id_type> boundary_ids2;
-    boundary_ids2.insert(0);
-    std::vector<unsigned int> variables2(3);
-    variables2[0] = u_var; variables2[1] = v_var; variables2[2] = w_var;
-    ConstFunction<Number> cf2(0.0);
-    DirichletBoundary dirichlet_bc2(boundary_ids2,variables2,&cf2);
     system.get_dof_map().add_dirichlet_boundary(dirichlet_bc2);
-
-    if (debug)
-        std::cout << "before systems.init\n";
 
     initMaterialMatrices();
 
     // Initialize the data structures for the equation system.
     equation_systems.init();
-
-    if (debug)
-        std::cout << "after systems.init\n";
 
     // Print information about the system to the screen.
     equation_systems.print_info();
@@ -120,22 +111,24 @@ int main (int argc, char** argv)
      **/
     equation_systems.solve();
 
-    if (debug)
-       std::cout << "after solve\n";
-
     std::vector<Number> sols;
     equation_systems.build_solution_vector(sols);
-
-    if (debug)
-       std::cout << "after build solution vector\n";
+    if (global_processor_id() > 0)
+        sols.reserve(mesh.n_nodes()*6);
+    if (global_n_processors() > 1)
+        mesh.comm().broadcast(sols);
 
     if (debug)
     {
+        std::cout << "System matrix:\n";
         system.matrix->print(std::cout);
+        std::cout << "\nright-handside:\n";
         system.rhs->print(std::cout);
+        std::cout << std::endl;
     }
 
-    // be sure that only the master process (id = 0) act on the solution, since the rest of the processes only see their own partial solution
+    // be sure that only the master process (id = 0) acts on the solution,
+    // since the rest of the processes only see their own partial solution
     if (global_processor_id() == 0)
     {
         std::cout << global_processor_id() << ": Solution: x=[";
@@ -145,10 +138,22 @@ int main (int argc, char** argv)
            std::cout << "uvw_" << i << " = " << sols[6*i] << ", " << sols[6*i+1] << ", " << sols[6*i+2] << "\n";
         std::cout << "]\n" << std::endl;
     }
+    else
+    {
+        MeshBase::const_node_iterator no = mesh.local_nodes_begin();
+        const MeshBase::const_node_iterator end_no = mesh.local_nodes_end();
+        for (int i = 0 ; no != end_no; ++no,++i)
+        {
+            int id = (*no)->id();
+            std::cout << "uvw_" << i << " = " << sols[6*id] << ", " << sols[6*id+1] << ", " << sols[6*id+2] << "\n";
+        }
+        std::cout << "]\n" << std::endl;
+    }
 
-    writeOutput(mesh, equation_systems);
+    if (isOutfileSet)
+        writeOutput(mesh, equation_systems);
 
-    std::cout << "All done ;)\n";
+    std::cout << "All done\n";
 
     return 0;
 }
@@ -157,13 +162,13 @@ void read_parameters(int argc, char **argv)
 {
     if (argc < 7)
     {
-        err << "Usage: " << argv[0] << " -d -nu -e -mesh -out\n"
-            << "-d: Debug-Mode (1=on, 0=off (default))\n"
-            << "-nu: Possion-Number nu (0.4 default)\n"
-            << "-e: Elasticity Modulus E (1000000.0 default)\n"
+        err << "Usage: " << argv[0] << " -nu -e -t -mesh [-out] [-d]\n"
+            << "-nu: Possion's ratio (required)\n"
+            << "-e: Elastic modulus E (required)\n"
             << "-t: Thickness (1.0 default)\n"
-            << "-mesh: Input mesh file (*.xda or *.msh)\n"
-            << "-out: Output file name (without extension)\n";
+            << "-mesh: Input mesh file (*.xda/*.xdr or *.msh, required)\n"
+            << "-out: Output file name (without extension, optional)\n"
+            << "-d: Additional messages (1=on, 0=off (default))\n";
 
         libmesh_error_msg("Error, must choose valid parameters.");
     }
@@ -176,21 +181,37 @@ void read_parameters(int argc, char **argv)
 
     if ( command_line.search(1, "-nu") )
         nu = command_line.next(0.3);
+    else
+        libmesh_error_msg("ERROR: Poisson's ratio nu not specified!");
 
     if ( command_line.search(1, "-e") )
         em = command_line.next(1.0e6);
+    else
+        libmesh_error_msg("ERROR: Elastic modulus E not specified!");
 
     if ( command_line.search(1, "-t") )
         thickness = command_line.next(1.0);
+    else
+        libmesh_error_msg("ERROR: Mesh thickness t not specified!");
 
     if ( command_line.search(1, "-mesh") )
-        in_filename = command_line.next("1_tri.xda");
+        in_filename = command_line.next("mesh.xda");
+    else
+        libmesh_error_msg("ERROR: Mesh file not specified!");
 
     if ( command_line.search(1, "-out") )
+    {
         out_filename = command_line.next("out");
+        isOutfileSet = true;
+    }
+    else
+        isOutfileSet = false;
 
-    std::cout << "Run program with parameters: d= " << (debug?"true":"false") << ", nu= " << nu << ", em= " << em << ", t= " << thickness;
-    std::cout << ", in-file= " << in_filename << ", out-file= " << out_filename << "\n";
+    std::cout << "Run program with parameters: extra messages = " << (debug?"true":"false") << ", nu = " << nu << ", E = " << em << ", t = " << thickness;
+    std::cout << ", in-file = " << in_filename;
+    if (isOutfileSet)
+        std::cout << ", out-file = " << out_filename;
+    std::cout << "\n";
 }
 
 void initMaterialMatrices()
@@ -958,7 +979,7 @@ void localToGlobalTrafo(ElemType type, DenseMatrix<Real> &trafo, DenseMatrix<Rea
     DenseMatrix<Real> KeSub(6,6);
     DenseMatrix<Real> KeNew(6*nodes,6*nodes);
     DenseMatrix<Real> TSub(6,6);
-    for (int k = 0; k < 2; k++) // copy trafo two times into TSub (cf. comment beneath)
+    for (int k = 0; k < 2; k++) // copy trafo two times into TSub (cf comment beneath)
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
                 TSub(3*k+i,3*k+j) = trafo(i,j);
