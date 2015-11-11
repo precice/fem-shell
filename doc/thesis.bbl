@@ -38,6 +38,10 @@ Feel++ Consortium.
 \newblock Feel++ - finite element embedded library in c++.
 \newblock \url{http://www.feelpp.org}.
 
+\bibitem[gms]{gmsh-manual}
+Gmsh manual.
+\newblock \url{http://geuz.org/gmsh/doc/texinfo/gmsh.html}.
+
 \bibitem[Jar]{icetools}
 Alexander~H. Jarosch.
 \newblock icetools: a numerical ice flow model download.

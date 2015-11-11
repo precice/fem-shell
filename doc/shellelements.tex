@@ -1,11 +1,11 @@
-\section{Shell Elements}
+\section{Shell Elements}\label{sec:Shell}
 Mathematical fundamentals of shell elements divided into the two parts and the coordinate transformation
  
  
  
  
  
- \subsection{Introduction to Linear Elastic Problems}
+ \subsection{Introduction to Linear Elastic Problems}\label{sec:Shell-IntroLinEla}
  % \cite{steinke2005finite} ch3.1 (S.61)\newline
  % Einführung von Vektoren und Matrizen (Verschiebungsvektor, Tensoren bzw. Vektoren der Dehnungen und Spannungen)\newline
  % Verknüpfung der Versch. mit den Dehnungen + Stoffgesetz (kinematische Beziehung)\newline
@@ -69,11 +69,11 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
  
  
  
- \subsection{Plane Element}
+ \subsection{Plane Element}\label{sec:Shell-Plane}
  First part of shell element: plane part. derivation of this part with two exemplary finite element types
-  \subsubsection{Problem Definition}\label{sec:PlaneProbDef}
-  %- Bild ähnlich ch7.1 mit xy-Ausdehnung, Dicke t, Mittelfläche, Rand, KoSys; Streckenlast q0 und Volumenkraft g aber weglassen\newline
-  \begin{figure}
+ %TODO mit Text füllen
+  \subsubsection{Problem Definition}\label{sec:Shell-Plane-ProbDef}
+  \begin{figure}%- Bild ähnlich ch7.1 mit xy-Ausdehnung, Dicke t, Mittelfläche, Rand, KoSys; Streckenlast q0 und Volumenkraft g aber weglassen
 \centering
 \includegraphics[width=0.97\linewidth]{figures/plane}
 \caption{Schematic view of a plane object}
@@ -81,7 +81,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
 \end{figure}
   In Figure \ref{fig:plane} an object is shown which extends to the x and y axis as its primary direction. The extend in z-direction is smaller and denoted by thickness $t$. The mid-surface located in between the top and bottom surface areas has the coordinate $z=0$. Its local z-axis equals the normal vector of the mid place. Such an object is called \textit{plane} in the following.
   
-  %- Bed. für ebenen Spannungszustand (eb. Dehnungszustand erwähnen und auf Ref (z.B. Zienkiewicz) verweisen)\newline
+  %- Bed. für ebenen Spannungszustand (eb. Dehnungszustand erwähnen und auf Ref (z.B. Zienkiewicz) verweisen)
   There are two different problem definitions regarding plane elements: Plane stress and plane strain. The directions of displacements $u$ and $v$ along the orthogonal local x and y axis defining its displacement field is a common feature of both problems. Also, both have in common, that only strains and stresses in the xy plane have to be considered: Instead of nine, only three components remain. While in the case of plane stress all other stress components are zero, in plane strain the stress in direction perpendicular to the xy plane is non-zero. In this thesis only plane stress will be discussed in further detail. More information about plane strain is given in \cite{zienkiewicz2000finite}. %TODO weitere referenz mit details dazu
   The following conditions must be satisfied such that a plane can be in \textit{plane stress} \cite{steinke2005finite}:
   \begin{itemize}
@@ -171,16 +171,16 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   
   
   
-  \subsubsection{Tri-3 Plane Element}
-  %mathematical derivation of three node triangular plane element \textbf{discretization}\\
-  %see Steinke \cite{steinke2005finite} page 215-221\\
+  \subsubsection{Tri-3 Plane Element}\label{sec:Shell-Plane-Tri}
+  %mathematical derivation of three node triangular plane element \textbf{discretization}
+
   \begin{figure}% Bild von trianguliertem Körper
 %  	\centering
   	\includegraphics[width=1.0\linewidth]{figures/plane_triangulation}
   	\caption{Subdividing plane object with triangular elements}
   	\label{fig:plane_triangulation}
   \end{figure}
-  In section \ref{sec:PlaneProbDef} the plane's functional was derived. Now the focus is on the functional's discretization. Figure \ref{fig:plane_triangulation} shows a general, planar object defined to be placed in the xy-plane. The first discretization step is to divide the object into single triangles approximating the shape of it. This process is called triangulation. Every one of these triangles then represents a finite element with one node at every corner. The finer the triangulation is done the better the object and its boundary are matched by its discrete complement, but also the more finite elements have to be considered in later calculations.
+  In section \ref{sec:Shell-Plane-ProbDef} the plane's functional was derived. Now the focus is on the functional's discretization. Figure \ref{fig:plane_triangulation} shows a general, planar object defined to be placed in the xy-plane. The first discretization step is to divide the object into single triangles approximating the shape of it. This process is called triangulation. Every one of these triangles then represents a finite element with one node at every corner. The finer the triangulation is done the better the object and its boundary are matched by its discrete complement, but also the more finite elements have to be considered in later calculations.
   \begin{figure}
   	\centering
   	\includegraphics[width=1.0\linewidth]{figures/plane_triangle}
@@ -395,14 +395,13 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   
   
   
-  \subsubsection{Quad-4 Plane Element}
+  \subsubsection{Quad-4 Plane Element}\label{sec:Shell-Plane-Quad}
   %- mathematical derivation of four node quadrilateral plane element\newline
   Sometimes it can be beneficial to use quadrilateral elements when describing a mesh. In contrast to triangles which always lie, due to their simple shape, in a plane, quadrilateral can have more complex forms. Such cases include for example: The fourth nodes does not lie in the plane defined by the other three or the shape is not convex. It is difficult to deal with such forms and one could be tempted to restrict the element to have rectangular shapes only, because these are easy to formulate and work with. But they are impractical when complicated geometry is to be modeled, especially if details should be emphasized in fine graduation.
     
   %- see Steinke \cite{steinke2005finite} page 237-250 + Cook \cite{cook2002concepts} page 202-208\\
   One solution to this problem is the use of isoparametric elements. They can be non-rectangular. The trick is to use reference coordinates which map the physical element into a reference element that is a square. Thus, the physical element can have a more general shape, but a coordinate transformation and numerical integration is needed which brings in more mathematical complexity \cite{cook2002concepts}.
   
-  %- isoparametrisches viereckselement (7.5.1) + bild\\
   In this section quadrilateral isoparametric elements consisting of four nodes are described, but one can expand it to eight or nine node elements. Figure \ref{fig:coord_trafo} shows the two abstraction layers: On the left side the original element is shown in physical space, on the right side the reference element is shown. The square has a side length of $2$. The coordinate system with the $\xi$ and $\eta$ axis has its origin in the center of the square. Also note the numbering of the nodes is again counter-clockwise.
   \begin{figure}%- bild von original- und bildebene Bild 7.17 steinke oder 6.2-1. cook
   	\centering
@@ -580,12 +579,12 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   \underline{K} = t \sum_{i=1}^{2} \sum_{j=1}^{2} \omega_i \omega_j \underline{B}(\xi_i,\eta_j)^T \underline{D}\, \underline{B}(\xi_i,\eta_j) |\underline{J}(\xi_i,\eta_j)|
   \end{equation}
  
- \subsection{Plate Bending Element}
+ \subsection{Plate Bending Element}\label{sec:Shell-Plate}
  Second part of shell element: plate part. derivation of this part with two exemplary finite element types
+  %TODO text füllen
   
   
-  
-  \subsubsection{Problem Definition}
+  \subsubsection{Problem Definition}\label{sec:Shell-Plate-ProbDef}
   %\cite{steinke2005finite} ch8.1
   \begin{figure} % bild wie bei \ref{sec:MprobDef}
   	\centering
@@ -745,7 +744,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   \end{itemize}
   The following sections show details of two discretizations of plate elements: A triangular element with three nodes and a quadrilateral element with four nodes.
   
-  \subsubsection{Tri-3 Plate Element} %\cite{steinke2005finite}\cite{specht1988modified}
+  \subsubsection{Tri-3 Plate Element}\label{sec:Shell-Plate-Tri}
   % mathematical derivation of three node triangular plane element\newline
   % see Steinke \cite{steinke2005finite} page 275-282 + \cite{specht1988modified} for reference of element\\
   % 8.4.4 beschreibt probleme mit einigen dreiecksplattenelementen, deshalb für meine arbeit element von specht \cite{specht1988modified}
@@ -920,7 +919,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   \end{equation}
   The edge load applies forces and moments contained in $\vec{F}_v$ to the nodes forming that edge. The above equation can be applied to every other edge.
   
-  \subsubsection{Quad-4 Plate Element}
+  \subsubsection{Quad-4 Plate Element}\label{sec:Shell-Plate-Quad}
   % mathematical derivation of four node quadrilateral plane element
   % see Zienkiewicz \cite{zienkiewicz2000finite} page 174-177,219-222 \cite{batoz1982evaluation page 1658-1662}
   % formulierung als DKQ element
@@ -1101,7 +1100,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   \end{pmatrix}
   \end{equation}
  
- \subsection{Coordinate Transformation} %\cite{steinke}
+ \subsection{Coordinate Transformation} \label{sec:Shell-CoTrafo}
   %see \cite{nguyen2008smoothed}; genau: \cite{zienkiewicz2000finite}\\
   The nodes and elements in the mesh are defined in a global three dimensional coordinate system. The elements need to be transformed into a two dimensional local coordinate system in order to be able to calculate their local stiffness matrices. This local stiffness matrix must then be transformed back into the global system before adding it to the global stiffness matrix. This section describes the building of the transformation matrix, that will be used in the following section for the addressed transformation steps.
   First the transformation of an arbitrary triangle defined in 3D space is described. 
@@ -1136,7 +1135,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
    \vec{\tilde{y}} = \vec{\tilde{z}} \times \vec{\tilde{x}}
   \end{equation*}
   Define transformation matrix $\underline{T}$ as follows:
-  \begin{equation}
+  \begin{equation}\label{eq:trafoT_tri}
    \underline{T} = \begin{pmatrix}
    \vec{\tilde{x}}^T\\ \vec{\tilde{y}}^T\\ \vec{\tilde{z}}^T
    \end{pmatrix} = \begin{pmatrix}
@@ -1145,7 +1144,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
    \tilde{z}_x & \tilde{z}_y & \tilde{z}_z
    \end{pmatrix}
   \end{equation}
-  Assembly of element's stiffness matrix needs partial derivatives. In order to get these derivatives with less computational effort, every triangle can be translated in such a way, that node $\vec{A}$ lies in the global origin before transforming it to local coordinates. Node $\vec{A}$ stays at $(0,\ 0,\ 0)$ coordinates which then simplifies getting the derivatives (see section \ref{seq:implementation}). It follows:
+  Assembly of element's stiffness matrix needs partial derivatives. In order to get these derivatives with less computational effort, every triangle can be translated in such a way, that node $\vec{A}$ lies in the global origin before transforming it to local coordinates. Node $\vec{A}$ stays at $(0,\ 0,\ 0)$ coordinates which then simplifies getting the derivatives (see section \ref{sec:Impl-Details-Assembly}). It follows:
   \begin{align*}
    \vec{\tilde{A}} &= \begin{pmatrix}
    0 & 0 & 0
@@ -1199,7 +1198,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
    \vec{\tilde{y}} = \vec{\tilde{z}} \times \vec{\tilde{x}}
   \end{equation*}
   Define transformation matrix $T$ as follows:
-  \begin{equation}
+  \begin{equation}\label{eq:trafoT_quad}
    \underline{T} = \begin{pmatrix}
    \vec{\tilde{x}}^T\\ \vec{\tilde{y}}^T\\ \vec{\tilde{z}}^T
    \end{pmatrix} = \begin{pmatrix}
@@ -1209,7 +1208,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   Remark: In order to transform a quadrilateral element from 3D to a local two dimensional space, the nodes of the original element must all be situated on a common plane. Otherwise such a transformation cannot be performed. Such shaped quadrilaterals cannot be used as shell elements.
  
  
- \subsection{Shell Element}
+ \subsection{Shell Element}\label{sec:Shell-Shell}
  % The combination of the two previous parts and the transformations results in the final shell element\newline
  Shell elements combine the potential of both, plane and plate elements. Every time a thin walled structure like a car body, dome structure or container with multiaxial pressures is to be simulated, shell elements provide a good solution. In this work only the so-called flat shell elements are described and used in the implementation. Details about curved shell elements, shells of revolution and general shells can be found in Cook et al. \cite{cook2002concepts}.
  
@@ -1329,7 +1328,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
  The degree of freedom $\theta_z$ does not exists in both, the plane and the plate element, and were introduced with the shell element. Therefore $(\underline{K}_{ij})_{66}$ is zero. The sixth degree of freedom is necessary because the missing stiffness regarding a rotation around the axis normal to the element could produce singularities in the overall stiffness matrix. This happens for example, if all neighboring elements of a node lie in the same plane, i.e. they are coplanar. A singularity can lead to a non-solvable system, so this case needs be excluded \cite{steinke2005finite}. One way is to introduce this sixth degree of freedom and give it a value that is so small that it does not influence the displacements and stresses too much. The number of this values varies: Werkle suggests a value of $1/10000$ of the smallest diagonal entry of $\underline{K}_{ij}$ \cite{werkle1995finite}, where Ibrahimbegovic et al. suggests $1/1000$ of the smallest diagonal entriy of $\underline{K}_{ij}$. The value must be small, but big enough to prevent the singularities. Since this value is an approximation, one has to modify it, if the solution is not as expected or one cannot get a solution at all due to the addressed singularities. %TODO ref von ibrahimbegovic überprüfen, ob tatsächlich 1/1000 drin steht; info aus quad_shell_element2.pdf
  
  % Dann muss die (Rück-)Transformationsmatrix $T$ erstellt werden, da SKM im lokalen KoSys definiert ist, aber in die globale Systemmatrix einsortiert werden muss
- The stiffness matrix for the shell element was constructed in a local coordinate system as described in section \ref{sec:}, \ref{sec:} and \ref{sec:}. The overall stiffness matrix containing information about all elements need to be described in a global coordinate system. Before the element stiffness matrix is added to the global stiffness matrix, it has to be transformed from local to global. This can be achieved by transforming the single blocks of $\underline{K}$ from equation \ref{eq:shell_K_ij} with the relation: %TODO section refs fehlen
+ The stiffness matrix for the shell element was constructed in a local coordinate system as described in section \ref{sec:Shell-Plane}, \ref{sec:Shell-Plate} and \ref{sec:Shell-CoTrafo}. The overall stiffness matrix containing information about all elements need to be described in a global coordinate system. Before the element stiffness matrix is added to the global stiffness matrix, it has to be transformed from local to global. This can be achieved by transforming the single blocks of $\underline{K}$ from equation \ref{eq:shell_K_ij} with the relation: %TODO section refs fehlen
  \begin{equation}\label{eq:shell_K_ij u_j=F_i}
  \underline{\check{K}}_{ij} \vec{\check{u}}_j = \vec{\check{F}}_i
  \end{equation}
@@ -1342,8 +1341,8 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
  \begin{equation}
  \underline{\tilde{T}}^T \underline{\check{K}}_{ij} \underline{\tilde{T}} \vec{u}_j = \underline{\tilde{T}}^T \underline{\tilde{T}} \vec{F}_i = \vec{F}_i
  \end{equation}
- Hence, the two vectors will be represented in global coordinates and only the local element stiffness matrix need to be transformed. The addressed $6\!\times\!6$ transformation matrix $\underline{\tilde{T}}$ is made up of the $3\!\times\!3$ transformation matrix $\underline{T}$ from section \ref{sec:}: %todo section ref fehlt
- \begin{equation}
+ Hence, the two vectors will be represented in global coordinates and only the local element stiffness matrix need to be transformed. The addressed $6\!\times\!6$ transformation matrix $\underline{\tilde{T}}$ is made up of the $3\!\times\!3$ transformation matrix $\underline{T}$ from section \ref{sec:Shell-CoTrafo}:
+ \begin{equation}\label{eq:trafoTtilde}
  \underline{\tilde{T}} = \begin{pmatrix}
  \underline{T} & 0\\
  0 & \underline{T}
@@ -1352,7 +1351,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
  
  % Je nachdem ob 3 oder 4 Knotenelement (Tri-3/Quad-4) sieht $K$ und $T$ natürlich anders aus
  In order to get the local element stiffness matrix $\underline{K}$ transformed to the global coordinate system, one has to transform the single submatrices $\underline{K}_{ij}$ as follows:
- \begin{equation}
+ \begin{equation}\label{eq:Kij=Tt Kij T}
  \underline{K}_{ij} = \underline{\tilde{T}}^T \underline{\check{K}}_{ij} \underline{\tilde{T}}
  \end{equation}
  for $1 \leq i,j \leq 3$ in the case of the triangular element and $1 \leq i,j, \leq 4$ for the quadrilateral element, respectively.

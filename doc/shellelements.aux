@@ -3,7 +3,9 @@
 \citation{steinke2005finite}
 \citation{zienkiewicz2000finite}
 \@writefile{toc}{\contentsline {section}{\numberline {3}Shell Elements}{10}}
+\newlabel{sec:Shell}{{3}{10}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Introduction to Linear Elastic Problems}{10}}
+\newlabel{sec:Shell-IntroLinEla}{{3.1}{10}}
 \newlabel{eq:displ_strain_relation}{{5}{10}}
 \newlabel{eq:stress-strain-relation}{{6}{10}}
 \citation{zienkiewicz2000finite}
@@ -11,13 +13,15 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Schematic view of a plane object}}{11}}
 \newlabel{fig:plane}{{1}{11}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Plane Element}{11}}
+\newlabel{sec:Shell-Plane}{{3.2}{11}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.1}Problem Definition}{11}}
-\newlabel{sec:PlaneProbDef}{{3.2.1}{11}}
+\newlabel{sec:Shell-Plane-ProbDef}{{3.2.1}{11}}
 \citation{steinke2005finite}
 \newlabel{eq:t3displ-str-rel}{{12}{12}}
 \newlabel{eq:sigma=D*eps}{{13}{12}}
 \newlabel{eq:planeFunctional}{{14}{12}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.2}Tri-3 Plane Element}{12}}
+\newlabel{sec:Shell-Plane-Tri}{{3.2.2}{12}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Subdividing plane object with triangular elements}}{13}}
 \newlabel{fig:plane_triangulation}{{2}{13}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Three node triangular element with its coordinates, nodal displacements and nodal forces}}{13}}
@@ -47,6 +51,7 @@
 \citation{cook2002concepts}
 \citation{steinke2005finite}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.3}Quad-4 Plane Element}{18}}
+\newlabel{sec:Shell-Plane-Quad}{{3.2.3}{18}}
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Coordinate transformation of four node quadrilateral element with physical space on the left side and reference space on the right side}}{19}}
 \newlabel{fig:coord_trafo}{{5}{19}}
 \newlabel{eq:q4basis}{{38}{19}}
@@ -57,7 +62,9 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Schematic drawing of a Kirchhoff plate with its main dimension $l$, thickness $t$ and loading $p$ normal to the mid-surface}}{22}}
 \newlabel{fig:plate}{{6}{22}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Plate Bending Element}{22}}
+\newlabel{sec:Shell-Plate}{{3.3}{22}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.1}Problem Definition}{22}}
+\newlabel{sec:Shell-Plate-ProbDef}{{3.3.1}{22}}
 \citation{steinke2005finite}
 \citation{klein2013fem}
 \citation{steinke2005finite}
@@ -91,6 +98,7 @@
 \citation{specht1988modified}
 \citation{steinke2005finite}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.2}Tri-3 Plate Element}{27}}
+\newlabel{sec:Shell-Plate-Tri}{{3.3.2}{27}}
 \newlabel{eq:platet3w=x*a}{{76}{28}}
 \citation{steinke2005finite}
 \newlabel{eq:w=NT*vecw}{{82}{29}}
@@ -102,6 +110,7 @@
 \citation{batoz1982evaluation}
 \citation{batoz1982evaluation}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.3}Quad-4 Plate Element}{31}}
+\newlabel{sec:Shell-Plate-Quad}{{3.3.3}{31}}
 \citation{batoz1982evaluation}
 \citation{zienkiewicz2000finite}
 \@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces 12 node quadrilateral plate element DQK}}{32}}
@@ -111,14 +120,18 @@
 \citation{batoz1982evaluation}
 \citation{batoz1982evaluation}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Coordinate Transformation}{36}}
+\newlabel{sec:Shell-CoTrafo}{{3.4}{36}}
 \@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Arbitrary triangle with nodes A, B and C, defined in global $xyz$ coordinate system. After transformation a new, local, $\mathaccentV {tilde}07E{x}\mathaccentV {tilde}07E{y}\mathaccentV {tilde}07E{z}$ coordinate system with node A in its origin, is created.}}{37}}
 \newlabel{fig:triangle}{{10}{37}}
+\newlabel{eq:trafoT_tri}{{114}{37}}
 \@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Quadrilateral with nodes A, B, C and D, defined in global $xyz$ coordinate system. After transformation a new, local, $\mathaccentV {tilde}07E{x}\mathaccentV {tilde}07E{y}\mathaccentV {tilde}07E{z}$ coordinate system is created.}}{38}}
 \newlabel{fig:quadrilateral}{{11}{38}}
 \citation{cook2002concepts}
 \citation{klein2013fem}
 \citation{steinke2005finite}
+\newlabel{eq:trafoT_quad}{{115}{39}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Shell Element}{39}}
+\newlabel{sec:Shell-Shell}{{3.5}{39}}
 \@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Creation of a triangular flat shell element by superimposing a triangular plane and a triangular plate element. The elements are described in the same local coordinate system with their degrees of freedom shown exemplary at one node per element.}}{40}}
 \newlabel{fig:shell_triangle}{{12}{40}}
 \newlabel{eq:shell_u_i}{{116}{40}}
@@ -126,6 +139,8 @@
 \citation{steinke2005finite}
 \citation{werkle1995finite}
 \newlabel{eq:shell_K_ij u_j=F_i}{{121}{41}}
+\newlabel{eq:trafoTtilde}{{125}{42}}
+\newlabel{eq:Kij=Tt Kij T}{{126}{42}}
 \@setckpt{shellelements}{
 \setcounter{page}{43}
 \setcounter{equation}{126}
