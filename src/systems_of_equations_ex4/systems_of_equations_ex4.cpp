@@ -1026,7 +1026,8 @@ void contribRHS(const Elem **elem, DenseVector<Real> &Fe, std::unordered_set<uns
     {
         Node* node = (*elem)->get_node(side);
         dof_id_type id = node->id();
-        if (node->processor_id() != global_processor_id()) // do not process nodes that is owned by another process
+		// do not process nodes that is owned by another process
+        if (node->processor_id() != global_processor_id())
             continue;
 
         if (processedNodes->find(id) == processedNodes->end())

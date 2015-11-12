@@ -397,7 +397,7 @@ void contribRHS(const Elem **elem, DenseVector<Real> &Fe, std::unordered_set<uns
 
    
    
-  \subsubsection{Solving the system}
+  \subsubsection{Solving the system}\label{sec:Impl-Details-Solving}
   The system's solving is done in libMesh with only one call: \texttt{equation\_systems.\ solve()}. This function does two things: It calls the user-defined assembly function that constructs the system matrix and right-hand side and after that it starts the solver. The rest is handled by libMesh or libraries like PETSc, respectively, though the user has some options to control the solver's behavior. Listing \ref{lst:solve_system} shows the code section responsible for the system's solving.
 \begin{lstlisting}[caption=Solve the system and build solution,label=lst:solve_system,keepspaces=true]
 // optionally set solver parameters:
@@ -434,7 +434,7 @@ for (; no != end_no; ++no)
    
    
    
-  \subsubsection{Output}
+  \subsubsection{Output}\label{sec:Impl-Details-Output}
    When the system is solved and the results are applied to the mesh, the program can write the displaced mesh with its additional data to a file. Listing \ref{lst:output} shows the relevant function. First, the function checks if the user does not wish any output to be made. If this is the case nothing has to be done and the functions returns. Otherwise an output stream is created with the filename specified by the user as command line argument plus the ExodusII extension ``.e''. Finally, the mesh with all additional data is written to the file.
 \begin{lstlisting}[caption=Store results in mesh file,label=lst:output,keepspaces=true]
 void writeOutput(Mesh &mesh, EquationSystems &es)
@@ -453,15 +453,94 @@ void writeOutput(Mesh &mesh, EquationSystems &es)
  
  
  \subsection{Parallelization with MPI}
- additional steps to make the code ready for multi process execution with MPI\\
+ additional steps to make the code ready for multi process execution with MPI %TODO mit text füllen
+ 
+ 
+ 
   \subsubsection{libMesh requirements}
-   grundsätzlich ist zum lösen des gleichungssystem mit mehreren prozessen petsc als externe lib notwendig
+   Although MPI is used internally throughout the libMesh library as soon as the program runs in MPI-mode, not everything will work as expected. If one tries to run a theoretically fully MPI-compatible libMesh program and tries to solve a system like the linear implicit system in this case, the wrong solutions will result. The problem occurs, when libMesh is built and configured without PETSc support. Then, libMesh will use an Eigen sparse solver, either a version on the user's environment or a built-in version from libMesh itself. These solvers are only serial and cannot be used with MPI, referring to an answer on the libMesh-mailing list from Dr.\ John Peterson, one of the libMesh developers. The solution would be to install PETSc and build libMesh against it.
   
+ 
+ 
+ 
   \subsubsection{Partitioning the mesh}
-   am mesh muss nichts verändert werden, da libmesh automatisch eine partitionierung des meshes vornimmt (kann aber verbessert werden)
-   
+   The parallelization of the solving step is directly linked to the partitioning of the mesh. Every process gets a part of the mesh and solves the system on its partition. LibMesh provides an automatically partition of the mesh with the user's need to call it. Though, there are different partitioning algorithms to choose from, namely:
+   \begin{itemize}
+   	\item \texttt{LinearPartitioner}: The linear partitioning algorithm is the simplest of all available partitioners. It takes the element list and splits it into equal-sized parts assigned to each processor.
+   	\item \texttt{CentroidPartitioner}: The centroid partitioner partitions simply based on the locations of element centroids. It must be defined how to sort the element centroids, i.e. the distance in the x, y or z-direction or the radial distance.
+   	\item \texttt{MetisPartitioner}: This partitioner uses the METIS graph partitioner to partition the elements. This partitioner will be used by libMesh at default if no other partitioner is specified.
+   	\item \texttt{ParmetisPartitioner}: Here, the ParMETIS graph partitioner will be used to partition the elements.
+   	\item \texttt{HilbertSFCPartitioner}: The Hilbert SFC partitioner uses a Hilbert space filling curve to partition the elements.
+   	\item \texttt{MortonSFCPartitioner}: Same as before but with a Morton space filling curve to partition the elements.
+   \end{itemize}
+   It is easy to use any of these partitioners in code. Listing \ref{lst:partitioners} shows an example use of the ParMETIS partitioner. Instead of this partitioner every other listed class can be placed at line 7 with the corresponding header file included (line 1).
+\begin{lstlisting}[caption=Mesh partitioning example,label=lst:partitioners,keepspaces=true]
+#include "libmesh/partmetis_partitionier.h"
+// (...)
+Mesh mesh(init.comm(), 2);
+mesh.allow_renumbering(false);
+mesh.read(in_filename);	
+
+ParmetisPartitioner partitioner;
+partitioner.partition(mesh);
+// (...)
+\end{lstlisting}
+  
+  
   \subsubsection{Local elements}
-   grundsätzlich sorgt libMesh dafür, dass jeder prozessor nur zugriff auf "seine" element, knoten usw. hat. Das wird hier wichtig mit änderungen an den iteratoren usw.
+   LibMesh uses a collection of different iterator-types to go through the mesh's elements and nodes. This collection can be split into two groups: Local and global iterators. In the serial case there is no difference between the two since all elements and nodes exist on the same process. If the program is run on multiple processes with a partitioned mesh, it becomes important to use local iterators. Thus, the single processes only iterate over their ``own'' elements and nodes without risking to interfere with the neighboring processes. This behavior gets especially important in the assembly function (cf. section \ref{sec:Impl-Details-Assembly}). Listing \ref{lst:local-elements} shows a short code part of this function. Here, the for loop head is shown, that will iterate over the mesh's elements in order to assemble the element's stiffness matrix and right-hand side and add them to the global system matrix and right-hand side, respectively. Note that it will be iterated over \texttt{active\_local\_elements}. In the serial case it could also be possible to use \texttt{active\_elements}. ``active'' in this case means, that only non-deactivated elements from the mesh will be processed. Since the deactivation of mesh parts is not used in this implementation, one can ignore this term.
+\begin{lstlisting}[caption=Local elements iterator,label=lst:local-elements,keepspaces=true]
+// (...)
+MeshBase::const_element_iterator       el     = mesh.active_local_elements_begin();
+const MeshBase::const_element_iterator end_el = mesh.active_local_elements_end();
+for (; el != end_el; ++el)
+{
+	// (...)
+}
+\end{lstlisting}
+   An example where global iterators are still possible and useful is after the solving step (see section \ref{sec:Impl-Details-Solving}. Listing \ref{lst:global-elements} shows parts of the code after the system gets solved.
+\begin{lstlisting}[caption=Global nodes iterator,label=lst:global-elements,keepspaces=true]
+// (...)
+std::vector<Number> sols;
+equation_systems.build_solution_vector(sols);
+
+if (global_processor_id() == 0)
+{
+	MeshBase::const_node_iterator           no = mesh.nodes_begin();
+	const MeshBase::const_node_iterator end_no = mesh.nodes_end();
+	for (; no != end_no; ++no)
+	{
+		// (...)
+	}
+	// (...)
+}
+// (...)
+\end{lstlisting}
+   LibMesh produces the solution vector only on the master process which has the ID $0$ per definition. Even when running the program with multiple processes, the solution vector on process 0 contains the values for all mesh nodes. Every other process does not have access to the solution vector. In order to apply the displacements onto the mesh nodes, process 0 must iterate over all mesh nodes. Instead of \texttt{local\_nodes}, in line 7 and 8 \texttt{nodes} will be used which represents all the nodes of the mesh.
+  
+  
   
   \subsubsection{Assembly changes}
-   damit rhs korrekt gesetzt wird muss über die prozessgrenzen hinweg klar sein, ob knoten bereits bearbeitet wurde oder nicht. wie das gelöst wurde kommt hier rein\newline
+   In section \ref{sec:Impl-Details-Assembly} it was stated that a problem occurs at the creation of the local right-hand side's vector: Since nodes can be part of multiple elements, they can also be processes multiple times and contribute more than one time to the RHS. This is allowed and was prevented by creating an \texttt{std::unordered\_set} that stores the ID of the already processed nodes. In the serial case this solves the problem. In the case of parallel execution every process generated such a set for itself without knowing what the other process has already stored in it. This way, it cannot be decided if a node that is on the boundary between two mesh partitions were already processed by one of the processes. One solution would be to communicate the data between the processes such that the information is consistent throughout the mesh. But that would produce a lot of communication overhead and slows down the program. With the help of libMesh this problem can be solved without any inter-process communication at all. Listing \ref{lst:rhs-mpi} contains code parts from the assembly function and the auxiliary function to create the local right-hand side.
+\begin{lstlisting}[caption=Process local nodes only,label=lst:rhs-mpi,keepspaces=true]
+// in the assemble_elasticity function:
+std::unordered_set<dof_id_type> processedNodes;
+processedNodes.reserve(mesh.n_local_nodes());
+
+//-------------------------------------------------------------------
+
+// in the contribRHS function:
+Node* node = (*elem)->get_node(side);
+int   id   = node->id();
+
+if (node->processor_id() != global_processor_id())
+	continue;
+	
+if (processedNodes->find(id) == processedNodes->end())
+{
+	processedNodes->insert(id);
+	// (...)
+}
+// (...)
+\end{lstlisting}
+   Here, one can see in line 3 that every process will create an set with a reserved size of only the number of local elements that process have access to. LibMesh stores the ID of the process in all nodes that are part of the mesh partition assigned to that process. This is exploited in line 11. If the stored ID of the node does not match the process' ID than it will be continued with the next node of the element. This can only be the case for nodes situated on the partition's boundary with another partition neighboring. If the node does not belong to the calling process, it must belong to of the other neighboring processes. It is impossible that way to skip a node, since all nodes belong to at least one process. With this line of code one, however, one can ensure that a node is processed only once: If it is not owned by the calling process, it is not processed at all. Otherwise it will be processed once and than marked in line 16 such that the same process will not use it in the future.
