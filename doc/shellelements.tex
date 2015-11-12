@@ -1,15 +1,11 @@
 \section{Shell Elements}\label{sec:Shell}
-Mathematical fundamentals of shell elements divided into the two parts and the coordinate transformation
+Mathematical fundamentals of shell elements divided into the two parts and the coordinate transformation %todo text füllen
  
  
  
  
  
  \subsection{Introduction to Linear Elastic Problems}\label{sec:Shell-IntroLinEla}
- % \cite{steinke2005finite} ch3.1 (S.61)\newline
- % Einführung von Vektoren und Matrizen (Verschiebungsvektor, Tensoren bzw. Vektoren der Dehnungen und Spannungen)\newline
- % Verknüpfung der Versch. mit den Dehnungen + Stoffgesetz (kinematische Beziehung)\newline
- % ???
  In the following the fundamental equations of linear elasticity will be considered. Here, the spatial case is used for demonstration, but every lower dimensional problem can easily be derived from it.
  The following definitions will be used in this thesis:
  \begin{equation}
@@ -63,7 +59,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
  \end{pmatrix}
  \end{equation}
  
- 
+ %todo ...
  
  
  
@@ -188,7 +184,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   	\label{fig:plane_triangle}
   \end{figure}
   One triangular finite element is shown in Figure \ref{fig:plane_triangle}. It is defined by the coordinates $(x_i,y_i)$ of its three nodes. Since the element is located in the xy-plane, the z-coordinate is of no interest and will be ignored. At every node, forces can be applied denoted with $F_{x_i}$ and $F_{y_i}$. Accordingly, every node can be displaced. The movement along the x-axis is denoted with $u_i$, or with $v_i$ along the y-axis respectively. Note, that the node numbering is in counter-clockwise direction. This definition will be kept throughout the thesis, and is important to remember when implementing the FEM-code in order to reduce errors.
-  In this thesis only triangles defined by three nodes are discussed. There are many more finite elements forming triangles, such as six node triangles or even seven node triangles. The main difference between these types of elements are the order of shape functions. More details about higher order triangular finite elements can be found in %TODO \cite
+  In this thesis only triangles defined by three nodes are discussed. There are many more finite elements forming triangles, such as six node triangles or even seven node triangles. The main difference between these types of elements are the order of shape functions. More details about higher order triangular finite elements can be found in \cite{zienkiewicz2000finite}, \cite{bergan1985triangular}, \cite{cook2002concepts}.
   
   % ansatzfunktion (abgewandelt statt phi, u und v separat)\\
   In the case of a three node triangle the basis functions for the two displacements $u$ and $v$ are as follows \cite{steinke2005finite}:
@@ -1208,8 +1204,8 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   	\put(4.2,4.2){$J$}
   	\put(5.45,1.7){$I$}
   	\unitlength=0.99mm
-  	\Dashline(25,7.5)(43,40){1.5}
-  	\Dashline(52,19.5)(15,27.0){1.5}
+  	\Dline(25,7.5)(43,40){1.5}
+  	\Dline(52,19.5)(15,27.0){1.5}
   	\end{picture}
   	\caption{Quadrilateral with nodes A, B, C and D, defined in global $xyz$ coordinate system. After transformation a new, local, $\tilde{x}\tilde{y}\tilde{z}$ coordinate system is created.}
   	\label{fig:quadrilateral}
@@ -1417,7 +1413,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
  The degree of freedom $\theta_z$ does not exists in both, the plane and the plate element, and were introduced with the shell element. Therefore $(\underline{K}_{ij})_{66}$ is zero. The sixth degree of freedom is necessary because the missing stiffness regarding a rotation around the axis normal to the element could produce singularities in the overall stiffness matrix. This happens for example, if all neighboring elements of a node lie in the same plane, i.e. they are coplanar. A singularity can lead to a non-solvable system, so this case needs be excluded \cite{steinke2005finite}. One way is to introduce this sixth degree of freedom and give it a value that is so small that it does not influence the displacements and stresses too much. The number of this values varies: Werkle suggests a value of $1/10000$ of the smallest diagonal entry of $\underline{K}_{ij}$ \cite{werkle1995finite}, where Ibrahimbegovic et al. suggests $1/1000$ of the smallest diagonal entriy of $\underline{K}_{ij}$. The value must be small, but big enough to prevent the singularities. Since this value is an approximation, one has to modify it, if the solution is not as expected or one cannot get a solution at all due to the addressed singularities. %TODO ref von ibrahimbegovic überprüfen, ob tatsächlich 1/1000 drin steht; info aus quad_shell_element2.pdf
  
  % Dann muss die (Rück-)Transformationsmatrix $T$ erstellt werden, da SKM im lokalen KoSys definiert ist, aber in die globale Systemmatrix einsortiert werden muss
- The stiffness matrix for the shell element was constructed in a local coordinate system as described in section \ref{sec:Shell-Plane}, \ref{sec:Shell-Plate} and \ref{sec:Shell-CoTrafo}. The overall stiffness matrix containing information about all elements need to be described in a global coordinate system. Before the element stiffness matrix is added to the global stiffness matrix, it has to be transformed from local to global. This can be achieved by transforming the single blocks of $\underline{K}$ from equation \ref{eq:shell_K_ij} with the relation: %TODO section refs fehlen
+ The stiffness matrix for the shell element was constructed in a local coordinate system as described in section \ref{sec:Shell-Plane}, \ref{sec:Shell-Plate} and \ref{sec:Shell-CoTrafo}. The overall stiffness matrix containing information about all elements need to be described in a global coordinate system. Before the element stiffness matrix is added to the global stiffness matrix, it has to be transformed from local to global. This can be achieved by transforming the single blocks of $\underline{K}$ from equation \ref{eq:shell_K_ij} with the relation:
  \begin{equation}\label{eq:shell_K_ij u_j=F_i}
  \underline{\check{K}}_{ij} \vec{\check{u}}_j = \vec{\check{F}}_i
  \end{equation}

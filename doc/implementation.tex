@@ -1,5 +1,5 @@
 \section{FEM Code Implementation}
-contains development of the program code with focus on the assembly of the system and its solving, the process of parallelization %TODO
+ This section contains information about the features of the framework ``libMesh'' that was used in the implementation of the program, details on important parts of the implementation like the system matrix assembly or the mesh format requirements and import. Additionally the parallelization with MPI concludes this section, describing details about libMesh requirements for MPI usage and important modifications to the program's code.
  
  
  
@@ -50,11 +50,8 @@ int main (int argc, char** argv)
  In fact, this is the base construction of nearly every libMesh program. It starts with including libMesh components that are needed by the program, e.g. \textit{mesh.h, equation\_systems.h, fe.h}. Then, the library needs to be initialized (line 10). This is necessary because it may depend on a number of other external libraries like MPI and PETSc that require initialization before use. On the other hand, if the \texttt{\textbf{LibMeshInit}} object goes out of scope, the other libraries are finalized automatically by libMesh. Next, a mesh is created (lines 12-14) on the default MPI communicator (even if the program is executed single-threaded). The mesh can either be read from file or created by internal mesh generation tools. In line 16 an equation systems object is created. It can contain multiple different systems. Here, only one linear implicit system is added to the object (line 16). Each system can contain multiple variables of different approximation orders (see lines 20/21). Many systems require a user-defined function that will assemble the (linear) system (lines 6 and 23). Now, the data structures for equation system must be initialized which is done in line 25. The solving of the systems is done in line 27 of the code. This one line of code calls the assemble function defined earlier and invokes the default numerical solver. If the external library PETSc is installed, the solver can be controlled from the command line by the user. After solving the system, the solution can be written to file; here, for example, the results are written to a VTK-formatted plot file (line 29).
  
  \subsection{Implementation Details}\label{sec:Impl-Details}
- details about the implementation with the libmesh FEM framework \\%TODO
- - short overview: stand-alone-version: gets input parameters from user and mesh file and produces results stored in output file
+  This section contains details about the program's implementation using the libMesh framework. Different parts of the code like the initialization, loading of the mesh or assembling of the system matrix are described. The focus is put on the interaction between the libMesh library and the user's code. Requirements regarding mesh formats and user arguments are described as well.
 
- %\begin{lstlisting}[caption=Example libMesh program,label=lst1]
- %\end{lstlisting}
  
   \subsubsection{Initialization}\label{sec:Impl-Details-Init}
   The program expects a few parameters set by the user through the command line at start. The ordering of these parameters are not relevant; some are optional. Here is a complete list of all parameters that can be set in the command line:
@@ -453,8 +450,7 @@ void writeOutput(Mesh &mesh, EquationSystems &es)
  
  
  \subsection{Parallelization with MPI}
- additional steps to make the code ready for multi process execution with MPI %TODO mit text füllen
- 
+  When the complexity of the mesh gets larger or the program is coupled with other solvers and executed permanently, it is important to parallelize the calculations in order to solve the system in less time. The parallelization with MPI has three major parts: The library itself, the partition of the mesh and the solving of the system. In the following sections these parts are described in more detail. Additionally it will be stated what code changes had to be performed in order to make the serial code working with MPI.
  
  
   \subsubsection{libMesh requirements}

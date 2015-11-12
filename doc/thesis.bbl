@@ -16,6 +16,12 @@ Jean-Louis Batoz, Klaus-J{\"U}Rgen Bathe, and Lee-Wing Ho.
 \newblock {\em International Journal for Numerical Methods in Engineering},
   15(12):1771--1812, 1980.
 
+\bibitem[BF85]{bergan1985triangular}
+PG~Bergan and CA~Felippa.
+\newblock A triangular membrane element with rotational degrees of freedom.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  50(1):25--69, 1985.
+
 \bibitem[BLSS]{echempp}
 Martin Bogdan, Kai Ludwig, Elena Sapozhnikova, and Bernd Speiser.
 \newblock Echem++ - a problem solving environment for electrochemistry.
