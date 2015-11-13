@@ -202,13 +202,69 @@
     	\caption{Subdividing plane object with triangular elements}
     	\label{fig:plane_triangulation}
   \end{figure}
+
+  \setlength\unitlength{0.9cm}
+  \begin{picture}(14,6)
+   	\thicklines
+   	\put(0.2,0.1){\vector(1,0){1.5}}
+   	\put(0.2,0.1){\vector(0,1){1.5}}
+   	\put(1.8,0){$x$}
+   	\put(0.1,1.7){$y$}
+   	
+   	\put(0.5, 2.5){\qbezier(0,0)(0.5,1.5)(2.5,2)}
+   	\put(3,4.5){\qbezier(0,0)(2,0.5)(4,0.5)}
+   	\put(7,5){\qbezier(0,0)(2,0)(4,-1)}
+   	\put(11,4){\qbezier(0,0)(0.5,-0.25)(1,-1)}
+   	\put(12,3){\qbezier(0,0)(2,-3)(-9,-2)}
+   	\put(3,1){\qbezier(0,0)(-1,-0.09)(-2.5,1.5)}
+  \end{picture}
     
   \begin{figure}[htbp]
   	\centering
-  	\includegraphics[width=1.0\linewidth]{figures/plane_triangle}
+  	%\includegraphics[width=1.0\linewidth]{figures/plane_triangle}
+  	\setlength\unitlength{0.9cm}
+	\begin{picture}(14,6)
+	\thicklines
+	\put(0.4,0.3){\vector(1,0){13.5}}
+	\put(0.4,0.3){\vector(0,1){5.5}}
+	\put(14.0,0.2){$\mathbf{x}$}
+	\put(0.3,5.9){$\mathbf{y}$}
+	
+	\put(6.2,0.7){\line(6,2.5){6}}
+	\put(5.85,0.35){$1$}
+	\put(12.2,3.2){\line(-10,1){10}}
+	\put(12.3,2.8){$2$}
+	\put(2.2,4.2){\line(4,-3.5){4}}
+	\put(1.9,3.8){$3$}
+	
+	\thinlines
+	\Dline(6.2,0.7)(6.2,0.3){0.1}
+	\put(6,0){$x_1$}
+	\Dline(6.2,0.7)(0.4,0.7){0.1}
+	\put(0,0.6){$y_1$}
+	\Dline(12.2,3.2)(12.2,0.3){0.1}
+	\put(12,0){$x_2$}
+	\Dline(12.2,3.2)(0.4,3.2){0.1}
+	\put(0,3.1){$y_2$}
+	\Dline(2.2,4.2)(2.2,0.3){0.1}
+	\put(2,0){$x_3$}
+	\Dline(2.2,4.2)(0.4,4.2){0.1}
+	\put(0,4){$y_3$}
+	
+	\put(6.2,0.7){\vector(1,0){1}}
+	\put(7.3,0.6){$u_1$}
+	\put(6.2,0.7){\vector(0,1){1}}
+	\put(6.0,1.8){$v_1$}
+	
+	\put(12.2,3.2){\vector(1,0){1}}
+	\put(13.3,3.1){$F_{x_2}$}
+	\put(12.2,3.2){\vector(0,1){1}}
+	\put(12.0,4.3){$F_{y_2}$}
+	\end{picture}
   	\caption{Three node triangular element with its coordinates, nodal displacements and nodal forces}
   	\label{fig:plane_triangle}
   \end{figure}
+    
   One triangular finite element is shown in Figure \ref{fig:plane_triangle}. It is defined by the coordinates $(x_i,y_i)$ of its three nodes. Since the element is located in the xy-plane, the z-coordinate is of no interest and will be ignored. At every node, forces can be applied denoted with $F_{x_i}$ and $F_{y_i}$. Accordingly, every node can be displaced. The movement along the x-axis is denoted with $u_i$, or with $v_i$ along the y-axis respectively. Note, that the node numbering is in counter-clockwise direction. This definition will be kept throughout the thesis, and is important to remember when implementing the FEM-code in order to reduce errors.
   In this thesis only triangles defined by three nodes are discussed. There are many more finite elements forming triangles, such as six node triangles or even seven node triangles. The main difference between these types of elements are the order of shape functions. More details about higher order triangular finite elements can be found in \cite{zienkiewicz2000finite}, \cite{bergan1985triangular}, \cite{cook2002concepts}, \cite{braess2007finite}.
   
@@ -232,7 +288,42 @@
   
   \begin{figure}[htbp]% dreieckskoordinaten (ähnlich bild 2.7 auf s.39(53))
   	\centering
-  	\includegraphics[width=0.9\linewidth]{figures/triangular_coords}
+  	%\includegraphics[width=0.9\linewidth]{figures/triangular_coords}
+	\setlength\unitlength{0.9cm}
+	\begin{picture}(14,6)
+	\thicklines
+	\put(0.4,0.3){\vector(1,0){13.5}}
+	\put(0.4,0.3){\vector(0,1){5.5}}
+	\put(14.0,0.2){$\mathbf{x}$}
+	\put(0.3,5.9){$\mathbf{y}$}
+	
+	\put(6.2,0.7){\line(6,2.5){6}}
+	\put(6.05,0.8){$1$}
+	\put(12.2,3.2){\line(-10,1){10}}
+	\put(12,3.3){$2$}
+	\put(2.2,4.2){\line(4,-3.5){4}}
+	\put(1.9,3.8){$3$}
+	
+	\thinlines
+	\Dline(6.2,0.7)(6.5,2.5){0.1}
+	\Dline(12.2,3.2)(6.5,2.5){0.1}
+	\Dline(2.2,4.2)(6.5,2.5){0.1}
+	\put(6.3,2.7){$P$}
+	
+	\put(12.2,3.2){\vector(6,2.5){0.5}}
+	\put(12.8,3.3){$L_2$}
+	\put(12.2,2.8){$L_2 = 1$}
+	\put(6.2,0.7){\vector(4,-3.5){0.5}}
+	\put(6.7,0.4){$L_1$}
+	\put(4.9,0.4){$L_1 = 1$}
+	\put(2.2,4.2){\vector(-10,1){0.7}}
+	\put(1.0,4.2){$L_3$}
+	\put(2.2,4.4){$L_3 = 1$}
+	
+	\put(9,1.5){$L_3 = 0$}
+	\put(2.8,2.2){$L_2 = 0$}
+	\put(7,4){$L_1 = 0$}
+	\end{picture}
   	\caption{Triangular coordinates $L_1,L_2,L_3$ and sampling point $P$ within the triangular element}
   	\label{fig:tri_coords}
   \end{figure}
