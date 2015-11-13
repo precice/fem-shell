@@ -28,6 +28,12 @@ Martin Bogdan, Kai Ludwig, Elena Sapozhnikova, and Bernd Speiser.
 \newblock
   \url{http://www.echem.uni-tuebingen.de/echem/software/EChem++/echem++.shtml/}.
 
+\bibitem[Bra07]{braess2007finite}
+Dietrich Braess.
+\newblock {\em Finite elements: Theory, fast solvers, and applications in solid
+  mechanics}.
+\newblock Cambridge University Press, 2007.
+
 \bibitem[BT82]{batoz1982evaluation}
 Jean-Louis Batoz and Mabrouk~Ben Tahar.
 \newblock Evaluation of a new quadrilateral thin plate bending element.
@@ -52,6 +58,11 @@ Gmsh manual.
 Alexander~H. Jarosch.
 \newblock icetools: a numerical ice flow model download.
 \newblock \url{http://sourceforge.net/projects/icetools/}.
+
+\bibitem[Kan04]{kansara2004development}
+Kaushalkumar Kansara.
+\newblock {\em Development of Membrane, Plate and Flat Shell Elements in Java.}
+\newblock PhD thesis, Virginia Tech, 2004.
 
 \bibitem[Kir07]{kirk2007adaptive}
 Benjamin~Shelton Kirk.

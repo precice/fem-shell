@@ -1,8 +1,5 @@
 \section{Shell Elements}\label{sec:Shell}
-Mathematical fundamentals of shell elements divided into the two parts and the coordinate transformation %todo text füllen
- 
- 
- 
+ Shell elements are used when structures need to be modeled where plane stresses as well as bending stresses are present. Different types of shell elements are available, including curved shell elements, shells of revolution, generalized shells or flat shell elements \cite{cook2002concepts}. The flat shell elements are subject of this work. Such an element can be constructed by the superposition of a plane and a plate element. This section contains the fundamentals of linear elastic problems - the field of application for the shell element - as well as the mathematical derivation of the plane and plate element, their combination resulting in the shell element and the necessary coordinate transformation that is needed for the implementation. 
  
  
  \subsection{Introduction to Linear Elastic Problems}\label{sec:Shell-IntroLinEla}
@@ -40,12 +37,14 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
  %\frac{\partial}{\partial y} & \frac{\partial}{\partial x} \end{pmatrix} \vec{u}
  = \underline{L}\vec{u}
  \end{equation}
- Equation \ref{eq:displ_strain_relation} relates the displacement vector field $\vec{u}$ with the strain field $\underline{\epsilon}$, or $\vec{\epsilon}$ respectively. Here, $\underline{L}$ is a differential operator. This strain-displacement relation is also called \textit{kinematic relationship} \cite{steinke2005finite}.\\
+ Equation \ref{eq:displ_strain_relation} relates the displacement vector field $\vec{u}$ with the strain field $\underline{\epsilon}$, or $\vec{\epsilon}$ respectively. Here, $\underline{L}$ is a differential operator. This strain-displacement relation is also called \textit{kinematic relationship} \cite{steinke2005finite}.
+ 
  In general initial strains can exist inside the material for example due to temperature changes or shrinkage. Such initial strains are denoted $\vec{\epsilon_0}$ and the stresses will be influenced by the difference between the actual and initial strains. Additionally one could imagine initial residual stresses $\vec{\sigma_0}$ that can be added to the general equation:
  \begin{equation}\label{eq:stress-strain-relation}
  \vec{\sigma} = \underline{D}\left(\vec{\epsilon}-\vec{\epsilon_0}\right)+\vec{\sigma_0},
  \end{equation}
  where $\underline{D}$ is the material matrix. In the simplest case of linear elasticity with isotropy, $\underline{D}$ only contains two parameters, namely the elastic modulus $E$ (also known as the Young's modulus) and the Poisson's ratio $\nu$. The former one defines the relationship between the stress and strain in a material, the latter one results as the quotient of the fraction of expansion and the fraction of compression for small changes.
+ 
  In the following the initial conditions are ignored, resulting in the a simpler form of equation \ref{eq:stress-strain-relation}:
  \begin{equation}
  \vec{\sigma} = \underline{D}\ \vec{\epsilon}
@@ -59,17 +58,34 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
  \end{pmatrix}
  \end{equation}
  
- %todo ...
- 
- 
+ Two different boundary conditions are distinguished: Essential and natural boundary conditions. The first one is geometrically described. An initial displacement $\vec{u^0}$ is impressed on a surface part $\Omega_u$ of the object:
+ \begin{equation}
+ \vec{u} = \vec{u^0} \text{on} \Omega_u
+ \end{equation}
+ The natural boundary conditions are represented by force conditions. They can be described as follows:
+ \begin{equation}
+ \underline{n} \vec{\sigma} = \vec{p^0} \text{on} \Omega_p
+ \end{equation}
+ where the matrix $\underline{n}$ contains entries of the object boundary's normal vector, $\vec{p^0}$ described the edge stress and $\vec{\sigma}$ is the stress vector:
+ \begin{align}
+ \vec{n} &= \begin{pmatrix}
+ n_x\\n_y\\n_z
+ \end{pmatrix}\\
+ \underline{n} &= \begin{pmatrix}
+ n_x & 0 & 0 & n_y & 0 & n_z\\
+ 0 & n_y & 0 & n_x & n_z & 0\\
+ 0 & 0 & n_z & 0 & n_y & n_x
+ \end{pmatrix}
+ \end{align}
  
  
  
  \subsection{Plane Element}\label{sec:Shell-Plane}
- First part of shell element: plane part. derivation of this part with two exemplary finite element types
- %TODO mit Text füllen
+  Plane elements are characterized by that loads are only apply in the mid-surface directions of an element and all displacements, strains and stresses happen in the mid-surface, too. In this section plane elements are discussed in more detail and two different discretizations, a three-node triangular element and a four-node quadrilateral element, are described.
+  
+  
   \subsubsection{Problem Definition}\label{sec:Shell-Plane-ProbDef}
-  \begin{figure}%- Bild ähnlich ch7.1 mit xy-Ausdehnung, Dicke t, Mittelfläche, Rand, KoSys; Streckenlast q0 und Volumenkraft g aber weglassen
+  \begin{figure}[htbp]%- Bild ähnlich ch7.1 mit xy-Ausdehnung, Dicke t, Mittelfläche, Rand, KoSys; Streckenlast q0 und Volumenkraft g aber weglassen
 \centering
 \includegraphics[width=0.97\linewidth]{figures/plane}
 \caption{Schematic view of a plane object}
@@ -78,7 +94,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   In Figure \ref{fig:plane} an object is shown which extends to the x and y axis as its primary direction. The extend in z-direction is smaller and denoted by thickness $t$. The mid-surface located in between the top and bottom surface areas has the coordinate $z=0$. Its local z-axis equals the normal vector of the mid place. Such an object is called \textit{plane} in the following.
   
   %- Bed. für ebenen Spannungszustand (eb. Dehnungszustand erwähnen und auf Ref (z.B. Zienkiewicz) verweisen)
-  There are two different problem definitions regarding plane elements: Plane stress and plane strain. The directions of displacements $u$ and $v$ along the orthogonal local x and y axis defining its displacement field is a common feature of both problems. Also, both have in common, that only strains and stresses in the xy plane have to be considered: Instead of nine, only three components remain. While in the case of plane stress all other stress components are zero, in plane strain the stress in direction perpendicular to the xy plane is non-zero. In this thesis only plane stress will be discussed in further detail. More information about plane strain is given in \cite{zienkiewicz2000finite}. %TODO weitere referenz mit details dazu
+  There are two different problem definitions regarding plane elements: Plane stress and plane strain. The directions of displacements $u$ and $v$ along the orthogonal local x and y axis defining its displacement field is a common feature of both problems. Also, both have in common, that only strains and stresses in the xy plane have to be considered: Instead of nine, only three components remain. While in the case of plane stress all other stress components are zero, in plane strain the stress in direction perpendicular to the xy plane is non-zero. In this thesis only plane stress will be discussed in further detail. More information about plane strain is given in \cite{zienkiewicz2000finite} and \cite{braess2007finite}, for instance.
   The following conditions must be satisfied such that a plane can be in \textit{plane stress} \cite{steinke2005finite}:
   \begin{itemize}
   	\item The thickness $t$ varies only slightly and it must hold: $t/l \ll 1$, with $l$ the extent of the larger side of the plane element.
@@ -107,7 +123,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   \sigma_{xx} & \sigma_{yy} & \sigma_{xy}
   \end{pmatrix}^T
   \end{equation}
-  The kinematic relationship $\vec{\epsilon}=\underline{L}\vec{u}$ \ref{eq:displ_strain_relation} linking the displacements $\vec{u}$ with the strains $\vec{\epsilon}$ at full length:
+  The kinematic relationship $\vec{\epsilon}=\underline{L}\vec{u}$ (eq.\ \ref{eq:displ_strain_relation}) linking the displacements $\vec{u}$ with the strains $\vec{\epsilon}$ can be written at full length:
   \begin{equation}\label{eq:t3displ-str-rel}
   \vec{\epsilon} = \begin{pmatrix}
   \epsilon_{xx} \\
@@ -147,18 +163,29 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   \end{pmatrix} = \underline{D} \vec{\epsilon} = \underline{D}\; \underline{L} \vec{u}
   \end{equation}
   %- Randbedingungen: q0 Streckenlast beschreiben, aber angeben, dass sie hier nicht beachtet werden, punktf. Ladungen werden hier benutzt\newline
-  % TODO hier fehlt der Abschnitt über die Randbedingungen steinke s. 214(227)
-  natural boundary conditions in form of nodal forces: $\vec{F} = \begin{pmatrix}
-  F_x & F_y
-  \end{pmatrix}^T$
-  
-  %- resultierendes Gesamtpotential ohne b und q
-  % TODO pi-potenzial einführen
-  The total potential of the plane element problem looks as follows:
-  \begin{equation}\label{eq:planeFunctional}
-  \Pi = 1/2 \int_{V}\vec{\epsilon}^T\vec{\sigma}dV - \vec{u}^T \vec{F},
+
+  After Steinke \cite{steinke2005finite}, the essential boundary conditions $\vec{u} = \vec{u^0}$ and the natural boundary conditions $t\ \underline{n}\ \vec{\sigma} = \vec{q^0}$ will be applied onto the objects boundary $\Gamma$, with $t$ is the object's thickness and $\vec{q^0}$ represents a line load. The matrix $\underline{n}$ looks as follows \cite{steinke2005finite}:
+  \begin{equation}
+  \underline{n} = \begin{pmatrix}
+  n_x & 0 & n_y\\ 0 & n_y & n_x
+  \end{pmatrix}
   \end{equation}
-  with the first term being the elastic strain energy and the second term the single forces.
+  Beside line loads, nodal forces $\vec{F} = \begin{pmatrix}
+  F_x & F_y
+  \end{pmatrix}^T$ are also possible.
+  
+  The total potential of the plane element problem looks as follows \cite{steinke2005finite}:
+  \begin{equation}
+  \Pi = \frac{1}{2} \int_{V}\vec{\epsilon}^T\vec{\sigma}dV - \int_{V} \vec{u}^T \vec{b}\ dV - \int_{\Gamma_q}\vec{u}^T \vec{q}\ d\gamma -\vec{u}^T \vec{F}
+  \end{equation}
+  The first term describes the elastic strain energy, the last three terms describe the different external forces. The first of the three describes the potential of the volume forces $\vec{b}^T = \rho \begin{pmatrix}
+  g_x & g_y
+  \end{pmatrix}$, where $\rho$ is the object's density and $g_x, g_y$ represents accelerations in the two directions. The second term stands for the line load along an edge $\Gamma_q$ and the last term contains the single nodal forces.
+  
+  The external forces are summarized in this work to the last term only. Line loads and volume forces can be converted to nodal load, assuming a linear distribution over the edges and the interior of the element, respectively \cite{steinke2005finite}. Therefore, the total potential of the plane element shrinks to the following:
+  \begin{equation}\label{eq:planeFunctional}
+  \Pi = \frac{1}{2} \int_{V}\vec{\epsilon}^T\vec{\sigma}dV - \vec{u}^T \vec{F}
+  \end{equation}
   
   
   
@@ -168,23 +195,22 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   
   
   \subsubsection{Tri-3 Plane Element}\label{sec:Shell-Plane-Tri}
-  %mathematical derivation of three node triangular plane element \textbf{discretization}
-
-  \begin{figure}% Bild von trianguliertem Körper
-%  	\centering
-  	\includegraphics[width=1.0\linewidth]{figures/plane_triangulation}
-  	\caption{Subdividing plane object with triangular elements}
-  	\label{fig:plane_triangulation}
+  In section \ref{sec:Shell-Plane-ProbDef} the plane element's functional was derived. Now the focus is on the functional's discretization. Figure \ref{fig:plane_triangulation} shows a general, planar object defined to be placed in the xy-plane. The first discretization step is to divide the object into single triangles approximating the shape of it. This process is called triangulation. Every one of these triangles then represents a finite element with one node at every corner. The finer the triangulation is done the better the object and its boundary are matched by its discrete complement, but also the more finite elements have to be considered in later calculations.
+  \begin{figure}[htbp]% Bild von trianguliertem Körper
+    	\centering
+    	\includegraphics[width=1.0\linewidth]{figures/plane_triangulation}
+    	\caption{Subdividing plane object with triangular elements}
+    	\label{fig:plane_triangulation}
   \end{figure}
-  In section \ref{sec:Shell-Plane-ProbDef} the plane's functional was derived. Now the focus is on the functional's discretization. Figure \ref{fig:plane_triangulation} shows a general, planar object defined to be placed in the xy-plane. The first discretization step is to divide the object into single triangles approximating the shape of it. This process is called triangulation. Every one of these triangles then represents a finite element with one node at every corner. The finer the triangulation is done the better the object and its boundary are matched by its discrete complement, but also the more finite elements have to be considered in later calculations.
-  \begin{figure}
+    
+  \begin{figure}[htbp]
   	\centering
   	\includegraphics[width=1.0\linewidth]{figures/plane_triangle}
   	\caption{Three node triangular element with its coordinates, nodal displacements and nodal forces}
   	\label{fig:plane_triangle}
   \end{figure}
   One triangular finite element is shown in Figure \ref{fig:plane_triangle}. It is defined by the coordinates $(x_i,y_i)$ of its three nodes. Since the element is located in the xy-plane, the z-coordinate is of no interest and will be ignored. At every node, forces can be applied denoted with $F_{x_i}$ and $F_{y_i}$. Accordingly, every node can be displaced. The movement along the x-axis is denoted with $u_i$, or with $v_i$ along the y-axis respectively. Note, that the node numbering is in counter-clockwise direction. This definition will be kept throughout the thesis, and is important to remember when implementing the FEM-code in order to reduce errors.
-  In this thesis only triangles defined by three nodes are discussed. There are many more finite elements forming triangles, such as six node triangles or even seven node triangles. The main difference between these types of elements are the order of shape functions. More details about higher order triangular finite elements can be found in \cite{zienkiewicz2000finite}, \cite{bergan1985triangular}, \cite{cook2002concepts}.
+  In this thesis only triangles defined by three nodes are discussed. There are many more finite elements forming triangles, such as six node triangles or even seven node triangles. The main difference between these types of elements are the order of shape functions. More details about higher order triangular finite elements can be found in \cite{zienkiewicz2000finite}, \cite{bergan1985triangular}, \cite{cook2002concepts}, \cite{braess2007finite}.
   
   % ansatzfunktion (abgewandelt statt phi, u und v separat)\\
   In the case of a three node triangle the basis functions for the two displacements $u$ and $v$ are as follows \cite{steinke2005finite}:
@@ -204,12 +230,13 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   \end{equation}
   both defined in triangular coordinates (see figure \ref{fig:tri_coords}).
   
-  \begin{figure}% dreieckskoordinaten (ähnlich bild 2.7 auf s.39(53))
+  \begin{figure}[htbp]% dreieckskoordinaten (ähnlich bild 2.7 auf s.39(53))
   	\centering
   	\includegraphics[width=0.9\linewidth]{figures/triangular_coords}
   	\caption{Triangular coordinates $L_1,L_2,L_3$ and sampling point $P$ within the triangular element}
   	\label{fig:tri_coords}
   \end{figure}
+  
   % interpolationsbedingunen führen auf Formfunktionen\\
   To get the unknown coefficients $a_i$, values for the triangular coordinates are set. This creates a system of linear equations:
   \begin{align}
@@ -257,7 +284,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   N_1 & N_2 & N_3
   \end{pmatrix}
   \end{align}
-  Characteristically for the shape function, as stated in \cite{steinke2005finite}, is, that shape function $N_i$ gets the value 1 at node $i$ and 0 at the two other nodes. The functions are linear with respect to $L_1$ and $L_2$ which can be noticed in equation \ref{eq:t3SF}. As stated before, these shape functions are the same for displacement $u$ and $v$. With the knowledge of the displacement values of the element's nodes one can formulate the displacement functions in triangular coordinate notation as follows:
+  Characteristically for the shape function, as stated in \cite{steinke2005finite}, is that shape function $N_i$ gets the value 1 at node $i$ and 0 at the two other nodes. The functions are linear with respect to $L_1$ and $L_2$ which can be noticed in equation \ref{eq:t3SF}. As stated before, these shape functions are the same for displacement $u$ and $v$. With the knowledge of the displacement values of the element's nodes one can formulate the displacement functions in triangular coordinate notation as follows:
   \begin{align}
   u &= N_1 u_1 + N_2 u_2 + N_3 u_3 \nonumber\\
   v &= N_1 v_1 + N_2 v_2 + N_3 v_3
@@ -399,7 +426,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   One solution to this problem is the use of isoparametric elements. They can be non-rectangular. The trick is to use reference coordinates which map the physical element into a reference element that is a square. Thus, the physical element can have a more general shape, but a coordinate transformation and numerical integration is needed which brings in more mathematical complexity \cite{cook2002concepts}.
   
   In this section quadrilateral isoparametric elements consisting of four nodes are described, but one can expand it to eight or nine node elements. Figure \ref{fig:coord_trafo} shows the two abstraction layers: On the left side the original element is shown in physical space, on the right side the reference element is shown. The square has a side length of $2$. The coordinate system with the $\xi$ and $\eta$ axis has its origin in the center of the square. Also note the numbering of the nodes is again counter-clockwise.
-  \begin{figure}%- bild von original- und bildebene Bild 7.17 steinke oder 6.2-1. cook
+  \begin{figure}[htbp]%- bild von original- und bildebene Bild 7.17 steinke oder 6.2-1. cook
   	\centering
   	\includegraphics[width=0.97\linewidth]{figures/coord_trafo}
   	\caption{Coordinate transformation of four node quadrilateral element with physical space on the left side and reference space on the right side}
@@ -576,13 +603,11 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   \end{equation}
  
  \subsection{Plate Bending Element}\label{sec:Shell-Plate}
- Second part of shell element: plate part. derivation of this part with two exemplary finite element types
-  %TODO text füllen
-  
+  In contrast to the plane element, the load at the plate (bending) elements are applied transversal to the element's mid-surface producing plate bending. It has one deformation degree of freedom and two rotational degrees of freedom. Plate elements are often used to model floors or ceilings. In this section, the plate element is discussed in more detail and two discretizations are described: The three-node triangular plate element and the four-node quadrilateral plate element.  
   
   \subsubsection{Problem Definition}\label{sec:Shell-Plate-ProbDef}
   %\cite{steinke2005finite} ch8.1
-  \begin{figure} % bild wie bei \ref{sec:MprobDef}
+  \begin{figure}[htbp] % bild wie bei \ref{sec:MprobDef}
   	\centering
   	\includegraphics[width=0.9\linewidth]{figures/plate}
   	\caption{Schematic drawing of a Kirchhoff plate with its main dimension $l$, thickness $t$ and loading $p$ normal to the mid-surface}
@@ -692,7 +717,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   with $k$ denoted as \textit{plate stiffness}.
   
   % auf verschiedene randbedingungen der platte eingehen
-  \begin{figure} % Bild 8.5 steinke
+  \begin{figure}[htbp] % Bild 8.5 steinke
   	\centering
   	\includegraphics[width=0.97\linewidth]{figures/plate_boundary}
   	\caption{Part of a plate's boundary with its essential and natural boundary conditions}
@@ -741,15 +766,12 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   The following sections show details of two discretizations of plate elements: A triangular element with three nodes and a quadrilateral element with four nodes.
   
   \subsubsection{Tri-3 Plate Element}\label{sec:Shell-Plate-Tri}
-  % mathematical derivation of three node triangular plane element\newline
-  % see Steinke \cite{steinke2005finite} page 275-282 + \cite{specht1988modified} for reference of element\\
-  % 8.4.4 beschreibt probleme mit einigen dreiecksplattenelementen, deshalb für meine arbeit element von specht \cite{specht1988modified}
   There exists many different types of triangular plate elements, for example Batoz et al. \cite{batoz1980study}, Tocher \cite{tocher1963analysis} or Specht \cite{specht1988modified}. The three node triangular element from \cite{tocher1963analysis} has three degrees of freedom (d.\.o.\.f) ($w, \theta_x, \theta_y$) per node. His basis function was a complete cubic polynomial. The term $xy$ was left out, because the polynomial has one coefficient more than the element has d.\.o.\.f. This leads to the problem that no constant state of bending can be described (non-conforming element) and this leads to wrong results at convergence \cite{steinke2005finite}. Therefore, Steinke challenges the practical use of this element.
   A possible way to use a complete cubic polynomial would be to add another node in the center of mass of the triangle and assign the only degree of freedom $w$ to it \cite{steinke2005finite}. But the problem of non-conformity persist, as the nodal twists don't suffice to describe the twists along the element's edges, which are quadric. Here, additional nodes on the edges would be needed.
   To get a conforming element one can choose a basis function with a complete polynomial of order five. It has 21 coefficients and d.o.f. They are distributed as follows: Every node has six d.o.f $(w, \partial w/\partial x, \partial w/\partial y, \partial^2 w/\partial x^2, \partial^2 w/\partial y^2, \partial^2 w/\partial x\partial y)$ and the mid node of every edge gets the degree of freedom $\partial w/\partial n$. This results in continuous element edge twists, conformity and convergence. The problem: 21 d.o.f. per element leads to high computational effort and second order derivatives at the boundaries are needed. Hence, Steinke advices against using it in practice \cite{steinke2005finite}.
   
   % ansatzfunktion nach specht\\
-  In this work an element from \cite{specht1988modified} were implemented which is also described in \cite{steinke2005finite}. It has three nodes and also three d.o.f. per node: The deformation $w$ and the two twists $\theta_x$ and $\theta_y$. The basis function for the deformation $w$ is as follows:
+  In this work an element from Specht \cite{specht1988modified} were implemented which is also described in \cite{steinke2005finite}. It has three nodes and also three d.o.f. per node: The deformation $w$ and the two twists $\theta_x$ and $\theta_y$. The basis function for the deformation $w$ is as follows:
   \begin{align}
   w = &a_0 L_1 + a_1 L_2 + a_2 L_3 + a_3 L_1L_2 + a_4 L_2L_3 + a_5 L_3L_1 \nonumber\\
     & + a_6\left(L_2L_1^2 + \frac{1}{2}L_1L_2L_3 \left(3(1-\mu_3)L_1 - (1+3\mu_3)L_2 + (1+3\mu_3)L_3\right)\right) \nonumber\\
@@ -919,9 +941,8 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   % mathematical derivation of four node quadrilateral plane element
   % see Zienkiewicz \cite{zienkiewicz2000finite} page 174-177,219-222 \cite{batoz1982evaluation page 1658-1662}
   % formulierung als DKQ element
-  % !! formatierung an meine anpassen, da sehr unterschiedlich zu anderen referenzen !!
   The element implemented in this work is the so-called \textit{DKQ} element, introduced by Batoz et al. \cite{batoz1982evaluation}. It is a four node, 12 degrees-of-freedom quadrilateral element for thin plates. It is based on a generalization of the \textit{Discrete Kirchhoff Triangular} (DKT) element which is a three node, 9 d.o.f. triangular element. Like the triangular element of the previous section, the DKQ element's nodes have all three degrees of freedom: The displacement $w$ and the rotations $\theta_x$ and $\theta_y$ around the element's local $x$- and $y$-axis. Figure \ref{fig:dkq} shows an example of such an element.
-  \begin{figure} % Bild 1 batoz
+  \begin{figure}[htbp] % Bild 1 batoz
   	\centering
   	\includegraphics[width=0.97\linewidth]{figures/dkq}
   	\caption{12 node quadrilateral plate element DQK}
@@ -954,7 +975,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   \beta_x &= \sum_{i=1}^{8} N_i \beta_{x_i}\\
   \beta_y &= \sum_{i=1}^{8} N_i \beta_{y_i}
   \end{align}
-  $N_i(\xi,\eta)$ are here the shape functions with isoparametric coordinates $\xi$ and $\eta$. They are the same as of the eight node Serendipity element, described for example in \cite{zienkiewicz2000finite} and seen in Figure \ref{fig:serendipity}. The shape functions of this element are achieved by products of linear lagrangian polynomials of the form $\frac{1}{4}(\xi+1)(\eta+1)$. For the eight node element the following shape functions result:
+  $N_i(\xi,\eta)$ are here the shape functions with isoparametric coordinates $\xi$ and $\eta$. They are the same as of the eight node Serendipity element, described for example in \cite{zienkiewicz2000finite}, or \cite{braess2007finite} and seen in Figure \ref{fig:serendipity}. The shape functions of this element are achieved by products of linear lagrangian polynomials of the form $\frac{1}{4}(\xi+1)(\eta+1)$. For the eight node element the following shape functions result:
   \begin{align}
   N_1(\xi, \eta) &= \frac{1}{4}(1-\xi)(1-\eta)(-\xi-\eta-1) \nonumber\\
   N_2(\xi, \eta) &= \frac{1}{4}(1+\xi)(1-\eta)(\xi-\eta-1) \nonumber\\
@@ -965,7 +986,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   N_7(\xi, \eta) &= \frac{1}{2}(1-\xi^2)(1+\eta) \nonumber\\
   N_8(\xi, \eta) &= \frac{1}{2}(1-\xi)(1-\eta^2) \nonumber
   \end{align}
-  \begin{figure} % Bild 8.9 (a) \cite{zienkiewicz2000finite}
+  \begin{figure}[htbp] % Bild 8.9 (a) \cite{zienkiewicz2000finite}
   	\centering
   	\includegraphics[width=0.97\linewidth]{figures/serendipity}
   	\caption{Eight node quadrilateral element with local $\xi,\eta$-coordinates}
@@ -1101,7 +1122,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   The nodes and elements in the mesh are defined in a global three dimensional coordinate system. The elements need to be transformed into a two dimensional local coordinate system in order to be able to calculate their local stiffness matrices. This local stiffness matrix must then be transformed back into the global system before adding it to the global stiffness matrix. This section describes the building of the transformation matrix, that will be used in the following section for the addressed transformation steps.
   First the transformation of an arbitrary triangle defined in 3D space is described. 
   
-  \begin{figure} % Bild von Dreieck mit ABC, globalem KoSys, lokalem KoSys mit Ursprung in A, x-Achse auf Vektor AB usw.\newline
+  \begin{figure}[htbp] % Bild von Dreieck mit ABC, globalem KoSys, lokalem KoSys mit Ursprung in A, x-Achse auf Vektor AB usw.\newline
   	\centering
   	%\includegraphics[width=0.4\linewidth]{figures/triangle}
   	\setlength\unitlength{0.80cm}
@@ -1175,7 +1196,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
   \end{align*}
   Node $\vec{A}$ will not be changed by the transformation with $\underline{T}$, $\vec{B}$ will be projected onto the local $x$-axis that is defined to be the normalized vector between $\vec{A}$ and $\vec{B}$. Node $\vec{C}$ will be projected onto the local $xy$-plane. One can see that the $z$-component vanishes by transforming into local space, thus generating the wished two dimensional local space.
   
-  \begin{figure} % Bild von bel. Viereck mit ABCD, IJKL, globalem KoSys, lokalem KoSys mit Ursprung auf Schnittpunkt der gestrichelten Linien von JL und IK\newline
+  \begin{figure}[htbp] % Bild von bel. Viereck mit ABCD, IJKL, globalem KoSys, lokalem KoSys mit Ursprung auf Schnittpunkt der gestrichelten Linien von JL und IK\newline
   	\centering
   	%\includegraphics[width=0.5\linewidth]{figures/quadrilateral}
   	\setlength\unitlength{0.99cm}
@@ -1259,7 +1280,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
  Shell elements combine the potential of both, plane and plate elements. Every time a thin walled structure like a car body, dome structure or container with multiaxial pressures is to be simulated, shell elements provide a good solution. In this work only the so-called flat shell elements are described and used in the implementation. Details about curved shell elements, shells of revolution and general shells can be found in Cook et al. \cite{cook2002concepts}.
  
  Flat shell elements have a state of bending and membrane stress that can be described by superposition of the plane and plate element \cite{klein2013fem}. Figure \ref{fig:shell_triangle} shows the superposition of plane and plate elements to a flat shell element. The degrees of freedom of plane and plate at every node are combined at the node of the shell element. Obviously the plane and plate element must be of the same finite element's type, for example three node triangular or eight node quadrilateral.
- \begin{figure} % bild wie bei 8.7 von scheibe und platte und kombination zu schale + erklärungen, welche unbekannten und kräfte man bei welchem teil hat
+ \begin{figure}[htbp] % bild wie bei 8.7 von scheibe und platte und kombination zu schale + erklärungen, welche unbekannten und kräfte man bei welchem teil hat
  	%\centering
  	%\includegraphics[width=0.8\linewidth]{figures/shell_triangle}
  	\setlength\unitlength{0.9cm}
@@ -1410,7 +1431,7 @@ Mathematical fundamentals of shell elements divided into the two parts and the c
  
  % Kij weisst in der Spalte theta\_z und Zeile theta\_z $(k_ij)_66$ eine null auf -> erklärung und warum schlecht. ANDERE REFERENZ ERKLÄRT, WAS WIR DESHALB MACHEN (1/1000 der diagonalwerte)
  $\left(\underline{\hat{K}}_{ij}\right)_m$ describes the submatrix of the stiffness matrix of the plane element for node $i$ and $j$ and is marked with the $\circ$-symbol, $\left(\underline{\hat{K}}_{ij}\right)_p$ describes the corresponding matrix part of the plate element's stiffness matrix and is symbolized with a $\star$.
- The degree of freedom $\theta_z$ does not exists in both, the plane and the plate element, and were introduced with the shell element. Therefore $(\underline{K}_{ij})_{66}$ is zero. The sixth degree of freedom is necessary because the missing stiffness regarding a rotation around the axis normal to the element could produce singularities in the overall stiffness matrix. This happens for example, if all neighboring elements of a node lie in the same plane, i.e. they are coplanar. A singularity can lead to a non-solvable system, so this case needs be excluded \cite{steinke2005finite}. One way is to introduce this sixth degree of freedom and give it a value that is so small that it does not influence the displacements and stresses too much. The number of this values varies: Werkle suggests a value of $1/10000$ of the smallest diagonal entry of $\underline{K}_{ij}$ \cite{werkle1995finite}, where Ibrahimbegovic et al. suggests $1/1000$ of the smallest diagonal entriy of $\underline{K}_{ij}$. The value must be small, but big enough to prevent the singularities. Since this value is an approximation, one has to modify it, if the solution is not as expected or one cannot get a solution at all due to the addressed singularities. %TODO ref von ibrahimbegovic überprüfen, ob tatsächlich 1/1000 drin steht; info aus quad_shell_element2.pdf
+ The degree of freedom $\theta_z$ does not exists in both, the plane and the plate element, and were introduced with the shell element. Therefore $(\underline{K}_{ij})_{66}$ is zero. The sixth degree of freedom is necessary because the missing stiffness regarding a rotation around the axis normal to the element could produce singularities in the overall stiffness matrix. This happens for example, if all neighboring elements of a node lie in the same plane, i.e. they are coplanar. A singularity can lead to a non-solvable system, so this case needs be excluded \cite{steinke2005finite}. One way is to introduce this sixth degree of freedom and give it a value that is so small that it does not influence the displacements and stresses too much. The number of this values varies: Werkle suggests a value of $1/10000$ of the smallest diagonal entry of $\underline{K}_{ij}$ \cite{werkle1995finite}, whereas \cite{kansara2004development} used $1/1000$ of the smallest diagonal entry of $\underline{K}_{ij}$. The value must be small, but big enough to prevent the singularities. Since this value is an approximation, one has to modify it, if the solution is not as expected or one cannot get a solution at all due to the addressed singularities.
  
  % Dann muss die (Rück-)Transformationsmatrix $T$ erstellt werden, da SKM im lokalen KoSys definiert ist, aber in die globale Systemmatrix einsortiert werden muss
  The stiffness matrix for the shell element was constructed in a local coordinate system as described in section \ref{sec:Shell-Plane}, \ref{sec:Shell-Plate} and \ref{sec:Shell-CoTrafo}. The overall stiffness matrix containing information about all elements need to be described in a global coordinate system. Before the element stiffness matrix is added to the global stiffness matrix, it has to be transformed from local to global. This can be achieved by transforming the single blocks of $\underline{K}$ from equation \ref{eq:shell_K_ij} with the relation:

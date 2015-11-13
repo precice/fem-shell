@@ -192,7 +192,7 @@ equation_systems.print_info();
    
   \subsubsection{Matrix and vector assembly}\label{sec:Impl-Details-Assembly}
   As stated in section \ref{sec:Impl-Intro}, libMesh tries to do as much programming tasks as possible on its own and let the user concentrate on the mathematical/physical problem to model. The last sections show that this is often true, since the user often only need to set parameters, create objects or call functions. To solve the system, libMesh calls a user-defined assembly function. This function is the part where the user is involved at most, because here the system matrix and the right-hand side (RHS) must be assembled. Nevertheless libMesh helps the user with many auxiliary function as can be seen further down. The main part of the assembly function is described in listing \ref{lst:assemble}.
-\begin{lstlisting}[caption=Assemble System Matrix and RHS,label=lst:assemble]
+\begin{lstlisting}[caption=Assemble System Matrix and RHS,label=lst:assemble,float]
 LinearImplicitSystem& system = es.get_system<LinearImplicitSystem>("Elasticity");
 const DofMap& dof_map = system.get_dof_map();
 
