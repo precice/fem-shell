@@ -198,26 +198,40 @@
   In section \ref{sec:Shell-Plane-ProbDef} the plane element's functional was derived. Now the focus is on the functional's discretization. Figure \ref{fig:plane_triangulation} shows a general, planar object defined to be placed in the xy-plane. The first discretization step is to divide the object into single triangles approximating the shape of it. This process is called triangulation. Every one of these triangles then represents a finite element with one node at every corner. The finer the triangulation is done the better the object and its boundary are matched by its discrete complement, but also the more finite elements have to be considered in later calculations.
   \begin{figure}[htbp]% Bild von trianguliertem Körper
     	\centering
-    	\includegraphics[width=1.0\linewidth]{figures/plane_triangulation}
+    	%\includegraphics[width=1.0\linewidth]{figures/plane_triangulation}
+    	\setlength\unitlength{0.9cm}
+    	\begin{picture}(14,6)
+    	\thicklines
+    	\put(0.2,0.1){\vector(1,0){1.5}}
+    	\put(0.2,0.1){\vector(0,1){1.5}}
+    	\put(1.8,0){$x$}
+    	\put(0.1,1.7){$y$}
+    	
+    	\put(1, 2.5){\cbezier(0,0)(0,0.5)(0.5,1.5)(2,2)}
+    	\put(3,4.5){\cbezier(0,0)(1.5,0.5)(2.5,0)(3,0.5)}
+    	\put(6,5){\cbezier(0,0)(0.5,0.5)(1.5,0.5)(3.5,0.5)}
+    	\put(9.5,5.5){\cbezier(0,0)(2,0)(3,-1)(3.5,-2)}
+    	\put(13,3.5){\cbezier(0,0)(0.5,-1)(-0.5,-2)(-2,-2)}
+    	\put(11,1.5){\cbezier(0,0)(-1.5,0)(-2.5,0.5)(-3.5,1)}
+    	\put(7.5,2.5){\cbezier(0,0)(-1,0.5)(-2.5,0)(-3.5,-1)}
+    	\put(4,1.5){\cbezier(0,0)(-1,-1)(-3,0.5)(-3,1)}
+    	\thinlines
+    	\polyline(1,2.5)(3,4.5)(6,5)(9.5,5.5)(13,3.5)(11,1.5)(7.5,2.5)(4,1.5)(1,2.5)
+    	\polyline(3,4.5)(4,1.5)(6,5)(7.5,2.5)(9.5,5.5)(11,1.5)(13,3.5)
+    	\put(0.5,5.5){object boundary} \polyline(2,5.2)(1.65,3.7)
+    	\put(6,1){triangular element} \polyline(8,1.5)(9.2,3)
+    	\put(0.6,2.3){$1$}
+    	\put(4.0,1.1){$2$}
+    	\put(2.85,4.6){$3$}
+    	\put(7.3,2.1){$4$}
+    	\put(5.8,5.1){$5$}
+    	\put(9.4,5.6){$6$}
+    	\put(10.85,1.05){$7$}
+    	\put(13.2,3.4){$8$}
+    	\end{picture}
     	\caption{Subdividing plane object with triangular elements}
     	\label{fig:plane_triangulation}
   \end{figure}
-
-  \setlength\unitlength{0.9cm}
-  \begin{picture}(14,6)
-   	\thicklines
-   	\put(0.2,0.1){\vector(1,0){1.5}}
-   	\put(0.2,0.1){\vector(0,1){1.5}}
-   	\put(1.8,0){$x$}
-   	\put(0.1,1.7){$y$}
-   	
-   	\put(0.5, 2.5){\qbezier(0,0)(0.5,1.5)(2.5,2)}
-   	\put(3,4.5){\qbezier(0,0)(2,0.5)(4,0.5)}
-   	\put(7,5){\qbezier(0,0)(2,0)(4,-1)}
-   	\put(11,4){\qbezier(0,0)(0.5,-0.25)(1,-1)}
-   	\put(12,3){\qbezier(0,0)(2,-3)(-9,-2)}
-   	\put(3,1){\qbezier(0,0)(-1,-0.09)(-2.5,1.5)}
-  \end{picture}
     
   \begin{figure}[htbp]
   	\centering
@@ -519,12 +533,8 @@
   In this section quadrilateral isoparametric elements consisting of four nodes are described, but one can expand it to eight or nine node elements. Figure \ref{fig:coord_trafo} shows the two abstraction layers: On the left side the original element is shown in physical space, on the right side the reference element is shown. The square has a side length of $2$. The coordinate system with the $\xi$ and $\eta$ axis has its origin in the center of the square. Also note the numbering of the nodes is again counter-clockwise.
   \begin{figure}[htbp]%- bild von original- und bildebene Bild 7.17 steinke oder 6.2-1. cook
   	\centering
-  	\includegraphics[width=0.97\linewidth]{figures/coord_trafo}
-  	\caption{Coordinate transformation of four node quadrilateral element with physical space on the left side and reference space on the right side}
-  	\label{fig:coord_trafo}
-  \end{figure}
-  
-  \setlength\unitlength{0.9cm}
+  	%\includegraphics[width=0.97\linewidth]{figures/coord_trafo}
+  	\setlength\unitlength{0.99cm}
   	\begin{picture}(14,6)
   	\thicklines
   	\put(0.4,0.3){\vector(1.5,0){1.5}}
@@ -538,7 +548,7 @@
   	\put(6.3,4.5){\circle*{0.2}}
   	\put(2.5,5.3){\circle*{0.2}}
   	\polyline(10,1)(13.5,1)(13.5,4.5)(10,4.5)(10,1)
-	\put(10,1){\circle*{0.2}}
+  	\put(10,1){\circle*{0.2}}
   	\put(13.5,1){\circle*{0.2}}
   	\put(13.5,4.5){\circle*{0.2}}
   	\put(10,4.5){\circle*{0.2}}
@@ -549,6 +559,11 @@
   	\put(11.75,2.75){\vector(0,2){2}} 
   	\put(11.6,4.9){$\eta$}
   	
+  	\put(3.95,3.2){\vector(2.7,0.2){2.7}}
+  	\put(6.80,3.2){$\xi$}
+  	\put(3.95,3.2){\vector(0.7,2.3){0.7}} 
+  	\put(4.60,5.6){$\eta$}
+  	
   	\put(9.6,0.8){$1$}
   	\put(9.3,0.5){$(-1,-1)$}
   	\put(13.7,0.8){$2$}
@@ -556,8 +571,22 @@
   	\put(13.75,4.35){$3$}
   	\put(13.1,4.75){$(1,1)$}
   	\put(9.6,4.35){$4$}
- 	\put(9.3,4.75){$(-1,1)$}
+  	\put(9.3,4.75){$(-1,1)$}
+  	
+  	\put(0.9,0.5){$1$}
+  	\put(5.9,1.5){$2$}
+  	\put(6.5,4.4){$3$}
+  	\put(2.1,5.2){$4$}
+  	
+  	\put(10.75,1.75){$\times P(\xi,\eta)$}
+  	\put(2.5,2.25){$\times$}
+  	\put(2.3,1.9){$P(x,y)$}
+  	\thicklines
+  	\put(10.7,1.85){\vector(-7.9,0.55){7.9}}
   	\end{picture}
+  	\caption{Coordinate transformation of four node quadrilateral element with physical space on the left side and reference space on the right side}
+  	\label{fig:coord_trafo}
+  \end{figure}
   
   %- eigenschaften der ansatzfunktion + formfunktionen\\
   Similarly to the triangular element, interpolating the displacement field as well as the element geometry is done by shape functions. They are defined in reference coordinates. The displacement of a point within the element can be expressed by the displacements at the nodes and shape functions $\underline{N}$. Also, the position of that point can be expressed in terms of the (global) nodal positions and shape functions $\underline{\tilde{N}}$. The element is called \textit{isoparametric} if $\underline{N}$ is identical to $\underline{\tilde{N}}$. If $\underline{\tilde{N}}$ is of lower degree than $\underline{N}$, the element is called \textit{subparametric} and \textit{superparametric} if it is the other way around \cite{cook2002concepts}.
@@ -1114,7 +1143,33 @@
   \end{align}
   \begin{figure}[htbp] % Bild 8.9 (a) \cite{zienkiewicz2000finite}
   	\centering
-  	\includegraphics[width=0.97\linewidth]{figures/serendipity}
+  	%\includegraphics[width=0.97\linewidth]{figures/serendipity}
+  	\setlength\unitlength{1.5cm}
+  	\begin{picture}(8,6)
+  	\thicklines  
+  	\polyline(1.5,1.25)(1.5,4.75)(7,4.75)(7,1.25)(1.5,1.25)
+  	\put(1.5,1.25){\circle*{0.25}}
+  	\put(1.5,4.75){\circle*{0.25}}
+  	\put(7,4.75){\circle*{0.25}}
+  	\put(7,1.25){\circle*{0.25}}
+  	\put(4.25,1.25){\circle*{0.25}}
+  	\put(4.25,4.75){\circle*{0.25}}
+  	\put(1.5,3){\circle*{0.25}}
+  	\put(7,3){\circle*{0.25}}
+  	
+  	\thinlines
+  	\put(4.25,3){\vector(1,0){1.25}}
+  	\put(4.25,3){\vector(0,1){1.25}}
+  	\put(5.3,2.7){$\xi$}
+  	\put(4.4,4.0){$\eta$}
+  	\put(1.1,5.0){$(-1,1)$}   \put(4.0,5.0){$(0,1)$}   \put(6.7,5.0){$(1,1)$}
+  	\put(0.6,2.95){$(-1,0)$}                            \put(7.3,2.95){$(1,0)$}
+  	\put(1.1,0.8){$(-1,-1)$}  \put(3.9,0.8){$(0,-1)$}  \put(6.7,0.8){$(1,-1)$}
+  	
+  	\put(1.7,4.4){$4$}  \put(4.2,4.4){$7$}  \put(6.6,4.4){$3$}
+  	\put(1.7,2.9){$8$}                       \put(6.6,2.9){$6$}
+  	\put(1.7,1.4){$1$}  \put(4.2,1.4){$5$}  \put(6.6,1.4){$2$}
+  	\end{picture}
   	\caption{Eight node quadrilateral element with local $\xi,\eta$-coordinates}
   	\label{fig:serendipity}
   \end{figure}
