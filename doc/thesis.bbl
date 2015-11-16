@@ -40,6 +40,9 @@ Jean-Louis Batoz and Mabrouk~Ben Tahar.
 \newblock {\em International Journal for Numerical Methods in Engineering},
   18(11):1655--1677, 1982.
 
+\bibitem[bun]{bungartz2015fully}
+pre{CICE} - a fully parallel library for multi-physics surface coupling.
+
 \bibitem[CMPW02]{cook2002concepts}
 Robert~D. Cook, David~S. Malkus, Michael~E. Plesha, and Robert~J. Witt.
 \newblock {\em Concepts and Applications of Finite Element Analysis}.
@@ -49,6 +52,12 @@ Robert~D. Cook, David~S. Malkus, Michael~E. Plesha, and Robert~J. Witt.
 Feel++ Consortium.
 \newblock Feel++ - finite element embedded library in c++.
 \newblock \url{http://www.feelpp.org}.
+
+\bibitem[Gat15]{gatzhammer2015efficient}
+Bernhard Gatzhammer.
+\newblock {\em Efficient and flexible partitioned simulation of fluid-structure
+  interactions}.
+\newblock Verlag Dr. Hut, 2015.
 
 \bibitem[gms]{gmsh-manual}
 Gmsh manual.

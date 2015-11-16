@@ -33,19 +33,31 @@
 \contentsline {subsubsection}{\numberline {4.3.2}Partitioning the mesh}{59}
 \contentsline {subsubsection}{\numberline {4.3.3}Local elements}{60}
 \contentsline {subsubsection}{\numberline {4.3.4}Assembly changes}{61}
-\contentsline {section}{\numberline {5}Coupling with preCICE}{63}
-\contentsline {subsection}{\numberline {5.1}Introduction to coupling}{63}
-\contentsline {subsection}{\numberline {5.2}Introduction to preCICE}{63}
-\contentsline {subsection}{\numberline {5.3}Coupling methods}{63}
-\contentsline {subsection}{\numberline {5.4}Implementation}{63}
-\contentsline {section}{\numberline {6}Validation}{64}
-\contentsline {subsection}{\numberline {6.1}Test A: Membrane Displacement with Tri-3}{64}
-\contentsline {subsection}{\numberline {6.2}Test B: Membrane Displacement with Quad-4}{64}
-\contentsline {subsection}{\numberline {6.3}Test C: Plate Displacement with Tri-3}{64}
-\contentsline {subsection}{\numberline {6.4}Test D: Plate Displacement with Quad-4}{64}
-\contentsline {subsection}{\numberline {6.5}Test E: Shell Displacement with Tri-3}{64}
-\contentsline {subsection}{\numberline {6.6}Test F: Shell Displacement with Quad-4}{64}
-\contentsline {subsection}{\numberline {6.7}Test G: Convergence (increasing number of elements)}{65}
-\contentsline {subsection}{\numberline {6.8}Test H: MPI (increasing number of processes)}{65}
-\contentsline {subsection}{\numberline {6.9}Test I: Coupling with preCICE}{65}
-\contentsline {section}{\numberline {7}Conclusion}{66}
+\contentsline {section}{\numberline {5}Coupling through preCICE}{63}
+\contentsline {subsection}{\numberline {5.1}Overview of preCICE}{63}
+\contentsline {subsection}{\numberline {5.2}Coupling methods}{64}
+\contentsline {subsubsection}{\numberline {5.2.1}Explicit Coupling Schemes}{64}
+\contentsline {subsubsection}{\numberline {5.2.2}Implicit Coupling Schemes}{64}
+\contentsline {subsubsection}{\numberline {5.2.3}Quasi-Newton approaches}{64}
+\contentsline {subsection}{\numberline {5.3}Data Mapping}{64}
+\contentsline {subsubsection}{\numberline {5.3.1}Nearest-Neighbor}{64}
+\contentsline {subsubsection}{\numberline {5.3.2}Nearest-Projection}{64}
+\contentsline {subsubsection}{\numberline {5.3.3}Radial Basis Function}{64}
+\contentsline {subsection}{\numberline {5.4}Communication}{64}
+\contentsline {subsubsection}{\numberline {5.4.1}MPI Communication}{65}
+\contentsline {subsubsection}{\numberline {5.4.2}Socket Communication}{65}
+\contentsline {subsection}{\numberline {5.5}Implementation}{65}
+\contentsline {subsubsection}{\numberline {5.5.1}Additional Boundary Conditions}{65}
+\contentsline {subsubsection}{\numberline {5.5.2}Partitioned Coupling Surface}{65}
+\contentsline {subsubsection}{\numberline {5.5.3}Integration of preCICE}{65}
+\contentsline {section}{\numberline {6}Validation}{66}
+\contentsline {subsection}{\numberline {6.1}Test A: Membrane Displacement with Tri-3}{66}
+\contentsline {subsection}{\numberline {6.2}Test B: Membrane Displacement with Quad-4}{66}
+\contentsline {subsection}{\numberline {6.3}Test C: Plate Displacement with Tri-3}{66}
+\contentsline {subsection}{\numberline {6.4}Test D: Plate Displacement with Quad-4}{66}
+\contentsline {subsection}{\numberline {6.5}Test E: Shell Displacement with Tri-3}{66}
+\contentsline {subsection}{\numberline {6.6}Test F: Shell Displacement with Quad-4}{66}
+\contentsline {subsection}{\numberline {6.7}Test G: Convergence (increasing number of elements)}{67}
+\contentsline {subsection}{\numberline {6.8}Test H: MPI (increasing number of processes)}{67}
+\contentsline {subsection}{\numberline {6.9}Test I: Coupling with preCICE}{67}
+\contentsline {section}{\numberline {7}Conclusion}{68}
