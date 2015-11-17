@@ -51,14 +51,15 @@
 \contentsline {subsubsection}{\numberline {5.5.2}Partitioned Coupling Surface}{70}
 \contentsline {subsubsection}{\numberline {5.5.3}Integration of preCICE}{70}
 \contentsline {section}{\numberline {6}Validation}{71}
-\contentsline {subsection}{\numberline {6.1}Test A: Membrane Displacement with Tri-3}{71}
-\contentsline {subsection}{\numberline {6.2}Test B: Membrane Displacement with Quad-4}{71}
-\contentsline {subsection}{\numberline {6.3}Test C: Plate Displacement with Tri-3}{71}
-\contentsline {subsection}{\numberline {6.4}Test D: Plate Displacement with Quad-4}{71}
-\contentsline {subsection}{\numberline {6.5}Test E: Shell Displacement with Tri-3}{71}
-\contentsline {subsection}{\numberline {6.6}Test F: Shell Displacement with Quad-4}{71}
-\contentsline {subsection}{\numberline {6.7}Test G: Convergence (increasing number of elements)}{72}
-\contentsline {subsection}{\numberline {6.8}Test H: MPI (increasing number of processes)}{72}
-\contentsline {subsection}{\numberline {6.9}Test I: Coupling with preCICE}{72}
-\contentsline {section}{\numberline {7}Conclusion}{73}
-\contentsline {subsection}{\numberline {7.1}Future Work}{73}
+\contentsline {subsection}{\numberline {6.1}Test A: Plane Displacement with Tri-3 Element}{71}
+\contentsline {paragraph}{\nonumberline Results:}{71}
+\contentsline {subsection}{\numberline {6.2}Test B: Plane Displacement with Quad-4}{72}
+\contentsline {paragraph}{\nonumberline Results:}{73}
+\contentsline {subsection}{\numberline {6.3}Test C: Plate Displacement with Tri-3}{73}
+\contentsline {subsection}{\numberline {6.4}Test D: Plate Displacement with Quad-4}{73}
+\contentsline {subsection}{\numberline {6.5}Test E: Shell Displacement}{73}
+\contentsline {subsection}{\numberline {6.6}Test F: Convergence (increasing number of elements)}{73}
+\contentsline {subsection}{\numberline {6.7}Test G: MPI (increasing number of processes)}{73}
+\contentsline {subsection}{\numberline {6.8}Test H: Coupling with preCICE}{73}
+\contentsline {section}{\numberline {7}Conclusion}{74}
+\contentsline {subsection}{\numberline {7.1}Future Work}{74}
