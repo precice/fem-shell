@@ -877,6 +877,28 @@
   	\includegraphics[width=0.97\linewidth]{figures/plate_boundary}
   	\caption{Part of a plate's boundary with its essential and natural boundary conditions}
   	\label{fig:plate_boundary}
+  	\pgfsetfillopacity{1.0}
+  	\setlength\unitlength{1.0cm}
+  	\begin{picture}(12,7)
+  	\thicklines  
+  	\put(1.5,4.5){\vector(0,1){1}}
+  	\put(1.2,5.6){$z,w$}
+  	\put(1.5,4.5){\vector(1,-0.2){1}}
+  	\put(2.6,4.2){$y,\theta_y$}
+  	\put(1.5,4.5){\vector(-0.5,-0.5){0.7}}
+  	\put(0.6,3.5){$x,\theta_x$}
+  	
+  	\thinlines
+  	\polyline(2.5,1.5)(8.5,1.6)(11.5,5)(5,6)(2.5,1.5)
+  	\put(2.5,1.5){\circle*{0.25}}
+  	\put(1.7,1.0){$w_1,\theta_{x_1},\theta_{y_1}$}
+  	\put(8.5,1.6){\circle*{0.25}}
+  	\put(7.8,1.1){$w_2,\theta_{x_2},\theta_{y_2}$}
+  	\put(11.5,5){\circle*{0.25}}
+  	\put(11.0,5.3){$w_3,\theta_{x_3},\theta_{y_3}$}
+  	\put(5,6){\circle*{0.25}}
+  	\put(4.2,6.3){$w_4,\theta_{x_4},\theta_{y_4}$}
+  	\end{picture}
   \end{figure}
   Let $P$ be a point on the continuous boundary of the plate with a local Cartesian coordinate system as described in \cite{steinke2005finite} (see Figure \ref{fig:plate_boundary}): The $n$ coordinate is perpendicular to the boundary surface, the $s$ axis tangential to it. The third axis equals the global z-axis of the plate. There are three essential and three natural boundary conditions defined for $P$: The displacement $w$, the drills $\theta_n = \partial w/\partial s, \theta_s = -\partial w/\partial n$, the shear force $Q_n$ and the moments $M_{ns}$ and $M_{nn}$. Since this leads to an inconsistency with the differential equation above, \cite{steinke2005finite} stated that Kirchhoff introduced new forces:
   \begin{equation}
@@ -1099,10 +1121,32 @@
   The element implemented in this work is the so-called \textit{DKQ} element, introduced by Batoz et al. \cite{batoz1982evaluation}. It is a four node, 12 degrees-of-freedom quadrilateral element for thin plates. It is based on a generalization of the \textit{Discrete Kirchhoff Triangular} (DKT) element which is a three node, 9 d.o.f. triangular element. Like the triangular element of the previous section, the DKQ element's nodes have all three degrees of freedom: The displacement $w$ and the rotations $\theta_x$ and $\theta_y$ around the element's local $x$- and $y$-axis. Figure \ref{fig:dkq} shows an example of such an element.
   \begin{figure}[htbp] % Bild 1 batoz
   	\centering
-  	\includegraphics[width=0.97\linewidth]{figures/dkq}
+  	%\includegraphics[width=0.97\linewidth]{figures/dkq}
+  	\setlength\unitlength{1.0cm}
+  	\begin{picture}(12,7)
+  	\thicklines  
+  	\put(1.5,4.5){\vector(0,1){1}}
+  	\put(1.2,5.6){$z,w$}
+  	\put(1.5,4.5){\vector(1,-0.2){1}}
+  	\put(2.6,4.2){$y,\theta_y$}
+  	\put(1.5,4.5){\vector(-0.5,-0.5){0.7}}
+  	\put(0.6,3.5){$x,\theta_x$}
+  	
+  	\thinlines
+  	\polyline(2.5,1.5)(8.5,1.6)(11.5,5)(5,6)(2.5,1.5)
+  	\put(2.5,1.5){\circle*{0.25}}
+  	\put(1.7,1.0){$w_1,\theta_{x_1},\theta_{y_1}$}
+  	\put(8.5,1.6){\circle*{0.25}}
+  	\put(7.8,1.1){$w_2,\theta_{x_2},\theta_{y_2}$}
+  	\put(11.5,5){\circle*{0.25}}
+  	\put(11.0,5.3){$w_3,\theta_{x_3},\theta_{y_3}$}
+  	\put(5,6){\circle*{0.25}}
+  	\put(4.2,6.3){$w_4,\theta_{x_4},\theta_{y_4}$}
+  	\end{picture}
   	\caption{12 node quadrilateral plate element DQK}
   	\label{fig:dkq}
   \end{figure}
+  
 
   % dkq basiert auf diskretisierung der stress-energie, unter vernachlässigung der transverse shear strain energy (gl.(1) s.4)
   The formulation of the DKQ element by Batoz et al. \cite{batoz1982evaluation} uses the discrete Kirchhoff technique. It is based on the discretization of the strain energy and neglects the transverse shear energy. This results in the following functional:

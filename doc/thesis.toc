@@ -1,63 +1,64 @@
-\contentsline {section}{\numberline {1}Introduction}{5}
-\contentsline {section}{\numberline {2}Framework Evaluation}{6}
-\contentsline {subsection}{\numberline {2.1}General Aspects}{6}
-\contentsline {subsection}{\numberline {2.2}Frameworks Overview}{7}
-\contentsline {subsubsection}{\numberline {2.2.1}Feel++}{7}
-\contentsline {subsubsection}{\numberline {2.2.2}OOFEM}{8}
-\contentsline {subsubsection}{\numberline {2.2.3}GetFEM++}{8}
-\contentsline {subsubsection}{\numberline {2.2.4}MFEM}{8}
-\contentsline {subsubsection}{\numberline {2.2.5}libMesh}{9}
-\contentsline {section}{\numberline {3}Shell Elements}{10}
-\contentsline {subsection}{\numberline {3.1}Introduction to Linear Elastic Problems}{10}
-\contentsline {subsection}{\numberline {3.2}Plane Element}{11}
-\contentsline {subsubsection}{\numberline {3.2.1}Problem Definition}{11}
-\contentsline {subsubsection}{\numberline {3.2.2}Tri-3 Plane Element}{14}
-\contentsline {subsubsection}{\numberline {3.2.3}Quad-4 Plane Element}{19}
-\contentsline {subsection}{\numberline {3.3}Plate Bending Element}{23}
-\contentsline {subsubsection}{\numberline {3.3.1}Problem Definition}{23}
-\contentsline {subsubsection}{\numberline {3.3.2}Tri-3 Plate Element}{27}
-\contentsline {subsubsection}{\numberline {3.3.3}Quad-4 Plate Element}{32}
-\contentsline {subsection}{\numberline {3.4}Coordinate Transformation}{37}
-\contentsline {subsection}{\numberline {3.5}Shell Element}{40}
-\contentsline {section}{\numberline {4}FEM Code Implementation}{45}
-\contentsline {subsection}{\numberline {4.1}Introduction to libMesh}{45}
-\contentsline {subsection}{\numberline {4.2}Implementation Details}{47}
-\contentsline {subsubsection}{\numberline {4.2.1}Initialization}{47}
-\contentsline {subsubsection}{\numberline {4.2.2}Mesh file import}{48}
-\contentsline {subsubsection}{\numberline {4.2.3}System setup}{50}
-\contentsline {subsubsection}{\numberline {4.2.4}Matrix and vector assembly}{52}
-\contentsline {subsubsection}{\numberline {4.2.5}Solving the system}{57}
-\contentsline {subsubsection}{\numberline {4.2.6}Output}{58}
-\contentsline {subsection}{\numberline {4.3}Parallelization with MPI}{59}
-\contentsline {subsubsection}{\numberline {4.3.1}libMesh requirements}{59}
-\contentsline {subsubsection}{\numberline {4.3.2}Partitioning the mesh}{59}
-\contentsline {subsubsection}{\numberline {4.3.3}Local elements}{60}
-\contentsline {subsubsection}{\numberline {4.3.4}Assembly changes}{61}
-\contentsline {section}{\numberline {5}Coupling through preCICE}{63}
-\contentsline {subsection}{\numberline {5.1}Overview of preCICE}{63}
-\contentsline {subsection}{\numberline {5.2}Coupling methods}{64}
-\contentsline {subsubsection}{\numberline {5.2.1}Explicit Coupling Schemes}{64}
-\contentsline {subsubsection}{\numberline {5.2.2}Implicit Coupling Schemes}{64}
-\contentsline {subsubsection}{\numberline {5.2.3}Quasi-Newton approaches}{64}
-\contentsline {subsection}{\numberline {5.3}Data Mapping}{64}
-\contentsline {subsubsection}{\numberline {5.3.1}Nearest-Neighbor}{64}
-\contentsline {subsubsection}{\numberline {5.3.2}Nearest-Projection}{64}
-\contentsline {subsubsection}{\numberline {5.3.3}Radial Basis Function}{64}
-\contentsline {subsection}{\numberline {5.4}Communication}{64}
-\contentsline {subsubsection}{\numberline {5.4.1}MPI Communication}{65}
-\contentsline {subsubsection}{\numberline {5.4.2}Socket Communication}{65}
-\contentsline {subsection}{\numberline {5.5}Implementation}{65}
-\contentsline {subsubsection}{\numberline {5.5.1}Additional Boundary Conditions}{65}
-\contentsline {subsubsection}{\numberline {5.5.2}Partitioned Coupling Surface}{65}
-\contentsline {subsubsection}{\numberline {5.5.3}Integration of preCICE}{65}
-\contentsline {section}{\numberline {6}Validation}{66}
-\contentsline {subsection}{\numberline {6.1}Test A: Membrane Displacement with Tri-3}{66}
-\contentsline {subsection}{\numberline {6.2}Test B: Membrane Displacement with Quad-4}{66}
-\contentsline {subsection}{\numberline {6.3}Test C: Plate Displacement with Tri-3}{66}
-\contentsline {subsection}{\numberline {6.4}Test D: Plate Displacement with Quad-4}{66}
-\contentsline {subsection}{\numberline {6.5}Test E: Shell Displacement with Tri-3}{66}
-\contentsline {subsection}{\numberline {6.6}Test F: Shell Displacement with Quad-4}{66}
-\contentsline {subsection}{\numberline {6.7}Test G: Convergence (increasing number of elements)}{67}
-\contentsline {subsection}{\numberline {6.8}Test H: MPI (increasing number of processes)}{67}
-\contentsline {subsection}{\numberline {6.9}Test I: Coupling with preCICE}{67}
-\contentsline {section}{\numberline {7}Conclusion}{68}
+\contentsline {section}{\numberline {1}Introduction}{6}
+\contentsline {section}{\numberline {2}Framework Evaluation}{7}
+\contentsline {subsection}{\numberline {2.1}General Aspects}{7}
+\contentsline {subsection}{\numberline {2.2}Frameworks Overview}{8}
+\contentsline {subsubsection}{\numberline {2.2.1}Feel++}{8}
+\contentsline {subsubsection}{\numberline {2.2.2}OOFEM}{9}
+\contentsline {subsubsection}{\numberline {2.2.3}GetFEM++}{9}
+\contentsline {subsubsection}{\numberline {2.2.4}MFEM}{9}
+\contentsline {subsubsection}{\numberline {2.2.5}libMesh}{10}
+\contentsline {section}{\numberline {3}Shell Elements}{11}
+\contentsline {subsection}{\numberline {3.1}Introduction to Linear Elastic Problems}{11}
+\contentsline {subsection}{\numberline {3.2}Plane Element}{12}
+\contentsline {subsubsection}{\numberline {3.2.1}Problem Definition}{12}
+\contentsline {subsubsection}{\numberline {3.2.2}Tri-3 Plane Element}{15}
+\contentsline {subsubsection}{\numberline {3.2.3}Quad-4 Plane Element}{20}
+\contentsline {subsection}{\numberline {3.3}Plate Bending Element}{24}
+\contentsline {subsubsection}{\numberline {3.3.1}Problem Definition}{24}
+\contentsline {subsubsection}{\numberline {3.3.2}Tri-3 Plate Element}{29}
+\contentsline {subsubsection}{\numberline {3.3.3}Quad-4 Plate Element}{33}
+\contentsline {subsection}{\numberline {3.4}Coordinate Transformation}{38}
+\contentsline {subsection}{\numberline {3.5}Shell Element}{41}
+\contentsline {section}{\numberline {4}FEM Code Implementation}{46}
+\contentsline {subsection}{\numberline {4.1}Introduction to libMesh}{46}
+\contentsline {subsection}{\numberline {4.2}Implementation Details}{48}
+\contentsline {subsubsection}{\numberline {4.2.1}Initialization}{48}
+\contentsline {subsubsection}{\numberline {4.2.2}Mesh file import}{49}
+\contentsline {subsubsection}{\numberline {4.2.3}System setup}{51}
+\contentsline {subsubsection}{\numberline {4.2.4}Matrix and vector assembly}{53}
+\contentsline {subsubsection}{\numberline {4.2.5}Solving the system}{58}
+\contentsline {subsubsection}{\numberline {4.2.6}Output}{59}
+\contentsline {subsection}{\numberline {4.3}Parallelization with MPI}{60}
+\contentsline {subsubsection}{\numberline {4.3.1}libMesh requirements}{60}
+\contentsline {subsubsection}{\numberline {4.3.2}Partitioning the mesh}{60}
+\contentsline {subsubsection}{\numberline {4.3.3}Local elements}{61}
+\contentsline {subsubsection}{\numberline {4.3.4}Assembly changes}{62}
+\contentsline {section}{\numberline {5}Coupling through preCICE}{64}
+\contentsline {subsection}{\numberline {5.1}Overview of preCICE}{64}
+\contentsline {subsection}{\numberline {5.2}Coupling Methods}{65}
+\contentsline {subsubsection}{\numberline {5.2.1}Explicit Coupling Schemes}{65}
+\contentsline {subsubsection}{\numberline {5.2.2}Implicit Coupling Schemes}{66}
+\contentsline {subsection}{\numberline {5.3}Data Mapping}{67}
+\contentsline {subsubsection}{\numberline {5.3.1}Conservative vs.\ Consistent}{67}
+\contentsline {subsubsection}{\numberline {5.3.2}Nearest-Neighbor}{68}
+\contentsline {subsubsection}{\numberline {5.3.3}Nearest-Projection}{68}
+\contentsline {subsubsection}{\numberline {5.3.4}Radial Basis Function}{69}
+\contentsline {subsection}{\numberline {5.4}Communication}{69}
+\contentsline {subsubsection}{\numberline {5.4.1}MPI Communication}{69}
+\contentsline {subsubsection}{\numberline {5.4.2}Socket Communication}{70}
+\contentsline {subsection}{\numberline {5.5}Implementation}{70}
+\contentsline {subsubsection}{\numberline {5.5.1}Additional Boundary Conditions}{70}
+\contentsline {subsubsection}{\numberline {5.5.2}Partitioned Coupling Surface}{70}
+\contentsline {subsubsection}{\numberline {5.5.3}Integration of preCICE}{70}
+\contentsline {section}{\numberline {6}Validation}{71}
+\contentsline {subsection}{\numberline {6.1}Test A: Membrane Displacement with Tri-3}{71}
+\contentsline {subsection}{\numberline {6.2}Test B: Membrane Displacement with Quad-4}{71}
+\contentsline {subsection}{\numberline {6.3}Test C: Plate Displacement with Tri-3}{71}
+\contentsline {subsection}{\numberline {6.4}Test D: Plate Displacement with Quad-4}{71}
+\contentsline {subsection}{\numberline {6.5}Test E: Shell Displacement with Tri-3}{71}
+\contentsline {subsection}{\numberline {6.6}Test F: Shell Displacement with Quad-4}{71}
+\contentsline {subsection}{\numberline {6.7}Test G: Convergence (increasing number of elements)}{72}
+\contentsline {subsection}{\numberline {6.8}Test H: MPI (increasing number of processes)}{72}
+\contentsline {subsection}{\numberline {6.9}Test I: Coupling with preCICE}{72}
+\contentsline {section}{\numberline {7}Conclusion}{73}
+\contentsline {subsection}{\numberline {7.1}Future Work}{73}
