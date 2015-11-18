@@ -1,7 +1,7 @@
 \section{Validation}
-The code was tested with several problems to validate its correctness and state where and why there are differing results to the existing (commercial) FEM codes \textbf{TODO: besseren Text hier einfügen} %todo besseren einleitungstext formulieren, SAP 2000 benennen für später
+In the scope of this thesis a program was developed that implements flat shell elements. Two different discretizations of shell elements are provided: A three-node triangular element and a four-node quadrilateral element. A plane and a plate bending element were superimposed to the final flat shell element. This chapter attends the validation, i.e. the accuracy and convergence properties, of the two shell element discretizations as well as their parts, the plane and the plate element. Several problems were chosen that show the correctness of the discretized elements. The tests were taken from different sources, namely \cite{kansara2004development}, \cite{macneal1985proposed}, \cite{wilson1996three} and \cite{jin1994analysis}. Many example problems have analytical results to be compared with, the examples from \cite{kansara2004development} used a commercial software called \textit{SAP2000} \cite{sap-2000} as a benchmark for comparison. Since this software is used in practice for over 30 years, it will be used here as a benchmark as well.
  \subsection{Test A: Plane Displacement with Tri-3 Element}
-  The three-node triangular plane element \textbf{Tri-3} is validated with a cantilever beam shown in Figure \ref{fig:testA}. The example problem was taken from \cite{kansara2004development}.
+  The three-node triangular plane element \textbf{Tri-3} is validated with a cantilever beam shown in Figure \ref{fig:testA}. The example problem was taken from \cite{kansara2004development} (Test Example 2).
  \begin{figure}[htbp]
    	\centering
 	\setlength\unitlength{1.65cm}
@@ -53,12 +53,12 @@ The code was tested with several problems to validate its correctness and state 
    A concentrated load of $40 kips$ in total. Node 8 and 26 has a load of $6 \frac{2}{3}$, node 17 has a load of $26 \frac{2}{3}$.
    \end{itemize}
    
-   \paragraph{Results:} The displacements in x- and y-direction at node 22 and 26 are presented in Table \ref{tab:testA} together with the results of \textit{SAP-2000} from \cite{kansara2004development}. The displacements of the work's program deviate from the commercial software in all cases for at most $0.027\%$.
+   \paragraph{Results:} The displacements in x- and y-direction at node 22 and 26 are presented in Table \ref{tab:testA} together with the results from the \textit{SAP2000} software presented in \cite{kansara2004development}. The displacements of the thesis' program deviate from the commercial software in all cases for at most $0.027\%$.
    
    \begin{table}[htbp]
    \centering
    \begin{tabular}{c|c|C{2.5cm}|C{2.5cm}|c}
-   \textbf{Node} & \textbf{Displacement} & \textbf{Results from program} & \textbf{Results from SAP-2000} & \textbf{Deviation}\\\hline
+   \textbf{Node} & \textbf{Displacement} & \textbf{Results from program} & \textbf{Results from SAP2000} & \textbf{Difference (\%)}\\\hline\hline
    \multirow{2}{*}{22} & $u_x$ & $-0.0255988$ & $-0.025605$ & $0.024\%$\\
                        & $u_y$ & $ 0.0629549$ & $ 0.062971$ & $0.026\%$\\\hline
    \multirow{2}{*}{26} & $u_x$ & $-0.0342621$ & $-0.034271$ & $0.027\%$\\
@@ -70,7 +70,7 @@ The code was tested with several problems to validate its correctness and state 
    
    
  \subsection{Test B: Plane Displacement with Quad-4}
-  The four-node quadrilateral plane element \textbf{Quad-4} is validated with the same cantilever beam as used in Test A. It is shown in Figure \ref{fig:testB}. The example problem was also taken from \cite{kansara2004development}.
+  The four-node quadrilateral plane element \textbf{Quad-4} is validated with the same cantilever beam that was used in Test A. It is shown in Figure \ref{fig:testB}. The example problem was also taken from \cite{kansara2004development} (Test Example 5).
   \begin{figure}[htbp]
     \centering
   	\setlength\unitlength{1.65cm}
@@ -116,12 +116,12 @@ The code was tested with several problems to validate its correctness and state 
    A concentrated load of $40 kips$ in total. Node 8 and 26 has a load of $6 \frac{2}{3}$, node 17 has a load of $26 \frac{2}{3}$.
   \end{itemize}
 
-  \paragraph{Results:} The displacements in x- and y-direction at node 22 and 26 are presented in Table \ref{tab:testB} together with the results of \textit{SAP-2000} from \cite{kansara2004development}. The displacements of the work's program deviate from the commercial software in all cases for at most $0.03\%$.
+  \paragraph{Results:} The displacements in x- and y-direction at node 22 and 26 are presented in Table \ref{tab:testB}. The results of \textit{SAP2000} were used for comparison. The displacements calculated by the thesis' program deviate from the commercial software in all cases for at most $0.03\%$ and thus can be accepted as correct.
 
   \begin{table}[htbp]
    \centering
     \begin{tabular}{c|c|C{2.5cm}|C{2.5cm}|c}
-    \textbf{Node} & \textbf{Displacement} & \textbf{Results from program} & \textbf{Results from SAP-2000} & \textbf{Deviation}\\\hline
+    \textbf{Node} & \textbf{Displacement} & \textbf{Results from program} & \textbf{Results from SAP-2000} & \textbf{Difference (\%)}\\\hline\hline
     \multirow{2}{*}{22} & $u_x$ & $-0.0427728$ & $-0.042774$ & $0.028\%$\\
                         & $u_y$ & $ 0.1012620$ & $ 0.101265$ & $0.030\%$\\\hline
     \multirow{2}{*}{26} & $u_x$ & $-0.0570728$ & $-0.057074$ & $0.021\%$\\
@@ -132,19 +132,148 @@ The code was tested with several problems to validate its correctness and state 
    \end{table}
      
  \subsection{Test C: Plate Displacement with Tri-3}
- %Test 4.2.1 und 4.2.2 von test_cases.pdf\\
- %Bild\\
- %Mesh: meshgen\_q\_PlateQuad nx ny 0 file q / 
+  In this test the three-node triangular plate element \textbf{Tri-3} was validated. The example problem was taken from \cite{wilson1996three} (8.\.9.\.2 and 8.\.9.\.3). The geometry of the test is shown in Figure \ref{fig:testC}. Two different tests were made: At first a concentrated point load $P$ was applied at the center of the simply supported square plate. In the other test a uniformly distributed load of $1.0$ per unit area was assigned to the whole plate.
+  \begin{figure}[htbp]
+  	\centering
+  	\setlength\unitlength{1.05cm}
+  	\begin{picture}(8,8)
+  	\thicklines
+  	\put(0.5,0.5){\vector(1,0){1}}
+  	\put(0.5,0.5){\vector(0,1){1}}
+  	\put(1.6,0.6){$\mathbf{x}$}
+  	\put(0.6,1.6){$\mathbf{y}$}   	
+  	\thinlines
+  	\polygon(1,1)(7,1)(7,7)(1,7)
+  	\Line(1,4)(7,4)\Line(4,1)(4,7)
+  	\Line(1,2.5)(7,2.5)\Line(2.5,1)(2.5,7)
+  	\Line(1,5.5)(7,5.5)\Line(5.5,1)(5.5,7)
+  	\Line(1,1)(7,7)\Line(1,2.5)(5.5,7)\Line(1,4)(4,7)\Line(1,5.5)(2.5,7)\Line(2.5,1)(7,5.5)\Line(4,1)(7,4)\Line(5.5,1)(7,2.5)
+  	\polygon(1,1)(1.1,0.8)(0.9,0.8)
+  	\polygon(1,1)(0.8,1.1)(0.8,0.9)
+  	\polygon(7,1)(7.1,0.8)(6.9,0.8)
+  	\polygon(7,1)(7.2,1.1)(7.2,0.9)
+  	\polygon(7,7)(7.1,7.2)(6.9,7.2)
+  	\polygon(7,7)(7.2,7.1)(7.2,6.9)
+  	\polygon(1,7)(1.1,7.2)(0.9,7.2)
+  	\polygon(1,7)(0.8,7.1)(0.8,6.9)
+  	\put(4,4){\circle*{0.25}} \put(4.1,3.65){$P$}
+  	\put(1.06,1.05){$0$}\put(2.56,1.05){$1$}\put(4.06,1.05){$2$}\put(5.56,1.05){$3$}\put(7.06,1.05){$4$}
+  	\put(1.06,2.55){$5$}\put(2.56,2.55){$6$}\put(4.06,2.55){$7$}\put(5.56,2.55){$8$}\put(7.06,2.55){$9$}
+  	\put(1.06,4.05){$10$}\put(2.56,4.05){$11$}\put(4.06,4.05){$12$}\put(5.56,4.05){$13$}\put(7.06,4.05){$14$}
+  	\put(1.06,5.55){$15$}\put(2.56,5.55){$16$}\put(4.06,5.55){$17$}\put(5.56,5.55){$18$}\put(7.06,5.55){$19$}
+  	\put(1.06,7.05){$20$}\put(2.56,7.05){$21$}\put(4.06,7.05){$22$}\put(5.56,7.05){$23$}\put(7.06,7.05){$24$}
+  	\end{picture}
+  	\caption{}
+  	\label{fig:testC}
+  \end{figure}
+  
+  \begin{itemize}
+  	\item \textbf{Mesh dimensions}\\
+  	Side length $l = 10$\\
+  	Thickness $t = 0.1$
+  	
+  	\item \textbf{Material properties}\\
+  	Young's Modulus $E = 10.92$\\
+  	Poisson's ratio $\nu = 0.3$
+  	
+  	\item \textbf{Boundary conditions}\\
+  	All sides of the square plate are simply supported.
+  	
+  	\item \textbf{Loading}\\
+  	A concentrated load of $1.0$ is applied on the center node of the square in the first test. In a second test a uniform load of $1.0$ per unit area is applied to the whole plate.
+  \end{itemize}
+  
+  \paragraph{Results:} The maximum displacement in z-direction at the center node is presented in Table \ref{tab:testC}. The value is compared to the results of the Dircrete Kirchhoff Element (DKE) presented in \cite{wilson1996three}. The DKE is also a three-node triangular plate bending element. The difference between the program's result and the benchmark is at most $x.xx\%$. For the test with the central point load Wilson \cite{wilson1996three} states that the exact thin-plate displacement for this problem is $1.160$. %TOTO FAZIT
+  
+  \begin{table}[htbp]
+  	\centering
+  	\begin{tabular}{c|c|C{2.5cm}|C{2.5cm}|c}
+  		\textbf{Node} & \textbf{Displacement} & \textbf{Results from program} & \textbf{Results from DKE} & \textbf{Difference (\%)}\\\hline\hline
+  		\multicolumn{5}{l}{Point Load at center}\\\hline
+  		22 & $u_z$ & $-0.0427728$ & $-0.042774$ & $0.028\%$\\\hline\hline
+  		\multicolumn{5}{l}{Uniform Load}\\\hline
+  		22 & $u_z$ & $-0.0427728$ & $-0.042774$ & $0.028\%$\\\hline
+  	\end{tabular}
+  	\caption{Displacements and deviations for Test C}
+  	\label{tab:testC}
+  \end{table}
  \subsection{Test D: Plate Displacement with Quad-4}
  %Selbes mesh wie Test C nur eben mit Quadelementen\newline
  %test\_a\_quadN.xda, test\_g\_quad\_N.xda - korrekt, noch nicht getestet
+  \begin{figure}[htbp]
+  	\centering
+  	\setlength\unitlength{1.05cm}
+  	\begin{picture}(8,8)
+  	\thicklines
+  	\put(0.5,0.5){\vector(1,0){1}}
+  	\put(0.5,0.5){\vector(0,1){1}}
+  	\put(1.6,0.6){$\mathbf{x}$}
+  	\put(0.6,1.6){$\mathbf{y}$}   	
+  	\thinlines
+  	\polygon(1,1)(7,1)(7,7)(1,7)
+  	\Line(1,1.75)(7,1.75)\Line(1.75,1)(1.75,7)
+  	\Line(1,2.50)(7,2.50)\Line(2.50,1)(2.50,7)
+  	\Line(1,3.25)(7,3.25)\Line(3.25,1)(3.25,7)
+  	\Line(1,4.00)(7,4.00)\Line(4.00,1)(4.00,7)
+  	\Line(1,4.75)(7,4.75)\Line(4.75,1)(4.75,7)  	
+  	\Line(1,5.50)(7,5.50)\Line(5.50,1)(5.50,7)
+	\Line(1,6.25)(7,6.25)\Line(6.25,1)(6.25,7)
+  	\polygon(1,1)(1.1,0.8)(0.9,0.8)
+  	\polygon(1,1)(0.8,1.1)(0.8,0.9)
+  	\polygon(7,1)(7.1,0.8)(6.9,0.8)
+  	\polygon(7,1)(7.2,1.1)(7.2,0.9)
+  	\polygon(7,7)(7.1,7.2)(6.9,7.2)
+  	\polygon(7,7)(7.2,7.1)(7.2,6.9)
+  	\polygon(1,7)(1.1,7.2)(0.9,7.2)
+  	\polygon(1,7)(0.8,7.1)(0.8,6.9)
+  	\put(4,4){\circle*{0.25}} \put(4.1,3.65){$P$}
+  	\put(1.06,1.05){$0$}\put(4.06,1.05){$4$}\put(7.06,1.05){$8$}
+  	\put(1.06,2.55){$18$}\put(4.06,2.55){$22$}\put(7.06,2.55){$26$}
+  	\put(1.06,4.05){$36$}\put(4.06,4.05){$40$}\put(7.06,4.05){$44$}
+  	\put(1.06,5.55){$54$}\put(4.06,5.55){$58$}\put(7.06,5.55){$62$}
+  	\put(1.06,7.05){$72$}\put(4.06,7.05){$76$}\put(7.06,7.05){$80$}
+  	\end{picture}
+  	\caption{}
+  	\label{fig:testD}
+  \end{figure}
  \subsection{Test E: Shell Displacement}
  %Ein H-Trägerbalken. Am einen Ende fest eingespannt. Am anderen Ende wird oben eine Kraft am äußeren Knoten in den Balken hinein in flacher Ebene gegeben, gleichzeitig wird unten an der gegenüberliegenden Seite eine Kraft in entgegengesetzter Richtung gegeben\newline
  %test\_j\_tri.xda - korrekt
  %Gleich wie Test E nur eben Quadelemente\newline
  %test\_j\_quad.xda - korrekt
  \subsection{Test F: Convergence (increasing number of elements)}
- %??? theoretisch mit Test C/D bereits durchführbar mit N=2,4,8,16,32,64,128
+  \begin{figure}[htbp]
+  	\centering
+  	\setlength\unitlength{1.05cm}
+  	\begin{picture}(12,4)
+  	\thicklines
+  	\put(0.5,0.5){\vector(1,0){1}}
+  	\put(0.5,0.5){\vector(0,1){1}}
+  	\put(1.6,0.6){$\mathbf{x}$}
+  	\put(0.6,1.6){$\mathbf{y}$}   	
+  	\thinlines
+  	\polygon(1,1)(11,1)(11,3)(1,3)
+  	\Line(1,1.5)(11,1.5)\Line(3.5,1)(3.5,3)
+  	\Line(1,2)(11,2)\Line(6,1)(6,3)
+  	\Line(1,2.5)(11,2.5)\Line(8.5,1)(8.5,3)
+  	\Line(1,3)(11,1)\Line(3.5,3)(11,1.5)\Line(6,3)(11,2)\Line(8.5,3)(11,2.5)
+  	\Line(1,2.5)(8.5,1)\Line(1,2)(6,1)\Line(1,1.5)(3.5,1)
+  	\polygon(1,1)(1.1,0.8)(0.9,0.8)
+  	\polygon(1,1)(0.8,1.1)(0.8,0.9)
+  	\polygon(11,1)(11.1,0.8)(10.9,0.8)
+  	\polygon(11,1)(11.2,1.1)(11.2,0.9)
+  	\polygon(11,3)(11.1,3.2)(10.9,3.2)
+  	\polygon(11,3)(11.2,3.1)(11.2,2.9)
+  	\polygon(1,3)(1.1,3.2)(0.9,3.2)
+  	\polygon(1,3)(0.8,3.1)(0.8,2.9)
+  	\put(6,2){\circle*{0.25}} \put(6.1,1.65){$P$}
+  	\put(1.06,1.05){$0$}\put(6.06,1.05){$2$}\put(11.06,1.05){$4$}
+  	\put(1.06,2.05){$10$}\put(6.06,2.05){$12$}\put(11.06,2.05){$14$}
+  	\put(1.06,3.05){$20$}\put(6.06,3.05){$22$}\put(11.06,3.05){$24$}
+  	\end{picture}
+  	\caption{}
+  	\label{fig:testF}
+  \end{figure}
  \subsection{Test G: MPI (increasing number of processes)}
  %??? theoretisch alle Tests, z.B. E/F mit Prozessoranzahl = 1,2,4,8,16. In dem Fall ist natürlich die Zeit interessant und ob die Ergebnisse jeweils alle gleich sind
  \subsection{Test H: Coupling with preCICE}

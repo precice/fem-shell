@@ -120,7 +120,7 @@ H.~Werkle, {\em Finite Elemente in der Baustatik}.
 
 \bibitem{kansara2004development}
 K.~Kansara, {\em Development of Membrane, Plate and Flat Shell Elements in
-  Java.}
+  Java}.
 \newblock PhD thesis, Virginia Tech, 2004.
 
 \bibitem{kirk2007adaptive}
@@ -166,5 +166,24 @@ B.~Gatzhammer, {\em Efficient and flexible partitioned simulation of
 
 \bibitem{bungartz2015fully}
 ``pre{CICE} - a fully parallel library for multi-physics surface coupling,''
+
+\bibitem{macneal1985proposed}
+R.~H. Macneal and R.~L. Harder, ``A proposed standard set of problems to test
+  finite element accuracy,'' {\em Finite elements in Analysis and Design},
+  vol.~1, no.~1, pp.~3--20, 1985.
+
+\bibitem{wilson1996three}
+E.~L. Wilson, {\em Three-dimensional static and dynamic analysis of
+  structures}.
+\newblock Computers and Structures Inc., Berkeley, California, 1996.
+
+\bibitem{jin1994analysis}
+L.~Jin, {\em Analysis and evaluation of a shell finite element with drilling
+  degree of freedom}.
+\newblock PhD thesis, 1994.
+
+\bibitem{sap-2000}
+``{SAP}2000 - integrated finite element analysis and design of structures,''
+  2000.
 
 \end{thebibliography}

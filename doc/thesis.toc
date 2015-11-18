@@ -15,7 +15,7 @@
 \contentsline {subsubsection}{\numberline {3.2.3}Quad-4 Plane Element}{20}
 \contentsline {subsection}{\numberline {3.3}Plate Bending Element}{24}
 \contentsline {subsubsection}{\numberline {3.3.1}Problem Definition}{24}
-\contentsline {subsubsection}{\numberline {3.3.2}Tri-3 Plate Element}{29}
+\contentsline {subsubsection}{\numberline {3.3.2}Tri-3 Plate Element}{28}
 \contentsline {subsubsection}{\numberline {3.3.3}Quad-4 Plate Element}{33}
 \contentsline {subsection}{\numberline {3.4}Coordinate Transformation}{38}
 \contentsline {subsection}{\numberline {3.5}Shell Element}{41}
@@ -47,19 +47,21 @@
 \contentsline {subsubsection}{\numberline {5.4.1}MPI Communication}{69}
 \contentsline {subsubsection}{\numberline {5.4.2}Socket Communication}{70}
 \contentsline {subsection}{\numberline {5.5}Implementation}{70}
-\contentsline {subsubsection}{\numberline {5.5.1}Additional Boundary Conditions}{70}
-\contentsline {subsubsection}{\numberline {5.5.2}Partitioned Coupling Surface}{70}
-\contentsline {subsubsection}{\numberline {5.5.3}Integration of preCICE}{70}
-\contentsline {section}{\numberline {6}Validation}{71}
-\contentsline {subsection}{\numberline {6.1}Test A: Plane Displacement with Tri-3 Element}{71}
-\contentsline {paragraph}{\nonumberline Results:}{71}
-\contentsline {subsection}{\numberline {6.2}Test B: Plane Displacement with Quad-4}{72}
-\contentsline {paragraph}{\nonumberline Results:}{73}
-\contentsline {subsection}{\numberline {6.3}Test C: Plate Displacement with Tri-3}{73}
-\contentsline {subsection}{\numberline {6.4}Test D: Plate Displacement with Quad-4}{73}
-\contentsline {subsection}{\numberline {6.5}Test E: Shell Displacement}{73}
-\contentsline {subsection}{\numberline {6.6}Test F: Convergence (increasing number of elements)}{73}
-\contentsline {subsection}{\numberline {6.7}Test G: MPI (increasing number of processes)}{73}
-\contentsline {subsection}{\numberline {6.8}Test H: Coupling with preCICE}{73}
-\contentsline {section}{\numberline {7}Conclusion}{74}
-\contentsline {subsection}{\numberline {7.1}Future Work}{74}
+\contentsline {subsubsection}{\numberline {5.5.1}preCICE Code Example}{70}
+\contentsline {subsubsection}{\numberline {5.5.2}Additional Boundary Conditions}{71}
+\contentsline {subsubsection}{\numberline {5.5.3}Partitioned Coupling Surface}{72}
+\contentsline {subsubsection}{\numberline {5.5.4}Integration of preCICE}{74}
+\contentsline {section}{\numberline {6}Validation}{79}
+\contentsline {subsection}{\numberline {6.1}Test A: Plane Displacement with Tri-3 Element}{79}
+\contentsline {paragraph}{\nonumberline Results:}{80}
+\contentsline {subsection}{\numberline {6.2}Test B: Plane Displacement with Quad-4}{80}
+\contentsline {paragraph}{\nonumberline Results:}{81}
+\contentsline {subsection}{\numberline {6.3}Test C: Plate Displacement with Tri-3}{81}
+\contentsline {paragraph}{\nonumberline Results:}{82}
+\contentsline {subsection}{\numberline {6.4}Test D: Plate Displacement with Quad-4}{83}
+\contentsline {subsection}{\numberline {6.5}Test E: Shell Displacement}{83}
+\contentsline {subsection}{\numberline {6.6}Test F: Convergence (increasing number of elements)}{83}
+\contentsline {subsection}{\numberline {6.7}Test G: MPI (increasing number of processes)}{83}
+\contentsline {subsection}{\numberline {6.8}Test H: Coupling with preCICE}{83}
+\contentsline {section}{\numberline {7}Conclusion}{84}
+\contentsline {subsection}{\numberline {7.1}Future Work}{84}

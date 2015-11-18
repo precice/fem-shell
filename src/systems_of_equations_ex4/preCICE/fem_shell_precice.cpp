@@ -88,7 +88,7 @@ int main (int argc, char** argv)
         const Node *nd = *iter;
         for (int dims = 0; dims < dimensions; dims++)
         {
-            displ[i*dimensions+dims]  = 1.0;
+            displ[i*dimensions+dims]  = 0.0;
             forces[i*dimensions+dims] = 0.0;
         }
         grid[i*dimensions]   = (*nd)(0);

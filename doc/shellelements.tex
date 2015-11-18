@@ -874,31 +874,40 @@
   % auf verschiedene randbedingungen der platte eingehen
   \begin{figure}[htbp] % Bild 8.5 steinke
   	\centering
-  	\includegraphics[width=0.97\linewidth]{figures/plate_boundary}
+  	%\includegraphics[width=0.97\linewidth]{figures/plate_boundary}
+  	\setlength\unitlength{1.0cm}
+  	\begin{picture}(13,5.5)
+  	\thicklines
+  	\put(12.8,3.1){$x$}
+  	\put(0,2){\vector(7,1.5){8.5}}
+  	\put(8.6,3.8){$y$}
+  	\put(7,3.5){\vector(0,2){2}}
+  	\put(7.2,5.4){$z$}
+  	\put(7,3.5){\vector(5,-0.5){6}}
+  	\thinlines
+  	\polyline(0,0.5)(0,3.5)(7,5)(12,4.5)(12,1.5)
+  	\Dline(7,2)(7,3.5){0.1}
+  	\Dline(7,2)(0,0.5){0.1}
+  	\Dline(7,2)(12,1.5){0.1}
+  	{\pgfsetfillopacity{0.8}\color{gray}\Curve*(0,2)<1,-0.1>(12,3)<7,3>(12,3)<0,0>(7,3.5)<0,0>(0,2)<0,0>}
+  	\put(0,0){\pgfsetfillopacity{1.0}\Curve(0,2)<1,-0.1>(12,3)<7,3>}
+  	\put(0,0.5){\cbezier(0,0)(1,-0.1)(7,-1)(12,1)}
+  	\put(0,3.5){\cbezier(0,0)(1,-0.1)(7,-1)(12,1)}
+  	\thicklines
+  	\put(10,2.31){\circle*{0.2}}\put(9.65,2.35){$P$}
+  	\put(10,2.31){\vector(0,1){1.3}}\put(10.1,2.8){$w$}
+  	\put(10,3.66){\vector(0,1){0.7}}\put(10.1,3.65){$Q_n$}
+  	\put(10,2.31){\vector(1,0.25){1.5}}\put(11.1,2.25){$\theta_s$}
+  	\put(11.6,2.7){\vector(1,0.25){0.75}}\put(12.1,2.55){$s$}
+  	\put(10,2.31){\vector(-1,-0.25){1.5}}\put(8.75,1.7){$M_{nn}$}
+  	\put(10,2.31){\vector(1,-0.4){1}}\put(10.4,1.75){$n$}
+  	\put(11.1,1.85){\vector(1,-0.4){0.5}}\put(11.1,1.45){$\theta_n$}\put(11.3,1.85){$M_{ns}$}
+  	\Line(1.4,2.7)(2.3,2.1)\put(0.5,2.8){mid-surface}
+  	\put(0.5,1.4){boundary}
+  	\put(3,1.35){$\Gamma$}
+  	\end{picture}
   	\caption{Part of a plate's boundary with its essential and natural boundary conditions}
   	\label{fig:plate_boundary}
-  	\pgfsetfillopacity{1.0}
-  	\setlength\unitlength{1.0cm}
-  	\begin{picture}(12,7)
-  	\thicklines  
-  	\put(1.5,4.5){\vector(0,1){1}}
-  	\put(1.2,5.6){$z,w$}
-  	\put(1.5,4.5){\vector(1,-0.2){1}}
-  	\put(2.6,4.2){$y,\theta_y$}
-  	\put(1.5,4.5){\vector(-0.5,-0.5){0.7}}
-  	\put(0.6,3.5){$x,\theta_x$}
-  	
-  	\thinlines
-  	\polyline(2.5,1.5)(8.5,1.6)(11.5,5)(5,6)(2.5,1.5)
-  	\put(2.5,1.5){\circle*{0.25}}
-  	\put(1.7,1.0){$w_1,\theta_{x_1},\theta_{y_1}$}
-  	\put(8.5,1.6){\circle*{0.25}}
-  	\put(7.8,1.1){$w_2,\theta_{x_2},\theta_{y_2}$}
-  	\put(11.5,5){\circle*{0.25}}
-  	\put(11.0,5.3){$w_3,\theta_{x_3},\theta_{y_3}$}
-  	\put(5,6){\circle*{0.25}}
-  	\put(4.2,6.3){$w_4,\theta_{x_4},\theta_{y_4}$}
-  	\end{picture}
   \end{figure}
   Let $P$ be a point on the continuous boundary of the plate with a local Cartesian coordinate system as described in \cite{steinke2005finite} (see Figure \ref{fig:plate_boundary}): The $n$ coordinate is perpendicular to the boundary surface, the $s$ axis tangential to it. The third axis equals the global z-axis of the plate. There are three essential and three natural boundary conditions defined for $P$: The displacement $w$, the drills $\theta_n = \partial w/\partial s, \theta_s = -\partial w/\partial n$, the shear force $Q_n$ and the moments $M_{ns}$ and $M_{nn}$. Since this leads to an inconsistency with the differential equation above, \cite{steinke2005finite} stated that Kirchhoff introduced new forces:
   \begin{equation}
