@@ -132,7 +132,7 @@ In the scope of this thesis a program was developed that implements flat shell e
    \end{table}
      
  \subsection{Test C: Plate Displacement with Tri-3}
-  In this test the three-node triangular plate element \textbf{Tri-3} was validated. The example problem was taken from \cite{wilson1996three} (8.\.9.\.2 and 8.\.9.\.3). The geometry of the test is shown in Figure \ref{fig:testC}. Two different tests were made: At first a concentrated point load $P$ was applied at the center of the simply supported square plate. In the other test a uniformly distributed load of $1.0$ per unit area was assigned to the whole plate.
+  In this test the three-node triangular plate element \textbf{Tri-3} was validated. The example problem was taken from \cite{wilson1996three} (8.\.9.\.2). The geometry of the test is shown in Figure \ref{fig:testC}. Four different tests were made: At first the square plate were subdivided into $4\!\times\!4$ squares. Each square were divided into two triangles by a diagonal. Here, two possibilities are given: From the upper left to the lower right ($\boxbackslash$) or from the upper right to the lower left ($\boxslash$). This variant is shown in Figure \ref{fig:testC}. The other two tests were made with the same triangle variants but with a $16\!\times\!16$ mesh subdivision.
   \begin{figure}[htbp]
   	\centering
   	\setlength\unitlength{1.05cm}
@@ -169,8 +169,8 @@ In the scope of this thesis a program was developed that implements flat shell e
   
   \begin{itemize}
   	\item \textbf{Mesh dimensions}\\
-  	Side length $l = 10$\\
-  	Thickness $t = 0.1$
+  	Side length $l = 10.0$\\
+  	Thickness $t = 1.0$
   	
   	\item \textbf{Material properties}\\
   	Young's Modulus $E = 10.92$\\
@@ -180,19 +180,20 @@ In the scope of this thesis a program was developed that implements flat shell e
   	All sides of the square plate are simply supported.
   	
   	\item \textbf{Loading}\\
-  	A concentrated load of $1.0$ is applied on the center node of the square in the first test. In a second test a uniform load of $1.0$ per unit area is applied to the whole plate.
+  	A concentrated load of $1.0$ is applied on the center node of the square.
   \end{itemize}
   
-  \paragraph{Results:} The maximum displacement in z-direction at the center node is presented in Table \ref{tab:testC}. The value is compared to the results of the Dircrete Kirchhoff Element (DKE) presented in \cite{wilson1996three}. The DKE is also a three-node triangular plate bending element. The difference between the program's result and the benchmark is at most $x.xx\%$. For the test with the central point load Wilson \cite{wilson1996three} states that the exact thin-plate displacement for this problem is $1.160$. %TOTO FAZIT
-  
+  \paragraph{Results:} Wilson \cite{wilson1996three} states that the exact thin-plate displacement of the central node for this problem is $w_c = 1.16$. The results of the test is presented in Table \ref{tab:testC}. The program's result is compared to the exact value as well as to the results of the Dircrete Kirchhoff Element (DKE) presented in \cite{wilson1996three}. The DKE is also a three-node triangular plate bending element. At first, the results show that no difference exists between the different orientations of the triangles. For the $4\!\times\!4$ mesh subdivision the difference between the program's result and the benchmark is $10.69\%$ while it is only $8.69\%$ compared with the exact value. The relative big difference can be explained by the simple formulation of the Tri-3 element. For the $16\!\times\!16$ mesh subdivision the difference shrinks to only $0.72\%$ compared to the exact value and $0.97\%$ to the benchmark.  
   \begin{table}[htbp]
   	\centering
-  	\begin{tabular}{c|c|C{2.5cm}|C{2.5cm}|c}
-  		\textbf{Node} & \textbf{Displacement} & \textbf{Results from program} & \textbf{Results from DKE} & \textbf{Difference (\%)}\\\hline\hline
-  		\multicolumn{5}{l}{Point Load at center}\\\hline
-  		22 & $u_z$ & $-0.0427728$ & $-0.042774$ & $0.028\%$\\\hline\hline
-  		\multicolumn{5}{l}{Uniform Load}\\\hline
-  		22 & $u_z$ & $-0.0427728$ & $-0.042774$ & $0.028\%$\\\hline
+  	\begin{tabular}{C{1.5cm}|C{3.0cm}|C{2.5cm}|C{2.5cm}|C{2.7cm}}
+\small\textbf{Mesh variant} & \small\textbf{Displacement at center node} & \small\textbf{Results from program} & \small\textbf{Results of DKE} & \small\textbf{Difference to 1.16 (\%)}\\\hline\hline
+\multicolumn{5}{l}{$4\!\times\!4$ mesh subdivision}\\\hline
+$\boxslash$     & $w_{c_{12}}$ & $1.06723$ & $1.195$ & $8.69\%$\\\hline
+$\boxbackslash$ & $w_{c_{12}}$ & $1.06723$ & $1.195$ & $8.69\%$\\\hline\hline
+\multicolumn{5}{l}{$16\!\times\!16$ mesh subdivision}\\\hline
+$\boxslash$     & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
+$\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
   	\end{tabular}
   	\caption{Displacements and deviations for Test C}
   	\label{tab:testC}
