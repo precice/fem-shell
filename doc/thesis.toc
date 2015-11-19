@@ -56,12 +56,13 @@
 \contentsline {paragraph}{\nonumberline Results:}{79}
 \contentsline {subsection}{\numberline {6.2}Test B: Plane Displacement with Quad-4}{79}
 \contentsline {paragraph}{\nonumberline Results:}{80}
-\contentsline {subsection}{\numberline {6.3}Test C: Plate Displacement with Tri-3}{80}
-\contentsline {paragraph}{\nonumberline Results:}{81}
-\contentsline {subsection}{\numberline {6.4}Test D: Plate Displacement with Quad-4}{83}
-\contentsline {subsection}{\numberline {6.5}Test E: Shell Displacement}{83}
-\contentsline {subsection}{\numberline {6.6}Test F: Convergence (increasing number of elements)}{83}
-\contentsline {subsection}{\numberline {6.7}Test G: MPI (increasing number of processes)}{83}
-\contentsline {subsection}{\numberline {6.8}Test H: Coupling with preCICE}{83}
-\contentsline {section}{\numberline {7}Conclusion}{84}
-\contentsline {subsection}{\numberline {7.1}Future Work}{84}
+\contentsline {subsection}{\numberline {6.3}Test C: Plate Displacement with Tri-3}{81}
+\contentsline {paragraph}{\nonumberline Results:}{82}
+\contentsline {subsection}{\numberline {6.4}Test D: Plate Displacement with Quad-4}{82}
+\contentsline {paragraph}{\nonumberline Results:}{84}
+\contentsline {subsection}{\numberline {6.5}Test E: Shell Displacement}{84}
+\contentsline {subsection}{\numberline {6.6}Test F: Convergence (increasing number of elements)}{84}
+\contentsline {subsection}{\numberline {6.7}Test G: MPI (increasing number of processes)}{84}
+\contentsline {subsection}{\numberline {6.8}Test H: Coupling with preCICE}{84}
+\contentsline {section}{\numberline {7}Conclusion}{86}
+\contentsline {subsection}{\numberline {7.1}Future Work}{86}

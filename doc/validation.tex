@@ -53,16 +53,24 @@ In the scope of this thesis a program was developed that implements flat shell e
    A concentrated load of $40 kips$ in total. Node 8 and 26 has a load of $6 \frac{2}{3}$, node 17 has a load of $26 \frac{2}{3}$.
    \end{itemize}
    
-   \paragraph{Results:} The displacements in x- and y-direction at node 22 and 26 are presented in Table \ref{tab:testA} together with the results from the \textit{SAP2000} software presented in \cite{kansara2004development}. The displacements of the thesis' program deviate from the commercial software in all cases for at most $0.027\%$.
+   \paragraph{Results:} The displacements in x- and y-direction at node 22 and 26 are presented in Table \ref{tab:testA} together with the results from the \textit{SAP2000} software presented in \cite{kansara2004development}. The displacements of the thesis' program deviate from the commercial software in all cases for at most $0.027\%$. The triangle orientation in the example mesh contains both, the square diagonal facing the upper right and facing the lower right corner of the square. To show that the mixed usage of these orientation types increases the accuracy, two additional tests were made, one with only triangles having their hypotenuse facing the upper right corner of the square ($\boxslash$) and one with only triangles of the other type ($\boxbackslash$). The results of those tests can only be compared to the first test's results of the program, since no benchmark values are available. What can first be seen is that either of the new variants is less accurate than the mixed version. Second, the $\boxslash$-variant is more accurate than the $\boxbackslash$-variant and third, the accuracy in x-direction is better than in y-direction, particularly for the $\boxbackslash$-orientation.
    
    \begin{table}[htbp]
    \centering
    \begin{tabular}{c|c|C{2.5cm}|C{2.5cm}|c}
-   \textbf{Node} & \textbf{Displacement} & \textbf{Results from program} & \textbf{Results from SAP2000} & \textbf{Difference (\%)}\\\hline\hline
-   \multirow{2}{*}{22} & $u_x$ & $-0.0255988$ & $-0.025605$ & $0.024\%$\\
-                       & $u_y$ & $ 0.0629549$ & $ 0.062971$ & $0.026\%$\\\hline
-   \multirow{2}{*}{26} & $u_x$ & $-0.0342621$ & $-0.034271$ & $0.027\%$\\
-                       & $u_y$ & $ 0.1944070$ & $ 0.194456$ & $0.025\%$\\\hline
+   \textbf{Node} & \textbf{Displacement} & \textbf{Results from program$^{(a)}$} & \textbf{Results from SAP2000$^{(b)}$} & \textbf{Difference (\%)}\\\hline\hline
+   \multirow{2}{*}{22} & $u_x$ & $-0.0255988$ & $-0.025605$ & $0.024\%^{(b)}$\\
+                       & $u_y$ & $ 0.0629549$ & $ 0.062971$ & $0.026\%^{(b)}$\\\hline
+   \multirow{2}{*}{26} & $u_x$ & $-0.0342621$ & $-0.034271$ & $0.027\%^{(b)}$\\
+                       & $u_y$ & $ 0.1944070$ & $ 0.194456$ & $0.025\%^{(b)}$\\\hline\hline
+   \multirow{2}{*}{$\boxslash$ 22}     & $u_x$ & $-0.0243863$ & - & $4.97\%^{(a)}$\\
+                                         & $u_y$ & $ 0.0552195$ & - & $14.01\%^{(a)}$\\\hline
+   \multirow{2}{*}{$\boxslash$ 26}     & $u_x$ & $-0.0328891$ & - & $4.17\%^{(a)}$\\
+                                         & $u_y$ & $ 0.1829420$ & - & $6.27\%^{(a)}$\\\hline\hline
+   \multirow{2}{*}{$\boxbackslash$ 22} & $u_x$ & $-0.0235617$ & - & $8.65\%^{(a)}$\\
+                                         & $u_y$ & $ 0.0440028$ & - & $43.07\%^{(a)}$\\\hline
+   \multirow{2}{*}{$\boxbackslash$ 26} & $u_x$ & $-0.0322955$ & - & $6.09\%^{(a)}$\\
+                                         & $u_y$ & $ 0.1564130$ & - & $24.29\%^{(a)}$\\\hline
    \end{tabular}
    \caption{Displacements and deviations for Test A}
    \label{tab:testA}
@@ -116,7 +124,7 @@ In the scope of this thesis a program was developed that implements flat shell e
    A concentrated load of $40 kips$ in total. Node 8 and 26 has a load of $6 \frac{2}{3}$, node 17 has a load of $26 \frac{2}{3}$.
   \end{itemize}
 
-  \paragraph{Results:} The displacements in x- and y-direction at node 22 and 26 are presented in Table \ref{tab:testB}. The results of \textit{SAP2000} were used for comparison. The displacements calculated by the thesis' program deviate from the commercial software in all cases for at most $0.03\%$ and thus can be accepted as correct.
+  \paragraph{Results:} The displacements in x- and y-direction at node 22 and 26 are presented in Table \ref{tab:testB}. The results of \textit{SAP2000} were used for comparison. The displacements calculated by the thesis' program deviate from the commercial software in all cases for at most $0.03\%$ and thus can be accepted as satisfactory accurate.
 
   \begin{table}[htbp]
    \centering
@@ -132,11 +140,11 @@ In the scope of this thesis a program was developed that implements flat shell e
    \end{table}
      
  \subsection{Test C: Plate Displacement with Tri-3}
-  In this test the three-node triangular plate element \textbf{Tri-3} was validated. The example problem was taken from \cite{wilson1996three} (8.\.9.\.2). The geometry of the test is shown in Figure \ref{fig:testC}. Four different tests were made: At first the square plate were subdivided into $4\!\times\!4$ squares. Each square were divided into two triangles by a diagonal. Here, two possibilities are given: From the upper left to the lower right ($\boxbackslash$) or from the upper right to the lower left ($\boxslash$). This variant is shown in Figure \ref{fig:testC}. The other two tests were made with the same triangle variants but with a $16\!\times\!16$ mesh subdivision.
+  In this test the three-node triangular plate element \textbf{Tri-3} was validated. The example problem was taken from \cite{wilson1996three} (8.9.2). The geometry of the test is shown in Figure \ref{fig:testC}. Four different tests were made: At first the square plate were subdivided into $4\!\times\!4$ squares. Each square were divided into two triangles by a diagonal. Here, two possibilities are given: From the upper left to the lower right ($\boxbackslash$) or from the upper right to the lower left ($\boxslash$). This variant is shown in Figure \ref{fig:testC}. The other two tests were made with the same triangle variants but with a $16\!\times\!16$ mesh subdivision.
   \begin{figure}[htbp]
   	\centering
   	\setlength\unitlength{1.05cm}
-  	\begin{picture}(8,8)
+  	\begin{picture}(7,7.5)
   	\thicklines
   	\put(0.5,0.5){\vector(1,0){1}}
   	\put(0.5,0.5){\vector(0,1){1}}
@@ -163,7 +171,7 @@ In the scope of this thesis a program was developed that implements flat shell e
   	\put(1.06,5.55){$15$}\put(2.56,5.55){$16$}\put(4.06,5.55){$17$}\put(5.56,5.55){$18$}\put(7.06,5.55){$19$}
   	\put(1.06,7.05){$20$}\put(2.56,7.05){$21$}\put(4.06,7.05){$22$}\put(5.56,7.05){$23$}\put(7.06,7.05){$24$}
   	\end{picture}
-  	\caption{}
+  	\caption{A square plate simply supported on all four sides is shown with a mesh subdivision of $4\!\times\!4$ squares. Each square is divided into two triangles through a diagonal going from the lower left to the upper right corner. This orientation is symbolized by ``$\boxslash$''. In the center of the plate a concentrated load $P$ is applied.}
   	\label{fig:testC}
   \end{figure}
   
@@ -199,8 +207,7 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
   	\label{tab:testC}
   \end{table}
  \subsection{Test D: Plate Displacement with Quad-4}
- %Selbes mesh wie Test C nur eben mit Quadelementen\newline
- %test\_a\_quadN.xda, test\_g\_quad\_N.xda - korrekt, noch nicht getestet
+ This example problem tests the four-node quadrilateral plate element \textbf{Quad-4}. The test was taken from \cite{jin1994analysis} (4.2.1, 4.2.2). Several different configurations were made: The square plate was subdivided into 4, 8 and 16 square elements on each direction. Each mesh subdivision was then tested with a concentrated load of 30000 on the central node and with a uniformly distributed load of 300 per square unit. The geometry of for one of the six test configurations is shown in Figure \ref{fig:testD}.
   \begin{figure}[htbp]
   	\centering
   	\setlength\unitlength{1.05cm}
@@ -234,9 +241,57 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
   	\put(1.06,5.55){$54$}\put(4.06,5.55){$58$}\put(7.06,5.55){$62$}
   	\put(1.06,7.05){$72$}\put(4.06,7.05){$76$}\put(7.06,7.05){$80$}
   	\end{picture}
-  	\caption{}
+  	\caption{The mesh of test D is shown with a $8\!\times\!8$ subdivision and concentrated central loading configuration. The mesh can be subdivided coarser of finer and the loading can be applied uniformly over the whole plate. The square plate is in all cases simply supported on all four sides.}
   	\label{fig:testD}
   \end{figure}
+  
+  \begin{itemize}
+   \item \textbf{Mesh dimensions}\\
+   Side length $l = 10.0$\\
+   Thickness $t = 0.5$
+    	
+   \item \textbf{Material properties}\\
+   Young's Modulus $E = 10^7$\\
+   Poisson's ratio $\nu = 0.3$
+    	
+   \item \textbf{Boundary conditions}\\
+   All sides of the square plate are simply supported.
+    	
+   \item \textbf{Loading}\\
+   A uniform load of $300$ is applied on the whole plate in a first test, while a concentrated load of $30,000$ is applied on the center node of the square in a second test.
+  \end{itemize}
+    
+  \paragraph{Results:} For the test with the uniform load, \cite{jin1994analysis} states that the displacement of the central node $w_c^*$ can be evaluated exactly with the help of the plate theory, that is:
+  \begin{equation}
+  w_c^* = 0.00406 \frac{q_0 a^4}{D}
+  \end{equation}
+  With $q_0 = 300$ being the uniform load, $a = 10$ the length of the square plate and $D = \frac{E t^3}{12 (1-\nu^2)}$ the material property, the central node's displacement follows as:
+  \begin{equation}
+  w_c^* = 0.00406 \frac{300 * 10^4}{\frac{10^7 0.5^3}{12(1-0.3^2)}} = 0.1064045
+  \end{equation}
+  The results with the different mesh subdivision levels are very accurate, the $8\!\times\!8$-subdivision if less than a thousands percents different to the analytical solution and even the coarse level with only 4 elements per direction has only $0.35\%$ difference to the exact value.\\
+  For the concentrated load test, \cite{jin1994analysis} also proposes an analytic solution, namely:
+  \begin{equation}
+  w_c^* = 0.0115999 \frac{P a^4}{D}
+  \end{equation}
+  where $P = 30000$ is the concentrated load at the center node. The rest of the variables stays the same as in the uniform load test. The analytical solution to this example problem is then $
+  w_c^* = 0.30401019$. The program's results are far more inaccurate compared to the uniform load test with a maximum difference of $8.62\%$. The fine subdivision of $16\!\times\!16$ elements is though acceptably accurate with less than a percent difference to the analytically exact value.
+  \begin{table}[htbp]
+   \centering
+   \begin{tabular}{C{2.0cm}|C{3.0cm}|C{2.5cm}|C{2.5cm}|C{2.7cm}}
+\small\textbf{Mesh subdivisions} & \small\textbf{Displacement at center node} & \small\textbf{Results from program} & \small\textbf{Analytical solution} & \small\textbf{Difference (\%)}\\\hline\hline
+  \multicolumn{5}{l}{Uniform loading}\\\hline
+  $4\!\times\!4$   & $w_{c_{12}}$ & $0.106032$ & \multirow{3}{*}{$0.1064045$} & $0.35\%$\\\cline{1-3}\cline{5-5}
+  $8\!\times\!8$   & $w_{c_{40}}$ & $0.106405$ &  & $0.00047\%$\\\cline{1-3}\cline{5-5}
+  $16\!\times\!16$ & $w_{c_{144}}$& $0.106454$ &  & $0.046\%$\\\hline\hline
+  \multicolumn{5}{l}{Concentrated loading}\\\hline
+  $4\!\times\!4$   & $w_{c_{12}}$ & $0.332677$ & \multirow{3}{*}{$0.30401019$} & $8.62\%$\\\cline{1-3}\cline{5-5}
+  $8\!\times\!8$   & $w_{c_{40}}$ & $0.312851$ &  & $2.83\%$\\\cline{1-3}\cline{5-5}
+  $16\!\times\!16$ & $w_{c_{144}}$& $0.306664$ &  & $0.86\%$\\\hline\hline
+    	\end{tabular}
+    	\caption{Displacements and deviations for Test D}
+    	\label{tab:testD}
+    \end{table}
  \subsection{Test E: Shell Displacement}
  %Ein H-Trägerbalken. Am einen Ende fest eingespannt. Am anderen Ende wird oben eine Kraft am äußeren Knoten in den Balken hinein in flacher Ebene gegeben, gleichzeitig wird unten an der gegenüberliegenden Seite eine Kraft in entgegengesetzter Richtung gegeben\newline
  %test\_j\_tri.xda - korrekt
