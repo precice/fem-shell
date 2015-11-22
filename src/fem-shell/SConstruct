@@ -1,0 +1,21 @@
+# Set environment variable LIBMESH_ROOT or execute scons like that: scons LIBMESH_ROOT=$HOME/software/libmesh scons  
+
+import os
+
+vars = Variables(None, ARGUMENTS)
+env = Environment(variables = vars, ENV = os.environ)
+conf = Configure(env)
+
+libmeshRoot = os.getenv('LIBMESH_ROOT')
+
+env.Append(CPPPATH = [os.path.join(libmeshRoot, 'include')])
+env.Append(LIBPATH = [os.path.join(libmeshRoot, ".libs")])
+
+conf.CheckLib("mesh_opt")
+
+env["CXX"] = 'mpicxx'
+env.Append(CCFLAGS = ["-g3", "-O0", "-Wall", "-std=c++11", '-fopenmp'])
+
+env.Append(LINKFLAGS = ['-Wl,-rpath,' + os.path.join(libmeshRoot, "lib")])
+
+env.Program('fem-shell', ['fem-shell.cpp'])
