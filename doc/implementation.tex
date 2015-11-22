@@ -449,17 +449,17 @@ void writeOutput(Mesh &mesh, EquationSystems &es)
     
  
  
- \subsection{Parallelization with MPI}
+ \subsection{Parallelization with MPI}\label{sec:Impl-Parallel}
   When the complexity of the mesh gets larger or the program is coupled with other solvers and executed permanently, it is important to parallelize the calculations in order to solve the system in less time. The parallelization with MPI has three major parts: The library itself, the partition of the mesh and the solving of the system. In the following sections these parts are described in more detail. Additionally it will be stated what code changes had to be performed in order to make the serial code working with MPI.
  
  
-  \subsubsection{libMesh requirements}
+  \subsubsection{libMesh requirements}\label{sec:Impl-Parallel-Requirements}
    Although MPI is used internally throughout the libMesh library as soon as the program runs in MPI-mode, not everything will work as expected. If one tries to run a theoretically fully MPI-compatible libMesh program and tries to solve a system like the linear implicit system in this case, the wrong solutions will result. The problem occurs, when libMesh is built and configured without PETSc support. Then, libMesh will use an Eigen sparse solver, either a version on the user's environment or a built-in version from libMesh itself. These solvers are only serial and cannot be used with MPI, referring to an answer on the libMesh-mailing list from Dr.\ John Peterson, one of the libMesh developers. The solution would be to install PETSc and build libMesh against it.
   
  
  
  
-  \subsubsection{Partitioning the mesh}
+  \subsubsection{Partitioning the mesh}\label{sec:Impl-Parallel-Partitioning}
    The parallelization of the solving step is directly linked to the partitioning of the mesh. Every process gets a part of the mesh and solves the system on its partition. LibMesh provides an automatically partition of the mesh with the user's need to call it. Though, there are different partitioning algorithms to choose from, namely:
    \begin{itemize}
    	\item \texttt{LinearPartitioner}: The linear partitioning algorithm is the simplest of all available partitioners. It takes the element list and splits it into equal-sized parts assigned to each processor.
@@ -483,7 +483,7 @@ partitioner.partition(mesh);
 \end{lstlisting}
   
   
-  \subsubsection{Local elements}
+  \subsubsection{Local elements}\label{sec:Impl-Parallel-Local}
    LibMesh uses a collection of different iterator-types to go through the mesh's elements and nodes. This collection can be split into two groups: Local and global iterators. In the serial case there is no difference between the two since all elements and nodes exist on the same process. If the program is run on multiple processes with a partitioned mesh, it becomes important to use local iterators. Thus, the single processes only iterate over their ``own'' elements and nodes without risking to interfere with the neighboring processes. This behavior gets especially important in the assembly function (cf. section \ref{sec:Impl-Details-Assembly}). Listing \ref{lst:local-elements} shows a short code part of this function. Here, the for loop head is shown, that will iterate over the mesh's elements in order to assemble the element's stiffness matrix and right-hand side and add them to the global system matrix and right-hand side, respectively. Note that it will be iterated over \texttt{active\_local\_elements}. In the serial case it could also be possible to use \texttt{active\_elements}. ``active'' in this case means, that only non-deactivated elements from the mesh will be processed. Since the deactivation of mesh parts is not used in this implementation, one can ignore this term.
 \begin{lstlisting}[caption=Local elements iterator,label=lst:local-elements,keepspaces=true]
 // (...)
@@ -516,7 +516,7 @@ if (global_processor_id() == 0)
   
   
   
-  \subsubsection{Assembly changes}
+  \subsubsection{Assembly changes}\label{sec:Impl-Parallel-Assembly}
    In section \ref{sec:Impl-Details-Assembly} it was stated that a problem occurs at the creation of the local right-hand side's vector: Since nodes can be part of multiple elements, they can also be processes multiple times and contribute more than one time to the RHS. This is allowed and was prevented by creating an \texttt{std::unordered\_set} that stores the ID of the already processed nodes. In the serial case this solves the problem. In the case of parallel execution every process generated such a set for itself without knowing what the other process has already stored in it. This way, it cannot be decided if a node that is on the boundary between two mesh partitions were already processed by one of the processes. One solution would be to communicate the data between the processes such that the information is consistent throughout the mesh. But that would produce a lot of communication overhead and slows down the program. With the help of libMesh this problem can be solved without any inter-process communication at all. Listing \ref{lst:rhs-mpi} contains code parts from the assembly function and the auxiliary function to create the local right-hand side.
 \begin{lstlisting}[caption=Process local nodes only,label=lst:rhs-mpi,keepspaces=true]
 // in the assemble_elasticity function:

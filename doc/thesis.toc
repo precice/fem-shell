@@ -60,9 +60,12 @@
 \contentsline {paragraph}{\nonumberline Results:}{82}
 \contentsline {subsection}{\numberline {6.4}Test D: Plate Displacement with Quad-4}{82}
 \contentsline {paragraph}{\nonumberline Results:}{84}
-\contentsline {subsection}{\numberline {6.5}Test E: Shell Displacement}{84}
-\contentsline {subsection}{\numberline {6.6}Test F: Convergence (increasing number of elements)}{84}
-\contentsline {subsection}{\numberline {6.7}Test G: MPI (increasing number of processes)}{84}
-\contentsline {subsection}{\numberline {6.8}Test H: Coupling with preCICE}{84}
-\contentsline {section}{\numberline {7}Conclusion}{86}
-\contentsline {subsection}{\numberline {7.1}Future Work}{86}
+\contentsline {subsection}{\numberline {6.5}Test E: Shell Displacement}{85}
+\contentsline {paragraph}{\nonumberline Results:}{86}
+\contentsline {subsection}{\numberline {6.6}Test F: Convergence (increasing number of elements)}{86}
+\contentsline {paragraph}{\nonumberline Results:}{87}
+\contentsline {subsection}{\numberline {6.7}Test G: MPI (increasing number of processes)}{88}
+\contentsline {paragraph}{\nonumberline Results:}{90}
+\contentsline {subsection}{\numberline {6.8}Test H: Coupled ``Bending Tower''}{93}
+\contentsline {section}{\numberline {7}Conclusion}{94}
+\contentsline {subsection}{\numberline {7.1}Future Work}{94}

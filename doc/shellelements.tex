@@ -87,8 +87,32 @@
   \subsubsection{Problem Definition}\label{sec:Shell-Plane-ProbDef}
   \begin{figure}[htbp]%- Bild ähnlich ch7.1 mit xy-Ausdehnung, Dicke t, Mittelfläche, Rand, KoSys; Streckenlast q0 und Volumenkraft g aber weglassen
 \centering
-\includegraphics[width=0.97\linewidth]{figures/plane}
-\caption{Schematic view of a plane object}
+%\includegraphics[width=0.97\linewidth]{figures/plane}
+\setlength\unitlength{1.0cm}
+\begin{picture}(12,6)
+\thinlines
+\put(0,0){\pgfsetfillopacity{1.0}\Curve(0.5,2.5)<0,0.25>(3.5,4.25)<1,0.125>(7.5,4.5)<1,0>(10,2.5)<-1,-1>(6,1)<-0.5,-0.05>(2.5,1)<-0.5,0.125>(0.5,2.5)<0,0.5>}
+\thicklines
+{\pgfsetfillopacity{0.8}\color{gray}\Curve*(0.5,3)<0,0.25>(3.5,4.75)<1,0.125>(7.5,5)<1,0>(10,3)<-1,-1>(6,1.5)<-0.5,-0.05>(2.5,1.5)<-0.5,0.125>(0.5,3)<0,0.5>}
+\put(0,0){\pgfsetfillopacity{1.0}\color{black}\Curve(0.5,3)<0,0.25>(3.5,4.75)<1,0.125>(7.5,5)<1,0>(10,3)<-1,-1>(6,1.5)<-0.5,-0.05>(2.5,1.5)<-0.5,0.125>(0.5,3)<0,0.5>}
+\put(6.6,2.9){$x$}
+\put(5.5,3){\vector(1,0){1}}
+\put(6.1,3.4){$y$}
+\put(5.5,3){\vector(0.5,0.65){0.5}}
+\put(5.4,4.1){$z$}
+\put(5.5,3){\vector(0,1){1}}
+\thinlines
+\put(0,0){\pgfsetfillopacity{1.0}\Curve(0.5,3.5)<0,0.25>(3.5,5.25)<1,0.125>(7.5,5.5)<1,0>(10,3.5)<-1,-1>(6,2)<-0.5,-0.05>(2.5,2)<-0.5,0.125>(0.5,3.5)<0,0.5>}
+\Dline(0.5,3.5)(0.5,0.5){0.1}
+\Dline(10.37,3.5)(10.37,0.5){0.1}
+\put(5,0.5){\vector(-4.5,0){4.5}}
+\put(5,0.5){\vector(5.37,0){5.37}}
+\put(5.4,0.15){$l$}
+\Line(2.5,2)(2.5,1)\put(2.43,0.7){$t$}
+\polyline(10,3.5)(11,3)(10,2.5)\put(11.1,2.9){cover-surfaces}
+\Line(7.5,5)(9.5,5.5)\put(9.6,5.4){mid-surface}
+\end{picture}
+\caption{Schematic view of a plane object with main dimension $l$ and thickness $t$. The two cover-surfaces are located at $z=\pm \frac{t}{2}$, the mid-surface at $z=0$.}
 \label{fig:plane}
 \end{figure}
   In Figure \ref{fig:plane} an object is shown which extends to the x and y axis as its primary direction. The extend in z-direction is smaller and denoted by thickness $t$. The mid-surface located in between the top and bottom surface areas has the coordinate $z=0$. Its local z-axis equals the normal vector of the mid place. Such an object is called \textit{plane} in the following.
@@ -764,7 +788,34 @@
   %\cite{steinke2005finite} ch8.1
   \begin{figure}[htbp] % bild wie bei \ref{sec:MprobDef}
   	\centering
-  	\includegraphics[width=0.9\linewidth]{figures/plate}
+  	%\includegraphics[width=0.9\linewidth]{figures/plate}
+  	\setlength\unitlength{1.0cm}
+  	\begin{picture}(12,6)
+  	\thinlines
+  	\put(0,0){\pgfsetfillopacity{1.0}\Curve(0.5,2.5)<0,0.25>(3.5,4.25)<1,0.125>(7.5,4.5)<1,0>(10,2.5)<-1,-1>(6,1)<-0.5,-0.05>(2.5,1)<-0.5,0.125>(0.5,2.5)<0,0.5>}
+  	\thicklines
+  	{\pgfsetfillopacity{0.8}\color{gray}\Curve*(0.5,3)<0,0.25>(3.5,4.75)<1,0.125>(7.5,5)<1,0>(10,3)<-1,-1>(6,1.5)<-0.5,-0.05>(2.5,1.5)<-0.5,0.125>(0.5,3)<0,0.5>}
+  	\put(0,0){\pgfsetfillopacity{1.0}\color{black}\Curve(0.5,3)<0,0.25>(3.5,4.75)<1,0.125>(7.5,5)<1,0>(10,3)<-1,-1>(6,1.5)<-0.5,-0.05>(2.5,1.5)<-0.5,0.125>(0.5,3)<0,0.5>}
+    \put(6.6,2.9){$x$}
+    \put(5.5,3){\vector(1,0){1}}
+    \put(6.1,3.4){$y$}
+    \put(5.5,3){\vector(0.5,0.65){0.5}}
+    \put(5.4,4.1){$z$}
+    \put(5.5,3){\vector(0,1){1}}
+  	\thinlines
+  	\put(0,0){\pgfsetfillopacity{1.0}\Curve(0.5,3.5)<0,0.25>(3.5,5.25)<1,0.125>(7.5,5.5)<1,0>(10,3.5)<-1,-1>(6,2)<-0.5,-0.05>(2.5,2)<-0.5,0.125>(0.5,3.5)<0,0.5>}
+  	\Dline(0.5,3.5)(0.5,0.5){0.1}
+  	\Dline(10.37,3.5)(10.37,0.5){0.1}
+  	\put(5,0.5){\vector(-4.5,0){4.5}}
+  	\put(5,0.5){\vector(5.37,0){5.37}}
+  	\put(5.4,0.15){$l$}
+  	\Line(2.5,2)(2.5,1)\put(2.43,0.7){$t$}
+  	\polyline(10,3.5)(11,3)(10,2.5)\put(11.1,2.9){cover-surfaces}
+  	\Line(7.5,5)(9.5,5.5)\put(9.6,5.4){mid-surface}
+  	
+  	\put(2.5,3){\cbezier(0,0)(0,0.25)(1,0.25)(1,0)}\put(2.5,3){\cbezier(0,0)(0,-0.25)(1,-0.25)(1,0)}\put(2.9,2.9){$p$}
+  	\put(2.5,3.5){\vector(0,-0.5){0.5}}\put(3.5,3.5){\vector(0,-0.5){0.5}}\put(3,3.67){\vector(0,-0.5){0.5}}
+  	\end{picture}
   	\caption{Schematic drawing of a Kirchhoff plate with its main dimension $l$, thickness $t$ and loading $p$ normal to the mid-surface}
   	\label{fig:plate}
   \end{figure}
@@ -1132,7 +1183,7 @@
   	\centering
   	%\includegraphics[width=0.97\linewidth]{figures/dkq}
   	\setlength\unitlength{1.0cm}
-  	\begin{picture}(12,7)
+  	\begin{picture}(12.5,7)
   	\thicklines  
   	\put(1.5,4.5){\vector(0,1){1}}
   	\put(1.2,5.6){$z,w$}
@@ -1198,30 +1249,30 @@
   	\centering
   	%\includegraphics[width=0.97\linewidth]{figures/serendipity}
   	\setlength\unitlength{1.5cm}
-  	\begin{picture}(8,6)
+  	\begin{picture}(8,5)
   	\thicklines  
-  	\polyline(1.5,1.25)(1.5,4.75)(7,4.75)(7,1.25)(1.5,1.25)
-  	\put(1.5,1.25){\circle*{0.25}}
-  	\put(1.5,4.75){\circle*{0.25}}
-  	\put(7,4.75){\circle*{0.25}}
-  	\put(7,1.25){\circle*{0.25}}
-  	\put(4.25,1.25){\circle*{0.25}}
-  	\put(4.25,4.75){\circle*{0.25}}
-  	\put(1.5,3){\circle*{0.25}}
-  	\put(7,3){\circle*{0.25}}
+  	\polyline(1.5,0.75)(1.5,4.25)(7,4.25)(7,0.75)(1.5,0.75)
+  	\put(1.5,0.75){\circle*{0.25}}
+  	\put(1.5,4.25){\circle*{0.25}}
+  	\put(7,4.25){\circle*{0.25}}
+  	\put(7,0.75){\circle*{0.25}}
+  	\put(4.25,0.75){\circle*{0.25}}
+  	\put(4.25,4.25){\circle*{0.25}}
+  	\put(1.5,2.5){\circle*{0.25}}
+  	\put(7,2.5){\circle*{0.25}}
   	
   	\thinlines
-  	\put(4.25,3){\vector(1,0){1.25}}
-  	\put(4.25,3){\vector(0,1){1.25}}
-  	\put(5.3,2.7){$\xi$}
-  	\put(4.4,4.0){$\eta$}
-  	\put(1.1,5.0){$(-1,1)$}   \put(4.0,5.0){$(0,1)$}   \put(6.7,5.0){$(1,1)$}
-  	\put(0.6,2.95){$(-1,0)$}                            \put(7.3,2.95){$(1,0)$}
-  	\put(1.1,0.8){$(-1,-1)$}  \put(3.9,0.8){$(0,-1)$}  \put(6.7,0.8){$(1,-1)$}
+  	\put(4.25,2.5){\vector(1,0){1.25}}
+  	\put(4.25,2.5){\vector(0,1){1.25}}
+  	\put(5.3,2.2){$\xi$}
+  	\put(4.4,3.5){$\eta$}
+  	\put(1.1,4.5){$(-1,1)$}   \put(4.0,4.5){$(0,1)$}   \put(6.7,4.5){$(1,1)$}
+  	\put(0.6,2.45){$(-1,0)$}                            \put(7.3,2.45){$(1,0)$}
+  	\put(1.1,0.3){$(-1,-1)$}  \put(3.9,0.3){$(0,-1)$}  \put(6.7,0.3){$(1,-1)$}
   	
-  	\put(1.7,4.4){$4$}  \put(4.2,4.4){$7$}  \put(6.6,4.4){$3$}
-  	\put(1.7,2.9){$8$}                       \put(6.6,2.9){$6$}
-  	\put(1.7,1.4){$1$}  \put(4.2,1.4){$5$}  \put(6.6,1.4){$2$}
+  	\put(1.7,3.9){$4$}  \put(4.2,3.9){$7$}  \put(6.6,3.9){$3$}
+  	\put(1.7,2.4){$8$}                       \put(6.6,2.4){$6$}
+  	\put(1.7,0.9){$1$}  \put(4.2,0.9){$5$}  \put(6.6,0.9){$2$}
   	\end{picture}
   	\caption{Eight node quadrilateral element with local $\xi,\eta$-coordinates}
   	\label{fig:serendipity}
@@ -1360,7 +1411,7 @@
   	\centering
   	%\includegraphics[width=0.4\linewidth]{figures/triangle}
   	\setlength\unitlength{0.80cm}
-  	\begin{picture}(8,7)
+  	\begin{picture}(7.5,7.5)
   	\thicklines
   	\put(0,0){\vector(0,1){1}}
   	\put(1.1,0){$x$}
@@ -1434,7 +1485,7 @@
   	\centering
   	%\includegraphics[width=0.5\linewidth]{figures/quadrilateral}
   	\setlength\unitlength{0.99cm}
-  	\begin{picture}(8,7)
+  	\begin{picture}(7,5)
   	\thicklines
   	\put(0,0){\vector(0,1){1}}
   	\put(1.1,0){$x$}
@@ -1515,10 +1566,10 @@
  
  Flat shell elements have a state of bending and membrane stress that can be described by superposition of the plane and plate element \cite{klein2013fem}. Figure \ref{fig:shell_triangle} shows the superposition of plane and plate elements to a flat shell element. The degrees of freedom of plane and plate at every node are combined at the node of the shell element. Obviously the plane and plate element must be of the same finite element's type, for example three node triangular or eight node quadrilateral.
  \begin{figure}[htbp] % bild wie bei 8.7 von scheibe und platte und kombination zu schale + erklärungen, welche unbekannten und kräfte man bei welchem teil hat
- 	%\centering
+ 	\centering
  	%\includegraphics[width=0.8\linewidth]{figures/shell_triangle}
  	\setlength\unitlength{0.9cm}
- 	\begin{picture}(8.5,13)
+ 	\begin{picture}(11.5,9.5)
  	\thicklines
  	\put(10.0,3.5){\vector(1,0.5){0.55}}   \put(10.6,3.5){$x$}
  	\put(10.0,3.5){\vector(-0.5,1){0.25}}  \put(9.5,3.6){$y$}
