@@ -1,25 +1,14 @@
-\section*{Abstract}
-% - Minimum halbe Seite
-% - Was habe ich gemacht ... is presented.
-% - vergleichaspekte erstellt und frameworks getestet, um am besten geignetes zu finden -> libMesh ist es geworden
-% - Detailierter, welche Shell Elements, bestehen aus Plane und Plate
-% - 2 Versionen: Tri und Quad, jeweils welches Modell
-% - Programm entwickelt: eigenständige version und version mit einbindung von precice zur kopplung an multi-physics simulation. das programm kann mittels mpi parallel betrieben werden
-% - details zur implementierung 
-% - validierung der shell elements und ihrer komponenten durch viele tests. tests haben hohe genauigkeit in plane displacements gezeigt und ausreichend gute genauigkeit in plate displacements. die genauigkeit der shell elements ist akzeptabel aufgrund der einfachen approximation der elemente. die konvergenz-tests zeigen, dass bei ausreichend hoher unterteilung des meshs die genauigkeit sehr hoch ist.
-% - das programm skaliert gut im parallelen
-% - die kopplungstests/die validierung der kopplung hat gezeigt, dass das programm mittels precice erfolgreich an multi-physic simulationen gekoppelt werden kann
-
-Dieser Paragraph enthält eine nette kleine Zusammenfassung, in der zusammengefasst ist, was diese Arbeit enthält und tolles neues gemacht hat, das die Welt revolutionieren wird. Dieser Text hier dient im Augenblick nur als Platzhalter und wer ihn liest, sollte sich nicht beklagen, dass er oder sie gerade Zeit verschwendet hat.
-\newpage
-
 \section{Introduction}
-Here comes the introduction$\ \ldots\ $ my worst nightmare.\newpage
-% Batoz_et_al-1982 \cite{batoz1982evaluation} hat gute intro an der man schauen kann, wie man eine macht
+% Batoz_et_al-1982 \cite{batoz1982evaluation}
 
 % - einführende worte zu FEM -> see \cite{kansara2004development}
 %
 % - ziele und durchführung (ein bisschen den abstract wiederholen, aber keine ergebnisse mehr verraten)
+The goal of this work is to develop a structure solver with the finite element method that is part of a multi-physics simulations like a fluid-structure interaction coupling. The program uses a FEM library that provides data structures and functionality to ease the initialization, setup and solving of the system. Therefore, an evaluation based on several aspects is performed on different FEM frameworks.
+
+The solver works on two-dimensional meshes consisting of triangular and quadrilateral elements. In the scope of this thesis flat shell elements are implemented. A flat shell element can be constructed by superimposing a plane and a plate element. For this reason six finite element models is implemented: One plane, plate and shell element sharing a three-node triangular finite element approach, the others sharing a four-node quadrilateral finite element approach. The triangular and quadrilateral plane element is implemented based on the model description from \cite{steinke2005finite}. The triangular plate element is based on a model from \cite{specht1988modified}, while the quadrilateral plate elements implements the Discrete Kirchhoff Quadrilateral (DKQ) described in \cite{zienkiewicz2000finite}.
 
 \subsection{Organization}
 % was gibt es in welchem kapitel für inhalt, quasi ein überblick über die arbeit ohne genaue details oder ergebnisse
+
+\newline
