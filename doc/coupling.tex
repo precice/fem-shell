@@ -325,15 +325,16 @@ while ( interface.isCouplingOngoing() )
 				(*nd)(2) += sols[6*i+2];
 			}
 		}
+		writeOutput(mesh, equation_systems, t);
 	}
 }
 interface.finalize();
 \end{lstlisting}
-   The if-clause in line 27 checks if the coupling iteration has already converged. This is the case when \textbf{no} action for reading the iteration checkpoint is required. If the iteration is convergence the else-part beginning from line 29 becomes active. Here, the current time step is finally finished by increasing the local time variable (line 31) and applying the displacement solution to the program's own mesh (lines 32 to 43). This is done by the master-process only iterating over the complete collection of mesh nodes.
+   The if-clause in line 27 checks if the coupling iteration has already converged. This is the case when \textbf{no} action for reading the iteration checkpoint is required. If the iteration has converged then the else-part beginning from line 29 becomes active. Here, the current time step is finally finished by increasing the local time variable (line 31) and the displacement solution gets applied to the program's own mesh (lines 32 to 43). This is done by the master-process only, iterating over the complete collection of mesh nodes.
    
-   Line 45 is the closing bracket of the big while-loop. If the program proceeds to this point, the simulation was finished, either correctly or quit due to errors. In both cases the solver interface to preCICE must be correctly finalized which is done by calling the appropriate function in line 46.
+   For every finished time step an output file is written (line 45), as long as the user put the corresponding argument to the command line. Line 46 is the closing bracket of the big while-loop. If the program proceeds to this point, the simulation was finished, either correctly or quit due to errors. In both cases the solver interface to preCICE must be correctly finalized which is done by calling the appropriate function in line 47.
    
-   In Listing \ref{lst:preCICEint3} a data structure was created that stores mappings from libMesh node IDs to preCICE vertex IDs. These mappings are necessary because the a vertex ID of preCICE and the ID of the mesh node at the corresponding geometrical position does not has to be equal. When the right-hand side for a single element is generated, the forces received from the fluid solver are used. Listing \ref{lst:preCICE-contribRHS} shows mostly the same code as in the stand-alone version of the solver. New are the lines 9 and 10 where the preCICE ID linked with the mesh node ``\texttt{id}'' is to be found in the map. If such an entry in the map is found, then the resulting iterator to this entry is valid and the forces at the corresponding position in the force-array can be assigned to the right-hand side vector.   
+   In Listing \ref{lst:preCICEint3} a data structure was created that stores mappings from libMesh node IDs to preCICE vertex IDs. These mappings are necessary because the vertex ID of preCICE and the ID of the mesh node at the corresponding geometrical position does not has to be equal. When the right-hand side for a single element is generated, the forces received from the fluid solver are used. Listing \ref{lst:preCICE-contribRHS} shows mostly the same code as in the stand-alone version of the solver. New are the lines 9 and 10 where the preCICE-ID linked with the mesh node ``\texttt{id}'' is to be found in the map. If such an entry is found then the resulting iterator to this entry is valid and the forces at the corresponding position in the force-array can be assigned to the right-hand side vector.   
 \begin{lstlisting}[caption=Modification of contribRHS-function,label=lst:preCICE-contribRHS,keepspaces=true]
 // (...)
 Node* node = (*elem)->get_node(side);

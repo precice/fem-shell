@@ -1,7 +1,20 @@
 \section{Summary and Conclusions}
-What does my code do, what problems arose, what problems persist, what does my code cannot do, where are opportunities for extensions, etc.
+ This chapter summarizes the important results achieved by the thesis and presents a discussion of these results. In the remainder of this chapter an outlook to future development is given.
+ 
+ 
  \subsection{Summary}
  % was war das ziel
+  The aim of the thesis was to develop a FEM-code being able to be coupled in a fluid-structure interaction. The program development should be supported by a FEM framework. Comparison aspects had to be created and an evaluation of several FEM libraries was performed. The implemented FEM-code was to be validated with example problems. The coupling part should be managed by the preCICE tool. The overall focus was on creating a well documented and easily readable and maintainable code, ready for further development and extensions.
+  
+  For the FEM framework evaluation different comparison aspects were introduced. Besides organizational requirements like an open-source code, C++ as development programming language and a wide and accurate documentation of the functions and classes, numerical and programmatic aspects were considered. The last aspects included the possibility to parallelize the code via MPI, a large collection of finite element types and built-in iterative linear solvers. During the evaluation process two libraries were practically tested, the first one being MFEM. Because of difficulties in use, another library - libMesh - was tested and finally chosen for the program development.
+  
+  In this thesis flat shell elements were implemented. Such an element is composed of a plane and a plate element part that are superimposed in order to construct the final shell element. Two different types of finite elements were considered: A three-node triangular element, denoted as Tri-3 and a four-node quadrilateral element, denoted as Quad-4. Six models had to be implemented in the scope of this thesis: A plane, plate and shell element for each of the two discretizations. Therefore, existing models like the Discrete Kirchhoff Quadrilateral were taken.
+  %...
+  
+  % implementation
+  
+  % validation
+
  % was wurde gemacht, im prinzip introduction nur in vergangenheitsform
  % keine schlussfolgerungen! das kommt er im nächsten abschnitt
  
@@ -16,11 +29,8 @@ What does my code do, what problems arose, what problems persist, what does my c
  
  % resumé: löser geeignet für multi-physics, wenn unterteilung des meshs entsprechend hoch ist, damit accuracy stimmt. dank gut skalierender parallelisierung möglich 
 
- \subsection{Future Work}
-  \begin{itemize}
-  	\item Now: Only forces at nodes are accepted and processed. Then: Pressures linked to faces can be accepted, too. The conversion to nodal values takes place in the structure solver. (Idea from coupling data mapping)
-  	\item Dynamic und Zeitabhängigkeit???????????????
-  	\item Weitere Elementtypen einbauen -> Tri-6, Quad-8, usw.
-  	\item Erweiterung um Frames und Beams (1D-Modelle) oder Solids (3D-Modelle)
-  \end{itemize}
+ \subsection{Future Development}
+  The developed FEM-code successfully implemented flat shell elements and is able to work in coupled multi-physics simulations. The validation showed good accuracy for fine mesh subdivisions. The program was designed to be able to easily introduce new models for plane and plate elements, for example quadratic or cubic quadrilateral elements with 8 or 9 nodes. This would enhance the accuracy further. The requirements of the developed program included two dimensional elements. One could expand this limit also to beam and truss elements of one dimension or even to three dimensional solid elements. The libMesh library and the coupling tool preCICE would support such features.
+  
+  All scenarios considered in this work so far had constant conditions. The finite element idealization could be extended to situations that are time dependent and simultaneously add dynamic behavior to the elastic structures. When displacements of an elastic body vary with time two additional forces must be introduced, namely the inertia or acceleration and resistance opposing the motion. Therefore, a new type of solver must be introduced as well which might also be provided by the libMesh framework.
 \newpage
