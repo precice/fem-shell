@@ -5,43 +5,41 @@
  \subsection{Introduction to Linear Elastic Problems}\label{sec:Shell-IntroLinEla}
  In the following the fundamental equations of linear elasticity will be considered. Here, the spatial case is used for demonstration, but every lower dimensional problem can easily be derived from it.
  The following definitions will be used in this thesis:
- \begin{equation}
- \vec{u}^T = \left(u\ v\ w\right)\ \mathrm{displacement\ vector}
- \end{equation}
- \begin{equation}
- \vec{f}^T = \left(f_x\ f_y\ f_z\right)\ \mathrm{external\ force\ vector}
- \end{equation}
+ \begin{align}
+ \vec{u} &= \begin{pmatrix}
+ u & v & w
+ \end{pmatrix}^T \text{displacement\ vector}
+ \vec{f} &= \begin{pmatrix}
+ f_x & f_y & f_z
+ \end{pmatrix}^T \text{external\ force\ vector}
+ \end{align}
  The strains and stresses can either be described in form of tensors $\underline{\epsilon}$ and $\underline{\sigma}$, or as vectors $\vec{\epsilon}$ and $\vec{\sigma}$:
- \begin{equation}
- \underline{\epsilon} = \begin{pmatrix}
+ \begin{align}
+ \underline{\epsilon} &= \begin{pmatrix}
  \epsilon_{xx} & \epsilon_{xy} & \epsilon_{xz} \\
  \epsilon_{yx} & \epsilon_{yy} & \epsilon_{yz} \\
- \epsilon_{zx} & \epsilon_{zy} & \epsilon_{zz} \end{pmatrix};
- \underline{\sigma} = \begin{pmatrix}
+ \epsilon_{zx} & \epsilon_{zy} & \epsilon_{zz} \end{pmatrix}\\
+ \underline{\sigma} &= \begin{pmatrix}
  \sigma_{xx} & \sigma_{xy} & \sigma_{xz} \\
  \sigma_{yx} & \sigma_{yy} & \sigma_{yz} \\
  \sigma_{zx} & \sigma_{zy} & \sigma_{zz} \end{pmatrix}
- \end{equation}
- \begin{equation}
- \vec{\epsilon}^T = \begin{pmatrix}
- \epsilon_{xx} & \epsilon_{yy} & \epsilon_{zz} & 2\epsilon_{xy} & 2\epsilon_{yz} & 2\epsilon_{zx} \end{pmatrix};
- \vec{\sigma}^T = \begin{pmatrix}
- \sigma_{xx} & \sigma_{yy} & \sigma_{zz} & \sigma_{xy} & \sigma_{yz} & \sigma_{zx} \end{pmatrix}
- \end{equation}
- As stated in \cite{steinke2005finite} the relation between displacements and strains is as follows:
- \begin{equation}\label{eq:displ_strain_relation}
- \underline{\epsilon} = \frac{1}{2}\left(\nabla\vec{u} + \vec{u}\:\nabla \right);\quad \vec{\epsilon}
- %= \begin{pmatrix}
- %\frac{\partial}{\partial x} & 0 \\
- %0 & \frac{\partial}{\partial y} \\
- %\frac{\partial}{\partial y} & \frac{\partial}{\partial x} \end{pmatrix} \vec{u}
- = \underline{L}\vec{u}
- \end{equation}
+ \end{align}
+ \begin{align}
+ \vec{\epsilon} &= \begin{pmatrix}
+ \epsilon_{xx} & \epsilon_{yy} & \epsilon_{zz} & 2\epsilon_{xy} & 2\epsilon_{yz} & 2\epsilon_{zx} \end{pmatrix}^T\\
+ \vec{\sigma} &= \begin{pmatrix}
+ \sigma_{xx} & \sigma_{yy} & \sigma_{zz} & \sigma_{xy} & \sigma_{yz} & \sigma_{zx} \end{pmatrix}^T
+ \end{align}
+ In the case of isotropic materials the strains and stresses are symmetrical, i.e. $\epsilon_{xy} = \epsilon_{yx}, \epsilon_{xz} = \epsilon_{zx}, \epsilon_{yz} = \epsilon_{zy}$ and $\sigma_{xy} = \sigma_{yx}, \sigma_{xz} = \sigma_{zx}, \sigma_{yz} = \sigma_{zy}$. As stated in \cite{steinke2005finite} the relation between displacements and strains is as follows:
+ \begin{align}\label{eq:displ_strain_relation}
+ \underline{\epsilon} &= \frac{1}{2}\left(\nabla\vec{u} + \vec{u}\:\nabla \right) \\
+ \vec{\epsilon} &= \underline{L}\vec{u} \nonumber
+ \end{align}
  Equation \ref{eq:displ_strain_relation} relates the displacement vector field $\vec{u}$ with the strain field $\underline{\epsilon}$, or $\vec{\epsilon}$ respectively. Here, $\underline{L}$ is a differential operator. This strain-displacement relation is also called \textit{kinematic relationship} \cite{steinke2005finite}.
  
  In general initial strains can exist inside the material for example due to temperature changes or shrinkage. Such initial strains are denoted $\vec{\epsilon_0}$ and the stresses will be influenced by the difference between the actual and initial strains. Additionally one could imagine initial residual stresses $\vec{\sigma_0}$ that can be added to the general equation:
  \begin{equation}\label{eq:stress-strain-relation}
- \vec{\sigma} = \underline{D}\left(\vec{\epsilon}-\vec{\epsilon_0}\right)+\vec{\sigma_0},
+ \vec{\sigma} = \underline{D}\left(\vec{\epsilon}-\vec{\epsilon_0}\right)+\vec{\sigma_0}
  \end{equation}
  where $\underline{D}$ is the material matrix. In the simplest case of linear elasticity with isotropy, $\underline{D}$ only contains two parameters, namely the elastic modulus $E$ (also known as the Young's modulus) and the Poisson's ratio $\nu$. The former one defines the relationship between the stress and strain in a material, the latter one results as the quotient of the fraction of expansion and the fraction of compression for small changes.
  
@@ -60,11 +58,11 @@
  
  Two different boundary conditions are distinguished: Essential and natural boundary conditions. The first one is geometrically described. An initial displacement $\vec{u^0}$ is impressed on a surface part $\Omega_u$ of the object:
  \begin{equation}
- \vec{u} = \vec{u^0} \text{on} \Omega_u
+ \vec{u} = \vec{u^0}\quad \text{on}\quad \Omega_u
  \end{equation}
  The natural boundary conditions are represented by force conditions. They can be described as follows:
  \begin{equation}
- \underline{n} \vec{\sigma} = \vec{p^0} \text{on} \Omega_p
+ \underline{n} \vec{\sigma} = \vec{p^0}\quad \text{on}\quad \Omega_p
  \end{equation}
  where the matrix $\underline{n}$ contains entries of the object boundary's normal vector, $\vec{p^0}$ described the edge stress and $\vec{\sigma}$ is the stress vector:
  \begin{align}
@@ -118,11 +116,11 @@
   In Figure \ref{fig:plane} an object is shown which extends to the x and y axis as its primary direction. The extend in z-direction is smaller and denoted by thickness $t$. The mid-surface located in between the top and bottom surface areas has the coordinate $z=0$. Its local z-axis equals the normal vector of the mid place. Such an object is called \textit{plane} in the following.
   
   %- Bed. für ebenen Spannungszustand (eb. Dehnungszustand erwähnen und auf Ref (z.B. Zienkiewicz) verweisen)
-  There are two different problem definitions regarding plane elements: Plane stress and plane strain. The directions of displacements $u$ and $v$ along the orthogonal local x and y axis defining its displacement field is a common feature of both problems. Also, both have in common, that only strains and stresses in the xy plane have to be considered: Instead of nine, only three components remain. While in the case of plane stress all other stress components are zero, in plane strain the stress in direction perpendicular to the xy plane is non-zero. In this thesis only plane stress will be discussed in further detail. More information about plane strain is given in \cite{zienkiewicz2000finite} and \cite{braess2007finite}, for instance.
+  There are two different formulations regarding plane elements: Plane stress and plane strain. The directions of displacements $u$ and $v$ along the orthogonal local x and y axis defining its displacement field is a common feature of both problems. Also, both have in common, that only strains and stresses in the xy plane have to be considered: Instead of nine, only three components remain. While in the case of plane stress all other stress components are zero, in plane strain the stress in direction perpendicular to the xy plane is non-zero. In this thesis only plane stress will be discussed in further detail. More information about plane strain is given in \cite{zienkiewicz2000finite} and \cite{braess2007finite}, for instance.
   The following conditions must be satisfied such that a plane can be in \textit{plane stress} \cite{steinke2005finite}:
   \begin{itemize}
   	\item The thickness $t$ varies only slightly and it must hold: $t/l \ll 1$, with $l$ the extent of the larger side of the plane element.
-  	\item The load is applied to the mid place.
+  	\item The load is applied to the mid-surface.
   	\item Displacements, strains and stresses are constant across the thickness.
   \end{itemize}
   The stress components $\sigma_{xz},\sigma_{yz},\sigma_{zz}$ normal to the surface areas with $z \pm t/2$ vanish (equals zero). Therefore only the two normal stress components $\sigma_{xx}$ and $\sigma_{yy}$ and the transverse stress component $\sigma_{xy}$ are left non-zero.
@@ -219,7 +217,7 @@
   
   
   \subsubsection{Tri-3 Plane Element}\label{sec:Shell-Plane-Tri}
-  In section \ref{sec:Shell-Plane-ProbDef} the plane element's functional was derived. Now the focus is on the functional's discretization. Figure \ref{fig:plane_triangulation} shows a general, planar object defined to be placed in the xy-plane. The first discretization step is to divide the object into single triangles approximating the shape of it. This process is called triangulation. Every one of these triangles then represents a finite element with one node at every corner. The finer the triangulation is done the better the object and its boundary are matched by its discrete complement, but also the more finite elements have to be considered in later calculations.
+  In section \ref{sec:Shell-Plane-ProbDef} the plane element's functional was derived (eq. \ref{eq:planeFunctional}). Now the focus is on the functional's discretization. The constructed finite element will be a three-node triangular element in the following also denoted as \textbf{Tri-3}. Figure \ref{fig:plane_triangulation} shows a general, planar object defined to be placed in the xy-plane. The first discretization step is to divide the object into single triangles approximating the shape of it. This process is called triangulation. Every one of these triangles then represents a finite element with one node at every corner. The finer the triangulation is done the better the object and its boundary are matched by its discrete complement, but also the more finite elements have to be considered in later calculations.
   \begin{figure}[htbp]% Bild von trianguliertem Körper
     	\centering
     	%\includegraphics[width=1.0\linewidth]{figures/plane_triangulation}
@@ -303,26 +301,19 @@
   	\label{fig:plane_triangle}
   \end{figure}
     
-  One triangular finite element is shown in Figure \ref{fig:plane_triangle}. It is defined by the coordinates $(x_i,y_i)$ of its three nodes. Since the element is located in the xy-plane, the z-coordinate is of no interest and will be ignored. At every node, forces can be applied denoted with $F_{x_i}$ and $F_{y_i}$. Accordingly, every node can be displaced. The movement along the x-axis is denoted with $u_i$, or with $v_i$ along the y-axis respectively. Note, that the node numbering is in counter-clockwise direction. This definition will be kept throughout the thesis, and is important to remember when implementing the FEM-code in order to reduce errors.
+  One triangular finite element is shown in Figure \ref{fig:plane_triangle}. It is defined by the coordinates $(x_i,y_i)$ of its three nodes. Since the element is located in the xy-plane, the z-coordinate is of no interest and will be ignored. At every node, forces can be applied denoted with $F_{x_i}$ and $F_{y_i}$. Accordingly, every node can be displaced. The movement along the x-axis is denoted with $u_i$ and with $v_i$ along the y-axis, respectively. Note, that the node numbering is in anti-clockwise direction. This convention will be kept throughout the thesis, and is important when implementing the FEM-code.
   In this thesis only triangles defined by three nodes are discussed. There are many more finite elements forming triangles, such as six node triangles or even seven node triangles. The main difference between these types of elements are the order of shape functions. More details about higher order triangular finite elements can be found in \cite{zienkiewicz2000finite}, \cite{bergan1985triangular}, \cite{cook2002concepts}, \cite{braess2007finite}.
   
   % ansatzfunktion (abgewandelt statt phi, u und v separat)\\
-  In the case of a three node triangle the basis functions for the two displacements $u$ and $v$ are as follows \cite{steinke2005finite}:
-  \begin{equation}\label{eq:t3_ansatzU}
-  u(x,y) = a_0 + a_1L_1 + a_2L_2 = \begin{pmatrix}
+  In the case of a three node triangle the basis functions for the two displacements $u$ and $v$ are the same and thus $u$ and $v$ can be replaced by an arbitrary function $\psi$\cite{steinke2005finite}:
+  \begin{align}\label{eq:t3_ansatz}
+  \psi(x,y) &= a_0 + a_1L_1 + a_2L_2 = \begin{pmatrix}
   1 & L_1 & L_2
   \end{pmatrix} \begin{pmatrix}
   a_0 \\ a_1 \\ a_2
-  \end{pmatrix} = \vec{x}^T \vec{a},
-  \end{equation}
-  \begin{equation}\label{eq:t3_ansatzV}
-  v(x,y) = a_0 + a_1L_1 + a_2L_2 = \begin{pmatrix}
-  1 & L_1 & L_2
-  \end{pmatrix} \begin{pmatrix}
-  a_0 \\ a_1 \\ a_2
-  \end{pmatrix} = \vec{x}^T \vec{a},
-  \end{equation}
-  both defined in triangular coordinates (see figure \ref{fig:tri_coords}).
+  \end{pmatrix} = \vec{x}^T \vec{a}
+  \end{align}
+  defined in triangular coordinates (see Figure \ref{fig:tri_coords}).
   
   \begin{figure}[htbp]% dreieckskoordinaten (ähnlich bild 2.7 auf s.39(53))
   	\centering
@@ -369,34 +360,34 @@
   % interpolationsbedingunen führen auf Formfunktionen\\
   To get the unknown coefficients $a_i$, values for the triangular coordinates are set. This creates a system of linear equations:
   \begin{align}
-  u(L_1=1, L_2=0) = u_1 &\rightarrow u_1 = a_0 + a_1 \nonumber\\
-  u(L_1=0, L_2=1) = u_2 &\rightarrow u_2 = a_0 + a_2 \nonumber\\
-  u(L_1=0, L_2=0) = u_3 &\rightarrow u_3 = a_0
+  \psi(L_1=1, L_2=0) = \psi_1 &\rightarrow \psi_1 = a_0 + a_1 \nonumber\\
+  \psi(L_1=0, L_2=1) = \psi_2 &\rightarrow \psi_2 = a_0 + a_2 \nonumber\\
+  \psi(L_1=0, L_2=0) = \psi_3 &\rightarrow \psi_3 = a_0
   \end{align}
-  Alternatively, this could be also done with $v$. Written as matrix and vector:
+  Written as matrix and vector:
   \begin{align}
-  \underline{A} \vec{a} = \vec{u} \nonumber\\
+  \underline{A} \vec{a} &= \vec{\psi} \nonumber\\
   \begin{pmatrix}
   1 & 1 & 0\\
   1 & 0 & 1\\
   1 & 0 & 0
   \end{pmatrix} \begin{pmatrix}
   a_0 \\ a_1 \\ a_2
-  \end{pmatrix} = \begin{pmatrix}
-  u_1 \\ u_2 \\ u_3
+  \end{pmatrix} &= \begin{pmatrix}
+  \psi_1 \\ \psi_2 \\ \psi_3
   \end{pmatrix}
   \end{align}
   Now, inverting matrix $A$ the coefficients can be found:
   \begin{equation}\label{eq:t3_coeffsA}
-  \vec{a} = \underline{A}^{-1} \vec{u} = \begin{pmatrix}
+  \vec{a} = \underline{A}^{-1} \vec{\psi} = \begin{pmatrix}
   0 & 0 & 1\\
   1 & 0 & -1\\
   0 & 1 & -1
   \end{pmatrix} \begin{pmatrix}
-  u_1 \\ u_2 \\ u_3
+  \psi_1 \\ \psi_2 \\ \psi_3
   \end{pmatrix}
   \end{equation}
-  If one put equation \ref{eq:t3_coeffsA} into \ref{eq:t3_ansatzU}, or the analogon into \ref{eq:t3_ansatzV}, the shape functions for the three node triangular finite element will be derived, as described in \cite{steinke2005finite}:
+  If one put equation \ref{eq:t3_coeffsA} into \ref{eq:t3_ansatz}, the shape functions for the three node triangular finite element will be derived, as described in \cite{steinke2005finite}:
   \begin{align}\label{eq:t3SF}
   u &= \vec{x}^T \vec{a} = \vec{x}^T \underline{A}^{-1}\vec{u} = \vec{N}^T\vec{u} \nonumber\\
   \vec{N}^T &= \vec{x}^T \underline{A}^{-1} =
@@ -413,7 +404,7 @@
   N_1 & N_2 & N_3
   \end{pmatrix}
   \end{align}
-  Characteristically for the shape function, as stated in \cite{steinke2005finite}, is that shape function $N_i$ gets the value 1 at node $i$ and 0 at the two other nodes. The functions are linear with respect to $L_1$ and $L_2$ which can be noticed in equation \ref{eq:t3SF}. As stated before, these shape functions are the same for displacement $u$ and $v$. With the knowledge of the displacement values of the element's nodes one can formulate the displacement functions in triangular coordinate notation as follows:
+  Characteristically for a shape functions $N_i$ is, as stated in \cite{steinke2005finite}, that it evaluates to 1 at node $i$ and to 0 at the two other nodes. The functions are linear with respect to $L_1$ and $L_2$ which can be noticed in equation \ref{eq:t3SF}. As stated before, these shape functions are the same for displacement $u$ and $v$. With the knowledge of the displacement values of the element's nodes one can formulate the displacement functions in triangular coordinate notation as follows:
   \begin{align}
   u &= N_1 u_1 + N_2 u_2 + N_3 u_3 \nonumber\\
   v &= N_1 v_1 + N_2 v_2 + N_3 v_3
@@ -459,7 +450,7 @@
   \frac{-\partial x}{\partial L_2} & \frac{\partial x}{\partial L_1}
   \end{pmatrix}
   \end{equation}
-  The conversion between triangular and Cartesian coordinates can be summarized as follows (see Figure \ref{fig:tri_coords} and \cite{steinke2005finite}):
+  where $|\underline{J}|$ denotes the determinant of the Jacobian matrix. The conversion between triangular and Cartesian coordinates can be summarized as follows (see Figure \ref{fig:tri_coords} and \cite{steinke2005finite}):
   \begin{align}\label{eq:triCoord<->CartCoord}
   L_1 + L_2 + L_3 &= 1 \rightarrow L_3 = 1-L_1-L_2 \nonumber\\
   x &= x_1L_1 + x_2L_2 + x_3L_3 = (x_1-x_3)L_1 + (x_2-x_3)L2 + x_3\\
@@ -549,12 +540,12 @@
   
   \subsubsection{Quad-4 Plane Element}\label{sec:Shell-Plane-Quad}
   %- mathematical derivation of four node quadrilateral plane element\newline
-  Sometimes it can be beneficial to use quadrilateral elements when describing a mesh. In contrast to triangles which always lie, due to their simple shape, in a plane, quadrilateral can have more complex forms. Such cases include for example: The fourth nodes does not lie in the plane defined by the other three or the shape is not convex. It is difficult to deal with such forms and one could be tempted to restrict the element to have rectangular shapes only, because these are easy to formulate and work with. But they are impractical when complicated geometry is to be modeled, especially if details should be emphasized in fine graduation.
+  It is sometimes beneficial to use quadrilateral elements when describing certain detailed parts of a mesh or just to use less elements to describe a plane area. In contrast to triangles which always lie, due to their simple shape, in a plane, quadrilateral can have more complex forms. Such cases include for example: The fourth node does not lie in the plane defined by the other three or the shape is not convex. It is difficult to deal with such forms and one could be tempted to restrict the element to have rectangular shapes only, because these are easy to formulate and work with. But they are impractical when complicated geometry is to be modeled, especially if details should be emphasized in fine graduation.
     
   %- see Steinke \cite{steinke2005finite} page 237-250 + Cook \cite{cook2002concepts} page 202-208\\
   One solution to this problem is the use of isoparametric elements. They can be non-rectangular. The trick is to use reference coordinates which map the physical element into a reference element that is a square. Thus, the physical element can have a more general shape, but a coordinate transformation and numerical integration is needed which brings in more mathematical complexity \cite{cook2002concepts}.
   
-  In this section quadrilateral isoparametric elements consisting of four nodes are described, but one can expand it to eight or nine node elements. Figure \ref{fig:coord_trafo} shows the two abstraction layers: On the left side the original element is shown in physical space, on the right side the reference element is shown. The square has a side length of $2$. The coordinate system with the $\xi$ and $\eta$ axis has its origin in the center of the square. Also note the numbering of the nodes is again counter-clockwise.
+  In this section a quadrilateral isoparametric elements consisting of four nodes is described and denoted by \textbf{Quad-4}. One can expand it to eight- or nine-node elements. Figure \ref{fig:coord_trafo} shows the two abstraction layers: On the left side the original element is shown in physical space, on the right side the reference element is shown. The square has a side length of $2$. The coordinate system with the $\xi$ and $\eta$ axis has its origin in the center of the square. Also note the numbering of the nodes is again counter-clockwise.
   \begin{figure}[htbp]%- bild von original- und bildebene Bild 7.17 steinke oder 6.2-1. cook
   	\centering
   	%\includegraphics[width=0.97\linewidth]{figures/coord_trafo}
@@ -672,8 +663,7 @@
     \frac{1}{4}(1-\xi)(1-\eta)&\frac{1}{4}(1+\xi)(1-\eta)&\frac{1}{4}(1+\xi)(1+\eta)&\frac{1}{4}(1-\xi)(1+\eta)
     \end{pmatrix} \vec{\phi}
   \end{align}
-  To check the correctness of the four shape function one can evaluate shape function $i$ with $\xi\eta$-coordinates of node $i$. It must evaluate to 1 while at any other node coordinate it must be zero.
-  Now, the displacements can be expressed as follows:
+  One can evaluate shape function $i$ with the $\xi\eta$-coordinates of node $i$. If it evaluates to 1 while at any other node coordinates it evaluates to zero the shape function is correctly set. Now, the displacements can be expressed as follows:
   \begin{equation}
   \vec{\tilde{u}} = \begin{pmatrix}
   u\\v
@@ -687,7 +677,7 @@
   with $\underline{N}$ being the matrix containing the shape functions and $\vec{u}$ being the vector of the nodal displacements.
   
   %- jacobi-matrix aufstellen, inverse und determinante nicht so genau (bzw. einfach, weil J eh nur 2x2 ist)\\
-  The assembly of the strain-displacement matrix $\underline{B}$ is more complicated with isoparametric elements. Due to the $\xi\eta$-coordinates one cannot easily describe an operator such as $\partial/\partial x$. The first step to achieve it, is to formulate a function $\phi = \phi(\xi,\eta)$. Like in the derivation on the shape functions $\phi$ can represent $u$ or $v$. Derivatives with respect to $\xi$ and $\eta$ are as follows \cite{cook2002concepts}:
+  The assembly of the strain-displacement matrix $\underline{B}$ is more complicated with isoparametric elements. Due to the $\xi\eta$-coordinates one cannot easily describe an operator such as $\partial/\partial x$. The first step is to formulate a function $\phi = \phi(\xi,\eta)$. Like in the derivation on the shape functions $\phi$ can represent $u$ or $v$. Derivatives with respect to $\xi$ and $\eta$ are as follows \cite{cook2002concepts}:
   \begin{align}
   \frac{\partial \phi}{\partial \xi} = \frac{\partial \phi}{\partial x} \frac{\partial x}{\partial \xi} + \frac{\partial \phi}{\partial y} \frac{\partial y}{\partial \xi} \nonumber\\
   \frac{\partial \phi}{\partial \eta} = \frac{\partial \phi}{\partial x} \frac{\partial x}{\partial \eta} + \frac{\partial \phi}{\partial y} \frac{\partial y}{\partial \eta}
@@ -696,14 +686,14 @@
   \begin{equation}\label{eq:q4derivRS=J*derivXY}
   \vec{\tilde{\phi}} = \underline{J} \vec{\phi}
   \end{equation}
-  where $\underline{J}$ is the Jacobian matrix:
+  where $\underline{J}$ is the Jacobian matrix
   \begin{equation}
   \underline{J} = \begin{pmatrix}
   \sum N_{i,\xi}x_i & \sum N_{i,\xi}y_i\\
   \sum N_{i,\eta}x_i & \sum N_{i,\eta}y_i
   \end{pmatrix}
   \end{equation}
-  where $N_{i,j}$ denotes the derivation of the $i$-th shape function with respect to $j$ and $x_i$ the $i$-th component of the $\vec{x}$ vector. The Jacobian matrix can be written out as follows:
+  and $N_{i,j}$ denotes the derivation of the $i$-th shape function with respect to $j$ and $x_i$ the $i$-th component of the $\vec{x}$ vector. The Jacobian matrix can be written out as follows:
   \begin{align}
   \underline{J} &= \frac{1}{4}\begin{pmatrix}
   -(1-\eta) & (1-\eta) & (1+\eta) & -(1+\eta)\\
@@ -766,17 +756,19 @@
   \end{pmatrix}\\
   &\qquad\qquad\qquad\qquad\qquad\quad\; \underline{\hat{N}} \nonumber
   \end{align}
+  where $j_{i}$ denotes the $i$-th entry in the inverse Jacobian matrix.
+  The composition of the previous three equations forms the matrix $\underline{B}$:
   \begin{equation}
   \underline{B} = \underline{L}\,\underline{\hat{J}}\,\underline{\hat{N}}
   \end{equation}
-  where $j_{i}$ denotes the $i$-th entry in the inverse Jacobian matrix.
+  
 
   %- stefigkeitsmatrix $K = int_V(B^TDBdV) = t*int_V(B^TDBdA) = t*int_-1^1 int_-1^1(B^TDB|J|dsdr)$ + erwähnen, dass |J| Flächeninhalt angibt (ref finden)
-  Together with the functional equation \ref{eq:t3functional} and the material matrix $\underline{D}$ \ref{eq:sigma=D*eps}, the stiffness matrix for the quadrilateral isoparametric element can be written as:
+  Together with the functional equation \ref{eq:t3functional} and the material matrix $\underline{D}$ (eq. \ref{eq:sigma=D*eps}), the stiffness matrix for the quadrilateral isoparametric element can be written as:
   \begin{equation}
   \underline{K} = \int_V \underline{B}^T \underline{D}\,\underline{B}\, dV = t\int_A \underline{B}^T \underline{D}\,\underline{B}\, dA = t\int_{-1}^{1}\int_{-1}^{1} \underline{B}^T \underline{D}\,\underline{B}\, |\underline{J}| d\xi d\eta
   \end{equation}
-  For the four node element a Gaussian quadrature needs 2x2 Gauss integration points to satisfy the above equation \cite{steinke2005finite}. These four points are located at $\xi_i = \pm \frac{\sqrt{3}}{3}$ and $\eta_i = \pm \frac{\sqrt{3}}{3}$ with weight factors $\omega_i = 1$. The equation for the stiffness matrix can then be written in discretized form as follows:
+  For the Quad-4 element a Gaussian quadrature needs four Gauss integration points to satisfy the above equation \cite{steinke2005finite}. These four points are located at $\xi_i = \pm \frac{\sqrt{3}}{3}$ and $\eta_i = \pm \frac{\sqrt{3}}{3}$ with weight factors $\omega_i = 1$. The equation for the stiffness matrix can then be written in discretized form as follows:
   \begin{equation}
   \underline{K} = t \sum_{i=1}^{2} \sum_{j=1}^{2} \omega_i \omega_j \underline{B}(\xi_i,\eta_j)^T \underline{D}\, \underline{B}(\xi_i,\eta_j) |\underline{J}(\xi_i,\eta_j)|
   \end{equation}
@@ -822,7 +814,7 @@
   In contrast to a plane, where the load is located planar with respect to the plane, the load is perpendicular to the mid place at a plate. Therefore plate element problems are important for supporting structures of bridges or ceilings and floors in buildings, for example. In Figure \ref{fig:plate} one can see a generalized plate object. It has a main dimension of $l$ and a constant thickness $t$. With the assumption that $t \ll l$, the problem becomes two dimensional and, instead of the whole object, only the middle plane between the two surface areas will be considered. The object has a local coordinate system with its xy-plane the mid plane and its z-axis perpendicular to this plane. The surface areas are located at $z = \pm t/2$. As stated in the beginning, the load is applied in z-direction, i.e. normal to the mid-surface.
   
   % hier wird die kirchhoff-platten-theorie verwendet
-  In this work Kirchhoff's theory of thin plates is used. For thick plates or laminated plates, the theory of Reissner-Mindlin is more applicable. The main difference is that with Reissner-Mindlin plates one takes the shear deformations into account. Thus, the normal to the mid-surface remains straight but not necessarily perpendicular to it; instead of a Kirchhoff plate: Here, the normal remains normal to the mid-surface even after deformation.
+  In this work Kirchhoff's theory of thin plates is used. For thick plates or laminated plates, the theory of Reissner-Mindlin is more applicable \cite{werkle1995finite}. The main difference is that with Reissner-Mindlin plates one takes the shear deformations into account. Thus, the normal to the mid-surface remains straight but not necessarily perpendicular to it; instead of a Kirchhoff plate: Here, the normal remains normal to the mid-surface even after deformation.
   
   % voraussetzungen der kirchhoff-platte
   As a short summarize the following conditions must be satisfied for a Kirchhoff plate \cite{steinke2005finite}:
@@ -914,7 +906,7 @@
   \begin{align}
   \vec{\kappa} &= \vec{\Delta}w \nonumber\\
   \vec{M} &= -\underline{D}_p \vec{\kappa} = -\underline{D}_p \vec{\Delta} w \nonumber\\
-  \vec{\Delta}^T \vec{M} = -\vec{\Delta}^T \underline{D}_p \vec{\Delta} w = p
+  \vec{\Delta}^T \vec{M} &= -\vec{\Delta}^T \underline{D}_p \vec{\Delta} w = p
   \end{align}
   The last equation leads to the partial differential equation of the plate bending \cite{klein2013fem}:
   \begin{equation}
@@ -1003,12 +995,12 @@
   The following sections show details of two discretizations of plate elements: A triangular element with three nodes and a quadrilateral element with four nodes.
   
   \subsubsection{Tri-3 Plate Element}\label{sec:Shell-Plate-Tri}
-  There exists many different types of triangular plate elements, for example Batoz et al. \cite{batoz1980study}, Tocher \cite{tocher1963analysis} or Specht \cite{specht1988modified}. The three node triangular element from \cite{tocher1963analysis} has three degrees of freedom (d.\.o.\.f) ($w, \theta_x, \theta_y$) per node. His basis function was a complete cubic polynomial. The term $xy$ was left out, because the polynomial has one coefficient more than the element has d.\.o.\.f. This leads to the problem that no constant state of bending can be described (non-conforming element) and this leads to wrong results at convergence \cite{steinke2005finite}. Therefore, Steinke challenges the practical use of this element.
+  There exist many different types of triangular plate elements, for example Batoz et al. \cite{batoz1980study}, Tocher \cite{tocher1963analysis} or Specht \cite{specht1988modified}. The three node triangular element from \cite{tocher1963analysis} has three degrees of freedom (d.o.f) ($w, \theta_x, \theta_y$) per node. His basis function was a complete cubic polynomial. The term $xy$ was left out, because the polynomial has one coefficient more than the element has d.o.f. This leads to the problem that no constant state of bending can be described (non-conforming element) and this leads to wrong results at convergence \cite{steinke2005finite}. Therefore, Steinke challenges the practical use of this element.
   A possible way to use a complete cubic polynomial would be to add another node in the center of mass of the triangle and assign the only degree of freedom $w$ to it \cite{steinke2005finite}. But the problem of non-conformity persist, as the nodal twists don't suffice to describe the twists along the element's edges, which are quadric. Here, additional nodes on the edges would be needed.
-  To get a conforming element one can choose a basis function with a complete polynomial of order five. It has 21 coefficients and d.o.f. They are distributed as follows: Every node has six d.o.f $(w, \partial w/\partial x, \partial w/\partial y, \partial^2 w/\partial x^2, \partial^2 w/\partial y^2, \partial^2 w/\partial x\partial y)$ and the mid node of every edge gets the degree of freedom $\partial w/\partial n$. This results in continuous element edge twists, conformity and convergence. The problem: 21 d.o.f. per element leads to high computational effort and second order derivatives at the boundaries are needed. Hence, Steinke advices against using it in practice \cite{steinke2005finite}.
+  To get a conforming element one can choose a basis function with a complete polynomial of fifth order. It has 21 coefficients and d.o.f. They are distributed as follows: Every node has six d.o.f $(w, \partial w/\partial x, \partial w/\partial y, \partial^2 w/\partial x^2, \partial^2 w/\partial y^2, \partial^2 w/\partial x\partial y)$ and the mid node of every edge gets the degree of freedom $\partial w/\partial n$. A conform element with continuous twists at its edges follows from that. But the 21 d.o.f. per element leads to high computational effort and second order derivatives at the boundaries are needed. Hence, Steinke advices against using it in practice \cite{steinke2005finite}.
   
   % ansatzfunktion nach specht\\
-  In this work an element from Specht \cite{specht1988modified} were implemented which is also described in \cite{steinke2005finite}. It has three nodes and also three d.o.f. per node: The deformation $w$ and the two twists $\theta_x$ and $\theta_y$. The basis function for the deformation $w$ is as follows:
+  In this work an element from Specht \cite{specht1988modified} was implemented which is also described in \cite{steinke2005finite}. It has three nodes and also three d.o.f. per node: The deformation $w$ and the two twists $\theta_x$ and $\theta_y$. The basis function for the deformation $w$ is as follows:
   \begin{align}
   w = &a_0 L_1 + a_1 L_2 + a_2 L_3 + a_3 L_1L_2 + a_4 L_2L_3 + a_5 L_3L_1 \nonumber\\
     & + a_6\left(L_2L_1^2 + \frac{1}{2}L_1L_2L_3 \left(3(1-\mu_3)L_1 - (1+3\mu_3)L_2 + (1+3\mu_3)L_3\right)\right) \nonumber\\
@@ -1040,7 +1032,7 @@
   \end{align}
   
   % interpolationsbedingungen
-  The twists $\theta_x$ and $\theta_y$ are yet described in Cartesian coordinates. They must be transformed into triangular coordinates with the help of equation \ref{eq:t3NablaTilde}:
+  The twists $\theta_x$ and $\theta_y$ are to be described in Cartesian coordinates. They must be transformed into triangular coordinates with the help of equation \ref{eq:t3NablaTilde}:
   \begin{equation}
   \vec{\theta} = \begin{pmatrix}
   \theta_x\\\theta_y
@@ -1098,7 +1090,7 @@
   \end{equation}
   
   % entwicklung der formfunktionen\\
-  Since the shape functions following a pattern, due to the regular order in the matrix $\underline{A}^{-1}$, one can summarize the nine shape functions into three groups; one for every node:
+  Since the shape functions follow a pattern, due to the regular order in the matrix $\underline{A}^{-1}$, one can summarize the nine shape functions into three groups; one for every node:
   \begin{align}
   N_i &= \begin{cases}
   \chi_i - \chi_{i+3} + \chi_{k+3} + 2\left(\chi_{i+6} - \chi_{k+6}\right) & \text{for d.o.f. } w\\
@@ -1178,7 +1170,7 @@
   % mathematical derivation of four node quadrilateral plane element
   % see Zienkiewicz \cite{zienkiewicz2000finite} page 174-177,219-222 \cite{batoz1982evaluation page 1658-1662}
   % formulierung als DKQ element
-  The element implemented in this work is the so-called \textit{DKQ} element, introduced by Batoz et al. \cite{batoz1982evaluation}. It is a four node, 12 degrees-of-freedom quadrilateral element for thin plates. It is based on a generalization of the \textit{Discrete Kirchhoff Triangular} (DKT) element which is a three node, 9 d.o.f. triangular element. Like the triangular element of the previous section, the DKQ element's nodes have all three degrees of freedom: The displacement $w$ and the rotations $\theta_x$ and $\theta_y$ around the element's local $x$- and $y$-axis. Figure \ref{fig:dkq} shows an example of such an element.
+  The Quad-4 element implemented in this work is the so-called Discrete Kirchhoff Quadrilateral (DKQ) element, introduced by Batoz et al. \cite{batoz1982evaluation}. It is a four-node, 12 degrees-of-freedom quadrilateral element for thin plates. It is based on a generalization of the Discrete Kirchhoff Triangular (DKT) element which is a three-node, 9 d.o.f. triangular element. Like the triangular element of the previous section, all the DKQ elements nodes have three degrees of freedom: The displacement $w$ and the rotations $\theta_x$ and $\theta_y$ around the element's local $x$- and $y$-axis. Figure \ref{fig:dkq} shows an example of such an element.
   \begin{figure}[htbp] % Bild 1 batoz
   	\centering
   	%\includegraphics[width=0.97\linewidth]{figures/dkq}
@@ -1203,7 +1195,7 @@
   	\put(5,6){\circle*{0.25}}
   	\put(4.2,6.3){$w_4,\theta_{x_4},\theta_{y_4}$}
   	\end{picture}
-  	\caption{12 node quadrilateral plate element DQK}
+  	\caption{4-node quadrilateral plate element DKQ with 12 degrees-of-freedom, three per node.}
   	\label{fig:dkq}
   \end{figure}
   
@@ -1221,7 +1213,7 @@
   \frac{\partial \beta_x}{\partial y} + \frac{\partial \beta_y}{\partial x}
   \end{pmatrix}
   \end{equation}
-  $\beta_i$ is the rotation of the normal to the undeformed mid-surface in $x$-$z$-plane and $y$-$z$-plane, respectively. For $\Pi$ only $C^0$ continuity is required \cite{batoz1982evaluation}. Further, Batoz et al. states that $\beta_x$ and $beta_y$ must be related to $w$ in such a way, that the final element satisfies the following requirements:
+  $\beta_i$ is the rotation of the normal to the undeformed mid-surface in $x$-$z$-plane and $y$-$z$-plane, respectively. For $\Pi$ only $C^0$ continuity is required \cite{batoz1982evaluation}. Further, Batoz et al. states that $\beta_x$ and $\beta_y$ must be related to $w$ in such a way, that the final element satisfies the following requirements:
   \begin{itemize}
   	\item The nodal variables must be $w$, $\theta_x$ and $\theta_y$ with respect to $x$ and $y$ at the four element's nodes ($\theta_x = \partial w/\partial y, \theta_y=-\partial w/\partial x$)
   	\item The Kirchhoff boundary conditions must be satisfied.
@@ -1234,7 +1226,7 @@
   \beta_x &= \sum_{i=1}^{8} N_i \beta_{x_i}\\
   \beta_y &= \sum_{i=1}^{8} N_i \beta_{y_i}
   \end{align}
-  $N_i(\xi,\eta)$ are here the shape functions with isoparametric coordinates $\xi$ and $\eta$. They are the same as of the eight node Serendipity element, described for example in \cite{zienkiewicz2000finite}, or \cite{braess2007finite} and seen in Figure \ref{fig:serendipity}. The shape functions of this element are achieved by products of linear lagrangian polynomials of the form $\frac{1}{4}(\xi+1)(\eta+1)$. For the eight node element the following shape functions result:
+  $N_i(\xi,\eta)$ are here the shape functions with isoparametric coordinates $\xi$ and $\eta$. They are the same as of the ``eight-node Serendipity'' element, described for example in \cite{zienkiewicz2000finite}, or \cite{braess2007finite} and seen in Figure \ref{fig:serendipity}. The shape functions of this element are achieved by products of linear Lagrangian polynomials of the form $\frac{1}{4}(\xi+1)(\eta+1)$. For the eight node element the following shape functions result:
   \begin{align}
   N_1(\xi, \eta) &= \frac{1}{4}(1-\xi)(1-\eta)(-\xi-\eta-1) \nonumber\\
   N_2(\xi, \eta) &= \frac{1}{4}(1+\xi)(1-\eta)(\xi-\eta-1) \nonumber\\
@@ -1274,7 +1266,7 @@
   	\put(1.7,2.4){$8$}                       \put(6.6,2.4){$6$}
   	\put(1.7,0.9){$1$}  \put(4.2,0.9){$5$}  \put(6.6,0.9){$2$}
   	\end{picture}
-  	\caption{Eight node quadrilateral element with local $\xi,\eta$-coordinates}
+  	\caption{Eight-node quadrilateral element (``Seredipity''-element) with local $\xi,\eta$-coordinates.}
   	\label{fig:serendipity}
   \end{figure}
   $\beta_{x_i}$ and $\beta_{y_i}$ are transitory nodal variables at the four nodes and mid-sides of the element.
@@ -1368,7 +1360,7 @@
   \vec{H_\xi^x}\\\vec{H_\eta^x}\\\vec{H_\xi^y}\\\vec{H_\eta^y}
   \end{pmatrix}
   \end{equation}
-  The expressions $vec{H_\xi^x}, \vec{H_\eta^x}, \vec{H_\xi^y}$ and $\vec{H_\eta^y}$ are vectors containing the derivatives of the corresponding components of the vectors $\vec{H^x}$ and $\vec{H^y}$ with respect to $\xi$ and $\eta$, respectively.
+  The expressions $\vec{H_\xi^x}, \vec{H_\eta^x}, \vec{H_\xi^y}$ and $\vec{H_\eta^y}$ are vectors containing the derivatives of the corresponding components of the vectors $\vec{H^x}$ and $\vec{H^y}$ with respect to $\xi$ and $\eta$, respectively.
   And the matrix $\underline{B}$ can then be inserted into the displacement-strain relation, like equation \ref{eq:kappa=YBw}:
   \begin{equation}
   \vec{\kappa} = \underline{B} \vec{w}
@@ -1387,7 +1379,7 @@
   &= \int_{-1}^{1} \int_{-1}^{1} \underline{B}^T \underline{D}_p \underline{B}\ \left|\underline{J}\right|\ d\,\!\xi d\,\!\eta
   \end{align}
   
-  The stiffness matrix can be numerically integration with a $2\!\times\!2$ Gaussian integration scheme. Batoz et al. states that four sampling points are enough, although a $3\!\times\!3$ point scheme would be necessary for exact integration on a rectangular element \cite{batoz1982evaluation}. Those four sampling points are located at $\xi_i = \pm \frac{\sqrt{3}}{3}$ and $\eta_i = \pm \frac{\sqrt{3}}{3}$ with weight factor $\omega_i = 1$ equivalent to all four. The equation for the stiffness matrix can then be written in discretized form as follows:
+  The stiffness matrix can be numerically integrated with a $2\!\times\!2$ Gaussian integration scheme. Batoz et al. states that four sampling points are enough, although a $3\!\times\!3$ point scheme would be necessary for exact integration on a rectangular element \cite{batoz1982evaluation}. Those four sampling points are located at $\xi_i = \pm \frac{\sqrt{3}}{3}$ and $\eta_i = \pm \frac{\sqrt{3}}{3}$ with weight factor $\omega_i = 1$ equivalent to all four. The equation for the stiffness matrix can then be written in discretized form as follows:
   \begin{equation}
   \underline{K} = \sum_{i=1}^{2} \sum_{j=1}^{2} \omega_i \omega_j \underline{B}(\xi_i,\eta_j)^T \underline{D}_p \underline{B}(\xi_i,\eta_j) \left|\underline{J}(\xi_i,\eta_j)\right|
   \end{equation}
@@ -1398,13 +1390,13 @@
   with
   \begin{equation}
   \vec{M} = \begin{pmatrix}
-  M_x\\M_y\\M_xy
+  M_x\\M_y\\M_{xy}
   \end{pmatrix}
   \end{equation}
  
  \subsection{Coordinate Transformation} \label{sec:Shell-CoTrafo}
   %see \cite{nguyen2008smoothed}; genau: \cite{zienkiewicz2000finite}\\
-  The nodes and elements in the mesh are defined in a global three dimensional coordinate system. The elements need to be transformed into a two dimensional local coordinate system in order to be able to calculate their local stiffness matrices. This local stiffness matrix must then be transformed back into the global system before adding it to the global stiffness matrix. This section describes the building of the transformation matrix, that will be used in the following section for the addressed transformation steps.
+  The nodes and elements in the mesh are defined in a global three dimensional coordinate system. The elements need to be transformed into a two dimensional local coordinate system in order to be able to construct their local stiffness matrices. This local stiffness matrix must then be transformed back into the global system before adding it to the global stiffness matrix. This section describes the building of the transformation matrix, that will be used in the following section for the addressed transformation steps.
   First the transformation of an arbitrary triangle defined in 3D space is described. 
   
   \begin{figure}[htbp] % Bild von Dreieck mit ABC, globalem KoSys, lokalem KoSys mit Ursprung in A, x-Achse auf Vektor AB usw.\newline
@@ -1435,7 +1427,7 @@
   	\label{fig:triangle}
   \end{figure}
     
-  Given a triangle with vertices $\vec{A} = (a_x, a_y, a_z)^T, \vec{B} = (b_x, b_y, b_z)^T$ and $\vec{C} = (c_x, c_y, c_z)^T$ ordered in counter-clockwise direction, as shown in Figure \ref{fig:triangle}. Let $\vec{u}$ be the vector from node $\vec{A}$ to $\vec{B}$ and $\vec{v}$ be the vector from node $\vec{A}$ to $\vec{C}$:
+  Given a triangle with vertices $\vec{A} = (a_x, a_y, a_z)^T, \vec{B} = (b_x, b_y, b_z)^T$ and $\vec{C} = (c_x, c_y, c_z)^T$ ordered in counterclockwise direction, as shown in Figure \ref{fig:triangle}. Let $\vec{u}$ be the vector from node $\vec{A}$ to $\vec{B}$ and $\vec{v}$ be the vector from node $\vec{A}$ to $\vec{C}$:
   \begin{align*}
   \vec{u} &= \vec{B}-\vec{A} = \begin{pmatrix}
   b_x - a_x & b_y - a_y & b_z - a_z
@@ -1479,7 +1471,7 @@
    \tilde{c}_x & \tilde{c}_y & 0
    \end{pmatrix}^T
   \end{align*}
-  Node $\vec{A}$ will not be changed by the transformation with $\underline{T}$, $\vec{B}$ will be projected onto the local $x$-axis that is defined to be the normalized vector between $\vec{A}$ and $\vec{B}$. Node $\vec{C}$ will be projected onto the local $xy$-plane. One can see that the $z$-component vanishes by transforming into local space, thus generating the wished two dimensional local space.
+  Node $\vec{A}$ will not be changed by the transformation with $\underline{T}$, $\vec{B}$ will be projected onto the local $x$-axis that is defined to be the normalized vector between $\vec{A}$ and $\vec{B}$. Node $\vec{C}$ will be projected onto the local $xy$-plane. One can see that the $z$-component vanishes by transforming into local space, thus generating the two dimensional local space.
   
   \begin{figure}[htbp] % Bild von bel. Viereck mit ABCD, IJKL, globalem KoSys, lokalem KoSys mit Ursprung auf Schnittpunkt der gestrichelten Linien von JL und IK\newline
   	\centering
@@ -1562,7 +1554,7 @@
  
  \subsection{Shell Element}\label{sec:Shell-Shell}
  % The combination of the two previous parts and the transformations results in the final shell element\newline
- Shell elements combine the potential of both, plane and plate elements. Every time a thin walled structure like a car body, dome structure or container with multiaxial pressures is to be simulated, shell elements provide a good solution. In this work only the so-called flat shell elements are described and used in the implementation. Details about curved shell elements, shells of revolution and general shells can be found in Cook et al. \cite{cook2002concepts}.
+ Shell elements combine the capability of both, plane and plate elements. Every time a thin walled structure like a car body, dome structure or container with multiaxial pressures is to be simulated, shell elements provide a good solution. In this work only the so-called flat shell elements are described and used in the implementation. Details about curved shell elements, shells of revolution and general shells can be found in Cook et al. \cite{cook2002concepts}.
  
  Flat shell elements have a state of bending and membrane stress that can be described by superposition of the plane and plate element \cite{klein2013fem}. Figure \ref{fig:shell_triangle} shows the superposition of plane and plate elements to a flat shell element. The degrees of freedom of plane and plate at every node are combined at the node of the shell element. Obviously the plane and plate element must be of the same finite element's type, for example three node triangular or eight node quadrilateral.
  \begin{figure}[htbp] % bild wie bei 8.7 von scheibe und platte und kombination zu schale + erklärungen, welche unbekannten und kräfte man bei welchem teil hat
@@ -1607,7 +1599,7 @@
  	\polyline(3.5,3.5)(5.0,0.5)(8.0,2.0)(3.5,3.5)
  	\put(4.8,0.1){$1$} \put(7.8,1.5){$2$} \put(3.3,3.0){$3$}
  	
- 	\put(6.0,6.0){$+$} \put(2.7,1.5){$=$}
+ 	\put(5.85,5.9){\textbf{{\Huge +}}} \put(2.3,1.5){\textbf{{\Huge =}}}
  	\end{picture}
  	\caption{Creation of a triangular flat shell element by superimposing a triangular plane and a triangular plate element. The elements are described in the same local coordinate system with their degrees of freedom shown exemplary at one node per element.}
  	\label{fig:shell_triangle}

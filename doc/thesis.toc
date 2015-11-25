@@ -1,4 +1,5 @@
 \contentsline {section}{\numberline {1}Introduction}{6}
+\contentsline {subsection}{\numberline {1.1}Organization}{6}
 \contentsline {section}{\numberline {2}Framework Evaluation}{7}
 \contentsline {subsection}{\numberline {2.1}General Aspects}{7}
 \contentsline {subsection}{\numberline {2.2}Frameworks Overview}{8}
@@ -10,12 +11,12 @@
 \contentsline {section}{\numberline {3}Shell Elements}{11}
 \contentsline {subsection}{\numberline {3.1}Introduction to Linear Elastic Problems}{11}
 \contentsline {subsection}{\numberline {3.2}Plane Element}{12}
-\contentsline {subsubsection}{\numberline {3.2.1}Problem Definition}{12}
+\contentsline {subsubsection}{\numberline {3.2.1}Problem Definition}{13}
 \contentsline {subsubsection}{\numberline {3.2.2}Tri-3 Plane Element}{15}
 \contentsline {subsubsection}{\numberline {3.2.3}Quad-4 Plane Element}{20}
 \contentsline {subsection}{\numberline {3.3}Plate Bending Element}{24}
 \contentsline {subsubsection}{\numberline {3.3.1}Problem Definition}{24}
-\contentsline {subsubsection}{\numberline {3.3.2}Tri-3 Plate Element}{29}
+\contentsline {subsubsection}{\numberline {3.3.2}Tri-3 Plate Element}{28}
 \contentsline {subsubsection}{\numberline {3.3.3}Quad-4 Plate Element}{33}
 \contentsline {subsection}{\numberline {3.4}Coordinate Transformation}{38}
 \contentsline {subsection}{\numberline {3.5}Shell Element}{41}
@@ -67,5 +68,7 @@
 \contentsline {subsection}{\numberline {6.7}Test G: MPI (increasing number of processes)}{88}
 \contentsline {paragraph}{\nonumberline Results:}{90}
 \contentsline {subsection}{\numberline {6.8}Test H: Coupled ``Bending Tower''}{93}
-\contentsline {section}{\numberline {7}Conclusion}{94}
-\contentsline {subsection}{\numberline {7.1}Future Work}{94}
+\contentsline {section}{\numberline {7}Summary and Conclusions}{94}
+\contentsline {subsection}{\numberline {7.1}Summary}{94}
+\contentsline {subsection}{\numberline {7.2}Conclusion}{94}
+\contentsline {subsection}{\numberline {7.3}Future Work}{94}

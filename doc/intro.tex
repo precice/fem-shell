@@ -1,7 +1,10 @@
 \section{Introduction}
 % Batoz_et_al-1982 \cite{batoz1982evaluation}
 
-% - einführende worte zu FEM -> see \cite{kansara2004development}
+% - einführende worte zu FEM
+
+
+
 %
 % - ziele und durchführung (ein bisschen den abstract wiederholen, aber keine ergebnisse mehr verraten)
 The goal of this work is to develop a structure solver with the finite element method that is part of a multi-physics simulations like a fluid-structure interaction coupling. The program uses a FEM library that provides data structures and functionality to ease the initialization, setup and solving of the system. Therefore, an evaluation based on several aspects is performed on different FEM frameworks.
@@ -10,5 +13,6 @@ The solver works on two-dimensional meshes consisting of triangular and quadrila
 
 \subsection{Organization}
 % was gibt es in welchem kapitel für inhalt, quasi ein überblick über die arbeit ohne genaue details oder ergebnisse
+The thesis is made up of seven chapters including the introduction. A detailed list of aspects used to evaluate several FEM frameworks is presented in chapter two, along with short outlines of the surveyed libraries and a motivation of the chosen library. Chapter three contains the mathematical derivations of the shell elements. After a motivation of linear elastic problems, first the plane element in its triangular and quadrilateral form is described, following by the plate elements. Before the construction of the shell elements, a section about coordinate transformation is presented. Chapter four describes details on the implementation process of the FEM code. First, an introduction to libMesh is shown. The remainder of this chapter describes the single parts of the code, like the mesh file import or the system matrix assembly, as well as the parallelization of the program with MPI. In chapter five the coupling via preCICE is presented. An overview of preCICE is given and details on the coupling with it is described, including the different coupling methods, data mappings and communication methods. The integration of preCICE into the existing structure solver code closes chater five. Chapter six contains many example problems with the help of which the shell elements and its components were validated. Also, the parallelization and the coupling were tested in this chapter. The seventh and last chapter presents a summary and discussion of the results and gives suggestions for future development.
 
-\newline
+\newpage

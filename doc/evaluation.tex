@@ -6,41 +6,41 @@ Part of the thesis was to find several frameworks which ease the work with the f
  \subsection{General Aspects}
  In preparation of evaluating the frameworks many criteria were created in order to find the most suitable library. The individual aspects are as follows:
  \begin{itemize}
-  \item Open Source: All frameworks under consideration need to be published under free license that allows modification and redistribution. The implemented program should be used by anyone without requiring to purchase additional commercial software.
+  \item Open Source: All frameworks under consideration need to be published under a free license that allows modification and redistribution. The implemented program should be used by anyone without requiring to purchase additional commercial software.
   
   \item Parallelization: Due to the need of accelerating calculations, the framework has to support an implementation of the widely used Message Passing Interface (MPI). The library should be able to use MPI internally for its own functions and procedures, but also support the developer with auxiliary function for communicating framework-related data.
  
-  \item The programming language was chosen to be C++. This aspect is subjective and due to the individual experience of the developer that is larger than, for example, with Python. It is not required that the framework is internally written in C++, but if not, it must provide an interface to C++ to work with.
+  \item The programming language was chosen to be C++. This aspect is subjective and due to the individual experience of the author that is larger than, for example, with Python. It is not required that the framework is internally written in C++, but if not, it must provide an interface to C++ to work with.
  
   \item Mesh file import: Since the program should be able to work with complex geometries, the definition of such a mesh cannot be done in source code. Therefore, the library should provide a possibility to import meshes from file. The file must contain definitions of the node positions as well as the topology of the elements. Additionally, boundary conditions must be definable through identifiers at nodes or edges. The actual formats of the mesh files supported is not important, as long it supports the addressed requirements. A framework proprietary format would also be possible if it is simply reproducible.
   
   \item Linked to the previous aspect is the variety of different finite element types the library has to provide. The current program version uses triangles and quadrilaterals with three and four nodes, respectively. To be able to expand the program's functionality in the future, the library should support elements like six node triangles, nine node quadrilaterals or three dimensional elements like tetrahedra and hexahedra.
   
-  \item Built-in solvers: The framework must provide a variety of different iterative solvers that can be interchanged at runtime by the user, or at least easily in the source code. Thus, the user has a higher flexibility when optimizing a problem or comparing different solvers in order to find the best for his or her problem.
+  \item Built-in solvers: The framework must provide a variety of different iterative solvers that can be interchanged at runtime by the user, or at least easily in the source code. Thus, the user has a higher flexibility when optimizing a problem or comparing different solvers in order to find the best for his or her problem. In the context of a structure solver for linear elastic problems it is focused especially on the group of linear iterative solvers.
  
   \item Accessible and detailed documentation: In order to guarantee maintainability and expandability the framework has to have a good documentation. This includes a complete documentation of every class and function, that is actively growing with the library itself. Additional documented example codes help the developer learning how to use the library correctly and efficiently. If problems with the framework occur the developer should be able to get in contact with the framework developers via mailing-lists or forums.
  
   \item Up-to-date: The framework should be well maintained and actively supported by its developers to ensure a long term compatibility with new features of the program code.
  
-  \item The framework should has been used by at least a few projects or has been part of publications. This shows the framework's importance and usability.
+  \item The framework should be used by at least a few projects or has been part of publications. This shows the framework's importance and usability.
  
-  \item Easy to learn syntax and structure: A rather subjective aspect, not less important. The limited time for this work does not allow studying complicated structures or semantics. The developer should be able to concentrate more on the mathematical/physical problem and less on programming details. This accompanies the choice of the programming language as well as the documentation aspect.
+  \item Easy to learn syntax and structure: A rather subjective aspect, not less important. The developer should be able to concentrate more on the mathematical/physical problems and less on programming details. This accompanies the choice of the programming language as well as the documentation aspect.
  \end{itemize}
  
  
  
  \subsection{Frameworks Overview}
- The following list contains FEM libraries which were evaluated in detail.
+ The following list contains the FEM libraries which were evaluated in detail.
   
   %\subsubsection{FEniCS}
   
   \subsubsection{Feel++}
-  Feel++ stands for "`Finite Element Embedded Language in C++"' and is a unified framework for finite and spectral Galerkin methods in 1D, 2D and 3D to solve partial differential equations \cite{prud2012feel++}. It was created in 2005 and still actively maintained with daily commits and the last release version from February, 2015.
-  One main aspect of Feel++ is to have the syntax, semantics and pragmatics close to the mathematics. It allows creation of versatile mathematical kernels for testing and comparing different techniques and methods in solving problems. A second aim is to have a small library that is good manageable but makes use wherever possible of established libraries, for example to solve linear systems.
-  It interfaces seamlessly with MPI simplifying the work's program parallelization. Different mesh file formats are available for import, like the GMSH format and a collection of different finite element type are supported.
+  Feel++ stands for "`Finite Element Embedded Language in C++"' and is a unified framework for finite and spectral Galerkin methods in 1D, 2D and 3D to solve partial differential equations \cite{prud2012feel++}. It was created in 2005 and is still actively maintained with daily commits and the last release version from February, 2015.
+  One main aspect of Feel++ is to have syntax, semantics and pragmatics close to the mathematics. It allows creation of versatile mathematical kernels for testing and comparing different techniques and methods in solving problems. A second aim is to have a small library that is well manageable but makes use wherever possible of established libraries, for example to solve linear systems.
+  It interfaces seamlessly with MPI simplifying the work's program parallelization. Different mesh file formats are available for import, like the GMSH format and a collection of different finite element types are supported.
   It is currently used in projects at Cemosis (Center for Modeling and Simulation in Strasbourg, France) including fluid structure interactions, high field magnets simulation and optical tomography \cite{feelpp}.
 
-
+%%%%%%%%%%%%%%%%%%%%%% KORREKTUR-GRENZE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   \subsubsection{OOFEM}\cite{oofem}
   The "`Object Oriented Finite Element Method"' framework is an multi-physics finite element code with object oriented architecture \cite{patzak2001design}. The aim of is to provide an efficient and robust tool for FEM computations as well as to offer highly modular and extensible environment for development \cite{oofem}; extensible in terms of new element types, boundary conditions or numerical algorithms that can be created by the user. OOFEM focuses on efficient and robust solution to mechanical, transport and fluid problems providing corresponding modules for it. It is written in C++ with focus on high portability between platforms and interfaces various external software libraries like PETSc, ParMETIS, and ParaView. The last stable release were published on February, 2014 but it is still actively developed. The framework is used in several publications \cite{oofemPubs}.
