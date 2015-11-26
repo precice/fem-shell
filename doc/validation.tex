@@ -59,17 +59,17 @@ In the scope of this thesis a program was developed that implements flat shell e
    \centering
    \begin{tabular}{c|c|C{2.5cm}|C{2.5cm}|c}
    \textbf{Node} & \textbf{Displacement} & \textbf{Results from program$^{(a)}$} & \textbf{Results from SAP2000$^{(b)}$} & \textbf{Difference (\%)}\\\hline\hline
-   \multirow{2}{*}{22} & $u_x$ & $-0.0255988$ & $-0.025605$ & $0.024\%^{(b)}$\\
+   \multirow{2}{*}{22} & $u_x$ & $-0.0255988$ & $-0.025605$ & $0.024\%^{(b)}$\\\cline{2-5}
                        & $u_y$ & $ 0.0629549$ & $ 0.062971$ & $0.026\%^{(b)}$\\\hline
-   \multirow{2}{*}{26} & $u_x$ & $-0.0342621$ & $-0.034271$ & $0.027\%^{(b)}$\\
+   \multirow{2}{*}{26} & $u_x$ & $-0.0342621$ & $-0.034271$ & $0.027\%^{(b)}$\\\cline{2-5}
                        & $u_y$ & $ 0.1944070$ & $ 0.194456$ & $0.025\%^{(b)}$\\\hline\hline
-   \multirow{2}{*}{$\boxslash$ 22}     & $u_x$ & $-0.0243863$ & - & $4.97\%^{(a)}$\\
+   \multirow{2}{*}{$\boxslash$ 22}     & $u_x$ & $-0.0243863$ & - & $4.97\%^{(a)}$\\\cline{2-5}
                                          & $u_y$ & $ 0.0552195$ & - & $14.01\%^{(a)}$\\\hline
-   \multirow{2}{*}{$\boxslash$ 26}     & $u_x$ & $-0.0328891$ & - & $4.17\%^{(a)}$\\
+   \multirow{2}{*}{$\boxslash$ 26}     & $u_x$ & $-0.0328891$ & - & $4.17\%^{(a)}$\\\cline{2-5}
                                          & $u_y$ & $ 0.1829420$ & - & $6.27\%^{(a)}$\\\hline\hline
-   \multirow{2}{*}{$\boxbackslash$ 22} & $u_x$ & $-0.0235617$ & - & $8.65\%^{(a)}$\\
+   \multirow{2}{*}{$\boxbackslash$ 22} & $u_x$ & $-0.0235617$ & - & $8.65\%^{(a)}$\\\cline{2-5}
                                          & $u_y$ & $ 0.0440028$ & - & $43.07\%^{(a)}$\\\hline
-   \multirow{2}{*}{$\boxbackslash$ 26} & $u_x$ & $-0.0322955$ & - & $6.09\%^{(a)}$\\
+   \multirow{2}{*}{$\boxbackslash$ 26} & $u_x$ & $-0.0322955$ & - & $6.09\%^{(a)}$\\\cline{2-5}
                                          & $u_y$ & $ 0.1564130$ & - & $24.29\%^{(a)}$\\\hline
    \end{tabular}
    \caption{Displacements and deviations for Test A}
@@ -130,9 +130,9 @@ In the scope of this thesis a program was developed that implements flat shell e
    \centering
     \begin{tabular}{c|c|C{2.5cm}|C{2.5cm}|c}
     \textbf{Node} & \textbf{Displacement} & \textbf{Results from program} & \textbf{Results from SAP-2000} & \textbf{Difference (\%)}\\\hline\hline
-    \multirow{2}{*}{22} & $u_x$ & $-0.0427728$ & $-0.042774$ & $0.028\%$\\
+    \multirow{2}{*}{22} & $u_x$ & $-0.0427728$ & $-0.042774$ & $0.028\%$\\\cline{2-5}
                         & $u_y$ & $ 0.1012620$ & $ 0.101265$ & $0.030\%$\\\hline
-    \multirow{2}{*}{26} & $u_x$ & $-0.0570728$ & $-0.057074$ & $0.021\%$\\
+    \multirow{2}{*}{26} & $u_x$ & $-0.0570728$ & $-0.057074$ & $0.021\%$\\\cline{2-5}
                         & $u_y$ & $ 0.3160560$ & $ 0.316064$ & $0.025\%$\\\hline
     \end{tabular}
    \caption{Displacements and deviations for Test B}
@@ -439,7 +439,7 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
     CON-configuration: A concentrated load of $4\times 10^{-4}$ is applied to the center node of the plate. For the different subdivision level, that is in increasing order: Node 4, 12, 40, 144, 544 and 2112.
    \end{itemize}
    
-   \paragraph{Results:} For the analytical solution to these problems one can use equation \ref{eq:test-WC*q} for the uniform loadings and \ref{eq:test-WC*P} for the concentrated loadings, that is:
+   \paragraph{Results:} For the analytical solution to these problems one can use equation \eqref{eq:test-WC*q} for the uniform loadings and \eqref{eq:test-WC*P} for the concentrated loadings, that is:
    \begin{equation*}
    D = \frac{E t^3}{12 \left( 1 - \nu^2 \right)} = 1.6
    \end{equation*}
@@ -514,80 +514,22 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
   \begin{table}[htbp]
     \centering
     \begin{tabular}{C{2.5cm}|c|c|c||c|c|c||c|c|c}
-    \small\textbf{No. processes} & \multicolumn{3}{c||}{\small\textbf{Solver time (s)}} & \multicolumn{3}{c||}{\small\textbf{Assembly time (s)}} & \multicolumn{3}{c}{\small\textbf{Overall time (s)}}\\
+    \small\textbf{No. processes} & \multicolumn{3}{c||}{\small\textbf{Assembly time (s)}} & \multicolumn{3}{c||}{\small\textbf{Solver time (s)}} & \multicolumn{3}{c}{\small\textbf{Overall time (s)}}\\
     & min & avg & max & min & avg & max & min & avg & max\\\hline\hline
     \multicolumn{10}{l}{Tri-3 element}\\\hline
-   1 & $49.35$ & $49.78$ & $50.96$ & $1.93$ & $1.97$ & $2.09$ & $51.57$ & $52.52$ & $53.61$\\\hline
-   2 & $35.65$ & $36.48$ & $37.36$ & $0.98$ & $0.98$ & $0.99$ & $38.39$ & $39.24$ & $40.14$\\\hline
-   3 & $40.47$ & $41.13$ & $41.57$ & $1.02$ & $1.04$ & $1.05$ & $43.67$ & $44.33$ & $44.23$\\\hline
-   4 & $33.31$ & $34.29$ & $34.93$ & $0.79$ & $0.80$ & $0.82$ & $36.27$ & $37.26$ & $37.90$\\\hline\hline
+   1 & $1.93$ & $1.97$ & $2.09$ & $49.35$ & $49.78$ & $50.96$ & $51.57$ & $52.52$ & $53.61$\\\hline
+   2 & $0.98$ & $0.98$ & $0.99$ & $35.65$ & $36.48$ & $37.36$ & $38.39$ & $39.24$ & $40.14$\\\hline
+   3 & $1.02$ & $1.04$ & $1.05$ & $40.47$ & $41.13$ & $41.57$ & $43.67$ & $44.33$ & $44.23$\\\hline
+   4 & $0.79$ & $0.80$ & $0.82$ & $33.31$ & $34.29$ & $34.93$ & $36.27$ & $37.26$ & $37.90$\\\hline\hline
    \multicolumn{10}{l}{Quad-4 element}\\\hline
-   1 & $31.88$ & $32.25$ & $33.29$ & $1.99$ & $2.01$ & $2.04$ & $34.43$ & $34.83$ & $35.94$\\\hline
-   2 & $23.67$ & $24.11$ & $24.75$ & $1.03$ & $1.03$ & $1.03$ & $26.21$ & $26.65$ & $27.28$\\\hline
-   3 & $26.05$ & $26.59$ & $26.95$ & $1.01$ & $1.08$ & $1.09$ & $28.79$ & $29.36$ & $29.88$\\\hline
-   4 & $21.53$ & $22.12$ & $23.05$ & $0.83$ & $0.84$ & $0.85$ & $24.14$ & $24.73$ & $25.66$\\\hline
+   1 & $1.99$ & $2.01$ & $2.04$ & $31.88$ & $32.25$ & $33.29$ & $34.43$ & $34.83$ & $35.94$\\\hline
+   2 & $1.03$ & $1.03$ & $1.03$ & $23.67$ & $24.11$ & $24.75$ & $26.21$ & $26.65$ & $27.28$\\\hline
+   3 & $1.01$ & $1.08$ & $1.09$ & $26.05$ & $26.59$ & $26.95$ & $28.79$ & $29.36$ & $29.88$\\\hline
+   4 & $0.83$ & $0.84$ & $0.85$ & $21.53$ & $22.12$ & $23.05$ & $24.14$ & $24.73$ & $25.66$\\\hline
     \end{tabular}
     \caption{Time measurements for Test G}
     \label{tab:testG}
    \end{table}
-   
-   \begin{figure}[htbp]
-   	\centering
-   	\begin{tikzpicture}
-   	\begin{axis}[xlabel=No. processes,
-   	ylabel=Time (s),
-   	xtick={1,2,3,4},
-   	ytick={50,45,40,35,30,25,20},
-   	grid=major,
-   	legend pos=outer north east]
-   	\addplot[mark=o,loosely dashdotted,gray,mark options={solid}] plot coordinates {
-   		(1,49.35)
-   		(2,35.65)
-   		(3,40.47)
-   		(4,33.31)
-   	};  
-   	\addlegendentry{Tri-3 min}
-   	\addplot[mark=o,dotted,gray,mark options={solid}] plot coordinates {
-   		(1,50.96)
-   		(2,37.36)
-   		(3,41.57)
-   		(4,34.93)
-   	};  
-   	\addlegendentry{Tri-3 max}
-   	\addplot[mark=o,black] plot coordinates {
-   		(1,49.78)
-   		(2,36.48)
-   		(3,41.13)
-   		(4,34.29)
-   	};  
-   	\addlegendentry{Tri-3 avg}
-   	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
-   	\addplot[mark=x,loosely dashdotted,gray,mark options={scale=1.5,solid}] plot coordinates {
-   		(1,31.88)
-   		(2,23.67)
-   		(3,26.05)
-   		(4,21.53)
-   	};
-   	\addlegendentry{Quad-4 min}
-   	\addplot[mark=x,dotted,gray,mark options={scale=1.5,solid}] plot coordinates {
-   		(1,33.29)
-   		(2,24.75)
-   		(3,26.95)
-   		(4,23.05)
-   	};
-   	\addlegendentry{Quad-4 max}
-   	\addplot[mark=x,black,mark options={scale=1.5}] plot coordinates {
-   		(1,32.25)
-   		(2,24.11)
-   		(3,26.59)
-   		(4,22.12)
-   	};
-   	\addlegendentry{Quad-4 avg}
-   	\end{axis}
-   	\end{tikzpicture}
-   	\caption{Solver Times}
-   	\label{fig:solver-times}
-   \end{figure}
    
    \begin{figure}[htbp]
    	\centering
@@ -645,6 +587,64 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
    	\end{tikzpicture}
    	\caption{Assembly Times}
    	\label{fig:assembly-times}
+   \end{figure}
+   
+   \begin{figure}[htbp]
+   	\centering
+   	\begin{tikzpicture}
+   	\begin{axis}[xlabel=No. processes,
+   	ylabel=Time (s),
+   	xtick={1,2,3,4},
+   	ytick={50,45,40,35,30,25,20},
+   	grid=major,
+   	legend pos=outer north east]
+   	\addplot[mark=o,loosely dashdotted,gray,mark options={solid}] plot coordinates {
+   		(1,49.35)
+   		(2,35.65)
+   		(3,40.47)
+   		(4,33.31)
+   	};  
+   	\addlegendentry{Tri-3 min}
+   	\addplot[mark=o,dotted,gray,mark options={solid}] plot coordinates {
+   		(1,50.96)
+   		(2,37.36)
+   		(3,41.57)
+   		(4,34.93)
+   	};  
+   	\addlegendentry{Tri-3 max}
+   	\addplot[mark=o,black] plot coordinates {
+   		(1,49.78)
+   		(2,36.48)
+   		(3,41.13)
+   		(4,34.29)
+   	};  
+   	\addlegendentry{Tri-3 avg}
+   	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+   	\addplot[mark=x,loosely dashdotted,gray,mark options={scale=1.5,solid}] plot coordinates {
+   		(1,31.88)
+   		(2,23.67)
+   		(3,26.05)
+   		(4,21.53)
+   	};
+   	\addlegendentry{Quad-4 min}
+   	\addplot[mark=x,dotted,gray,mark options={scale=1.5,solid}] plot coordinates {
+   		(1,33.29)
+   		(2,24.75)
+   		(3,26.95)
+   		(4,23.05)
+   	};
+   	\addlegendentry{Quad-4 max}
+   	\addplot[mark=x,black,mark options={scale=1.5}] plot coordinates {
+   		(1,32.25)
+   		(2,24.11)
+   		(3,26.59)
+   		(4,22.12)
+   	};
+   	\addlegendentry{Quad-4 avg}
+   	\end{axis}
+   	\end{tikzpicture}
+   	\caption{Solver Times}
+   	\label{fig:solver-times}
    \end{figure}
    
    \begin{figure}[htbp]

@@ -1,189 +1,236 @@
-\begin{thebibliography}{10}
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{CMPW02}
 
-\bibitem{prud2012feel++}
-C.~Prud’Homme, V.~Chabannes, V.~Doyeux, M.~Ismail, A.~Samak{\'e}, and
-  G.~Pena, ``Feel++: A computational framework for galerkin methods and
-  advanced numerical methods,'' in {\em ESAIM: Proceedings}, vol.~38,
-  pp.~429--455, EDP Sciences, 2012.
+\bibitem[BAA{\etalchar{+}}15]{petsc-user-ref}
+Satish Balay, Shrirang Abhyankar, Mark~F. Adams, Jed Brown, Peter Brune, Kris
+  Buschelman, Lisandro Dalcin, Victor Eijkhout, William~D. Gropp, Dinesh
+  Kaushik, Matthew~G. Knepley, Lois Curfman~McInnes, Karl Rupp, Barry~F. Smith,
+  Stefano Zampini, and Hong Zhang.
+\newblock {PETS}c users manual.
+\newblock Technical Report ANL-95/11 - Revision 3.6, Argonne National
+  Laboratory, 2015.
 
-\bibitem{feelpp}
-F.~Consortium, ``Feel++ - finite element embedded library in c++.''
-\newblock \url{http://www.feelpp.org}.
+\bibitem[BBH80]{batoz1980study}
+Jean-Louis Batoz, Klaus-J{\"U}Rgen Bathe, and Lee-Wing Ho.
+\newblock A study of three-node triangular plate bending elements.
+\newblock {\em International Journal for Numerical Methods in Engineering},
+  15(12):1771--1812, 1980.
 
-\bibitem{oofem}
-B.~Patz{\'{a}}k, ``Oofem project home page,'' 2009.
-\newblock \url{http://www.oofem.org}.
+\bibitem[BF85]{bergan1985triangular}
+PG~Bergan and CA~Felippa.
+\newblock A triangular membrane element with rotational degrees of freedom.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  50(1):25--69, 1985.
 
-\bibitem{patzak2001design}
-B.~Patz{\'a}k and Z.~Bittnar, ``Design of object oriented finite element
-  code,'' {\em Advances in Engineering Software}, vol.~32, no.~10,
-  pp.~759--767, 2001.
-
-\bibitem{oofemPubs}
-B.~Patz{\'{a}}k, ``publications [oofem wiki].''
-\newblock \url{http://www.oofem.org/wiki/doku.php?id=publications}.
-
-\bibitem{getfemppMPI}
-L.~Saavedra, J.~Pommier, and Y.~Renard, ``Mpi parallelization of getfem++ -
-  getfem++.''
-\newblock
-  \url{http://download.gna.org/getfem/html/homepage/userdoc/parallel.html}.
-
-\bibitem{icetools}
-A.~H. Jarosch, ``icetools: a numerical ice flow model download.''
-\newblock \url{http://sourceforge.net/projects/icetools/}.
-
-\bibitem{echempp}
-M.~Bogdan, K.~Ludwig, E.~Sapozhnikova, and B.~Speiser, ``Echem++ - a problem
-  solving environment for electrochemistry.''
+\bibitem[BLSS]{echempp}
+Martin Bogdan, Kai Ludwig, Elena Sapozhnikova, and Bernd Speiser.
+\newblock Echem++ - a problem solving environment for electrochemistry.
 \newblock
   \url{http://www.echem.uni-tuebingen.de/echem/software/EChem++/echem++.shtml/}.
 
-\bibitem{simnibs}
-A.~Thielscher, ``free software package for the simulation of non-invasive brain
-  stimulation.''
-\newblock \url{http://simnibs.de/}.
-
-\bibitem{getfempp}
-J.~Pommier and Y.~Renard, ``Getfem++ - an open source library based on
-  collaborative development.''
-\newblock \url{http://download.gna.org/getfem/html/homepage/index.html}.
-
-\bibitem{mfem}
-``{MFEM}: Modular finite element methods.'' \url{http://www.mfem.org}.
-
-\bibitem{mfemPubs}
-``{MFEM} - finite element discretization library.''
-\newblock \url{http://mfem.org/publications/}.
-
-\bibitem{kirk2006libmesh}
-B.~S. Kirk, J.~W. Peterson, R.~H. Stogner, and G.~F. Carey,
-  ``{\texttt{libMesh}: A C++ Library for Parallel Adaptive Mesh
-  Refinement/Coarsening Simulations},'' {\em Engineering with Computers},
-  vol.~22, no.~3--4, pp.~237--254, 2006.
-\newblock \url{http://dx.doi.org/10.1007/s00366-006-0049-3}.
-
-\bibitem{libmeshPubs}
-``libmesh publications listing.''
-\newblock \url{http://libmesh.github.io/publications.html}.
-
-\bibitem{cook2002concepts}
-R.~D. Cook, D.~S. Malkus, M.~E. Plesha, and R.~J. Witt, {\em Concepts and
-  Applications of Finite Element Analysis}.
-\newblock J. Wiley, 2002.
-
-\bibitem{steinke2005finite}
-P.~Steinke, {\em Finite-Elemente-Methode: Rechnergest{\"u}tzte Einf{\"u}hrung}.
-\newblock Springer-Verlag, 2015.
-
-\bibitem{zienkiewicz2000finite}
-O.~C. Zienkiewicz and R.~L. Taylor, {\em The finite element method: Solid
-  mechanics}, vol.~2.
-\newblock Butterworth-heinemann, 2000.
-
-\bibitem{braess2007finite}
-D.~Braess, {\em Finite elements: Theory, fast solvers, and applications in
-  solid mechanics}.
+\bibitem[Bra07]{braess2007finite}
+Dietrich Braess.
+\newblock {\em Finite elements: Theory, fast solvers, and applications in solid
+  mechanics}.
 \newblock Cambridge University Press, 2007.
 
-\bibitem{bergan1985triangular}
-P.~Bergan and C.~Felippa, ``A triangular membrane element with rotational
-  degrees of freedom,'' {\em Computer Methods in Applied Mechanics and
-  Engineering}, vol.~50, no.~1, pp.~25--69, 1985.
+\bibitem[BT82]{batoz1982evaluation}
+Jean-Louis Batoz and Mabrouk~Ben Tahar.
+\newblock Evaluation of a new quadrilateral thin plate bending element.
+\newblock {\em International Journal for Numerical Methods in Engineering},
+  18(11):1655--1677, 1982.
 
-\bibitem{klein2013fem}
-B.~Klein, {\em {FEM}: Grundlagen und Anwendungen der Finite-Elemente-Methode}.
-\newblock Springer-Verlag, 2013.
+\bibitem[bun]{bungartz2015fully}
+pre{CICE} - a fully parallel library for multi-physics surface coupling.
 
-\bibitem{batoz1980study}
-J.-L. Batoz, K.-J. Bathe, and L.-W. Ho, ``A study of three-node triangular
-  plate bending elements,'' {\em International Journal for Numerical Methods in
-  Engineering}, vol.~15, no.~12, pp.~1771--1812, 1980.
+\bibitem[CMPW02]{cook2002concepts}
+Robert~D. Cook, David~S. Malkus, Michael~E. Plesha, and Robert~J. Witt.
+\newblock {\em Concepts and Applications of Finite Element Analysis}.
+\newblock J. Wiley, 2002.
 
-\bibitem{tocher1963analysis}
-J.~L. Tocher, {\em Analysis of plate bending using triangular elements}.
-\newblock PhD thesis, University of California, Berkeley, 1963.
+\bibitem[Con]{feelpp}
+Feel++ Consortium.
+\newblock Feel++ - finite element embedded library in c++.
+\newblock \url{http://www.feelpp.org}.
 
-\bibitem{specht1988modified}
-B.~Specht, ``Modified shape functions for the three-node plate bending element
-  passing the patch test,'' {\em International Journal for Numerical Methods in
-  Engineering}, vol.~26, no.~3, pp.~705--715, 1988.
-
-\bibitem{batoz1982evaluation}
-J.-L. Batoz and M.~B. Tahar, ``Evaluation of a new quadrilateral thin plate
-  bending element,'' {\em International Journal for Numerical Methods in
-  Engineering}, vol.~18, no.~11, pp.~1655--1677, 1982.
-
-\bibitem{werkle1995finite}
-H.~Werkle, {\em Finite Elemente in der Baustatik}.
-\newblock Springer, 1995.
-
-\bibitem{kansara2004development}
-K.~Kansara, {\em Development of Membrane, Plate and Flat Shell Elements in
-  Java}.
-\newblock PhD thesis, Virginia Tech, 2004.
-
-\bibitem{kirk2007adaptive}
-B.~S. Kirk, {\em Adaptive Finite Element Simulation of Flow and Transport
-  Applications on Parallel Computers}.
-\newblock PhD thesis, Austin, TX, USA, 2007.
-
-\bibitem{kirk2013case}
-B.~S. Kirk, J.~W. Peterson, and R.~H. Stogner, ``The {libMesh} finite element
-  library: {A} case for object-oriented high-performance computing,'' in {\em
-  {PRACE Summer School 2013 - Frameworks for Scientific Computing on
-  Supercomputers; Ostrava, Czech Republic}}, June~17--21, 2013.
-\newblock \url{http://ntrs.nasa.gov/search.jsp?R=20130013759}.
-
-\bibitem{karypis1998fast}
-G.~Karypis and V.~Kumar, ``A fast and high quality multilevel scheme for
-  partitioning irregular graphs,'' {\em SIAM Journal on scientific Computing},
-  vol.~20, no.~1, pp.~359--392, 1998.
-
-\bibitem{petsc2015url}
-``{PETS}c web page.''
-\newblock \url{http://www.mcs.anl.gov/petsc}.
-
-\bibitem{laspack2015url}
-``{LAS}pack download page.''
-\newblock \url{http://www.netlib.org/linalg/}.
-
-\bibitem{petsc-user-ref}
-S.~Balay, S.~Abhyankar, M.~F. Adams, J.~Brown, P.~Brune, K.~Buschelman,
-  L.~Dalcin, V.~Eijkhout, W.~D. Gropp, D.~Kaushik, M.~G. Knepley,
-  L.~Curfman~McInnes, K.~Rupp, B.~F. Smith, S.~Zampini, and H.~Zhang, ``{PETS}c
-  users manual,'' Tech. Rep. ANL-95/11 - Revision 3.6, Argonne National
-  Laboratory, 2015.
-
-\bibitem{gmsh-manual}
-``Gmsh manual.''
-\newblock \url{http://geuz.org/gmsh/doc/texinfo/gmsh.html}.
-
-\bibitem{gatzhammer2015efficient}
-B.~Gatzhammer, {\em Efficient and flexible partitioned simulation of
-  fluid-structure interactions}.
+\bibitem[Gat15]{gatzhammer2015efficient}
+Bernhard Gatzhammer.
+\newblock {\em Efficient and flexible partitioned simulation of fluid-structure
+  interactions}.
 \newblock Verlag Dr. Hut, 2015.
 
-\bibitem{bungartz2015fully}
-``pre{CICE} - a fully parallel library for multi-physics surface coupling,''
+\bibitem[gms]{gmsh-manual}
+Gmsh manual.
+\newblock \url{http://geuz.org/gmsh/doc/texinfo/gmsh.html}.
 
-\bibitem{macneal1985proposed}
-R.~H. Macneal and R.~L. Harder, ``A proposed standard set of problems to test
-  finite element accuracy,'' {\em Finite elements in Analysis and Design},
-  vol.~1, no.~1, pp.~3--20, 1985.
+\bibitem[Jar]{icetools}
+Alexander~H. Jarosch.
+\newblock icetools: a numerical ice flow model download.
+\newblock \url{http://sourceforge.net/projects/icetools/}.
 
-\bibitem{wilson1996three}
-E.~L. Wilson, {\em Three-dimensional static and dynamic analysis of
-  structures}.
-\newblock Computers and Structures Inc., Berkeley, California, 1996.
-
-\bibitem{jin1994analysis}
-L.~Jin, {\em Analysis and evaluation of a shell finite element with drilling
+\bibitem[Jin94]{jin1994analysis}
+Lanheng Jin.
+\newblock {\em Analysis and evaluation of a shell finite element with drilling
   degree of freedom}.
 \newblock PhD thesis, 1994.
 
-\bibitem{sap-2000}
-``{SAP}2000 - integrated finite element analysis and design of structures,''
+\bibitem[Kan04]{kansara2004development}
+Kaushalkumar Kansara.
+\newblock {\em Development of Membrane, Plate and Flat Shell Elements in Java}.
+\newblock PhD thesis, Virginia Tech, 2004.
+
+\bibitem[Kir07]{kirk2007adaptive}
+Benjamin~Shelton Kirk.
+\newblock {\em Adaptive Finite Element Simulation of Flow and Transport
+  Applications on Parallel Computers}.
+\newblock PhD thesis, Austin, TX, USA, 2007.
+
+\bibitem[KK98]{karypis1998fast}
+George Karypis and Vipin Kumar.
+\newblock A fast and high quality multilevel scheme for partitioning irregular
+  graphs.
+\newblock {\em SIAM Journal on scientific Computing}, 20(1):359--392, 1998.
+
+\bibitem[Kle13]{klein2013fem}
+Bernd Klein.
+\newblock {\em {FEM}: Grundlagen und Anwendungen der Finite-Elemente-Methode}.
+\newblock Springer-Verlag, 2013.
+
+\bibitem[KPS13]{kirk2013case}
+B.~S. Kirk, J.~W. Peterson, and R.~H. Stogner.
+\newblock The {libMesh} finite element library: {A} case for object-oriented
+  high-performance computing.
+\newblock In {\em {PRACE Summer School 2013 - Frameworks for Scientific
+  Computing on Supercomputers; Ostrava, Czech Republic}}, June~17--21, 2013.
+\newblock \url{http://ntrs.nasa.gov/search.jsp?R=20130013759}.
+
+\bibitem[KPSC06]{kirk2006libmesh}
+B.~S. Kirk, J.~W. Peterson, R.~H. Stogner, and G.~F. Carey.
+\newblock {\texttt{libMesh}: A C++ Library for Parallel Adaptive Mesh
+  Refinement/Coarsening Simulations}.
+\newblock {\em Engineering with Computers}, 22(3--4):237--254, 2006.
+\newblock \url{http://dx.doi.org/10.1007/s00366-006-0049-3}.
+
+\bibitem[las]{laspack2015url}
+{LAS}pack download page.
+\newblock \url{http://www.netlib.org/linalg/}.
+
+\bibitem[LCY{\etalchar{+}}06]{lohner2006extending}
+Rainald L{\"o}hner, Juan~R Cebral, Chi Yang, Joseph~D Baum, Eric~L Mestreau,
+  and Orlando Soto.
+\newblock Extending the range and applicability of the loose coupling approach
+  for fsi simulations.
+\newblock In {\em Fluid-structure interaction}, pages 82--100. Springer, 2006.
+
+\bibitem[lib]{libmeshPubs}
+libmesh publications listing.
+\newblock \url{http://libmesh.github.io/publications.html}.
+
+\bibitem[LKBD09]{link20092d}
+Gerhard Link, M~Kaltenbacher, Michael Breuer, and M~D{\"o}llinger.
+\newblock A 2d finite-element scheme for fluid--solid--acoustic interactions
+  and its application to human phonation.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  198(41):3321--3334, 2009.
+
+\bibitem[mfea]{mfemPubs}
+{MFEM} - finite element discretization library.
+\newblock \url{http://mfem.org/publications/}.
+
+\bibitem[mfeb]{mfem}
+{MFEM}: Modular finite element methods.
+\newblock \url{http://www.mfem.org}.
+
+\bibitem[MH85]{macneal1985proposed}
+Richard~H Macneal and Robert~L Harder.
+\newblock A proposed standard set of problems to test finite element accuracy.
+\newblock {\em Finite elements in Analysis and Design}, 1(1):3--20, 1985.
+
+\bibitem[Pat]{oofemPubs}
+Bo{\v{r}}ek Patz{\'{a}}k.
+\newblock publications [oofem wiki].
+\newblock \url{http://www.oofem.org/wiki/doku.php?id=publications}.
+
+\bibitem[Pat09]{oofem}
+Bo{\v{r}}ek Patz{\'{a}}k.
+\newblock Oofem project home page, 2009.
+\newblock \url{http://www.oofem.org}.
+
+\bibitem[PB01]{patzak2001design}
+B.~Patz{\'a}k and Z.~Bittnar.
+\newblock Design of object oriented finite element code.
+\newblock {\em Advances in Engineering Software}, 32(10):759--767, 2001.
+
+\bibitem[PCD{\etalchar{+}}12]{prud2012feel++}
+Christophe Prud’Homme, Vincent Chabannes, Vincent Doyeux, Mourad Ismail,
+  Abdoulaye Samak{\'e}, and Gon{\c{c}}alo Pena.
+\newblock Feel++: A computational framework for galerkin methods and advanced
+  numerical methods.
+\newblock In {\em ESAIM: Proceedings}, volume~38, pages 429--455. EDP Sciences,
+  2012.
+
+\bibitem[pet]{petsc2015url}
+{PETS}c web page.
+\newblock \url{http://www.mcs.anl.gov/petsc}.
+
+\bibitem[PR]{getfempp}
+Julien Pommier and Yves Renard.
+\newblock Getfem++ - an open source library based on collaborative development.
+\newblock \url{http://download.gna.org/getfem/html/homepage/index.html}.
+
+\bibitem[sap00]{sap-2000}
+{\em {SAP}2000 - Integrated Finite Element Analysis and Design of Structures},
   2000.
+
+\bibitem[SMU{\etalchar{+}}10]{schafer2010fluid}
+Frank Sch{\"a}fer, Stefan M{\"u}ller, Thomas Uffinger, Stefan Becker, Jens
+  Grabinger, and Manfred Kaltenbacher.
+\newblock Fluid-structure-acoustic interaction of the flow past a thin flexible
+  structure.
+\newblock {\em AIAA journal}, 48(4):738--748, 2010.
+
+\bibitem[Spe88]{specht1988modified}
+Bernhard Specht.
+\newblock Modified shape functions for the three-node plate bending element
+  passing the patch test.
+\newblock {\em International Journal for Numerical Methods in Engineering},
+  26(3):705--715, 1988.
+
+\bibitem[SPR]{getfemppMPI}
+Luis Saavedra, Julien Pommier, and Yves Renard.
+\newblock Mpi parallelization of getfem++ - getfem++.
+\newblock
+  \url{http://download.gna.org/getfem/html/homepage/userdoc/parallel.html}.
+
+\bibitem[Ste15]{steinke2005finite}
+Peter Steinke.
+\newblock {\em Finite-Elemente-Methode: Rechnergest{\"u}tzte Einf{\"u}hrung}.
+\newblock Springer-Verlag, 2015.
+
+\bibitem[Thi]{simnibs}
+Axel Thielscher.
+\newblock free software package for the simulation of non-invasive brain
+  stimulation.
+\newblock \url{http://simnibs.de/}.
+
+\bibitem[Toc63]{tocher1963analysis}
+James~Lionel Tocher.
+\newblock {\em Analysis of plate bending using triangular elements}.
+\newblock PhD thesis, University of California, Berkeley, 1963.
+
+\bibitem[Wer95]{werkle1995finite}
+Horst Werkle.
+\newblock {\em Finite Elemente in der Baustatik}.
+\newblock Springer, 1995.
+
+\bibitem[Wil96]{wilson1996three}
+Edward~L Wilson.
+\newblock {\em Three-dimensional static and dynamic analysis of structures}.
+\newblock Computers and Structures Inc., Berkeley, California, 1996.
+
+\bibitem[ZT00]{zienkiewicz2000finite}
+Olgierd~Cecil Zienkiewicz and Robert~Leroy Taylor.
+\newblock {\em The finite element method: Solid mechanics}, volume~2.
+\newblock Butterworth-heinemann, 2000.
 
 \end{thebibliography}

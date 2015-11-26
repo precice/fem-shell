@@ -13,39 +13,39 @@
  f_x & f_y & f_z
  \end{pmatrix}^T \text{external\ force\ vector}
  \end{align}
- The strains and stresses can either be described in form of tensors $\underline{\epsilon}$ and $\underline{\sigma}$, or as vectors $\vec{\epsilon}$ and $\vec{\sigma}$:
+ The strains and stresses can either be described in form of tensors $\underline{\varepsilon}$ and $\underline{\sigma}$, or as vectors $\vec{\varepsilon}$ and $\vec{\sigma}$:
  \begin{align}
- \underline{\epsilon} &= \begin{pmatrix}
- \epsilon_{xx} & \epsilon_{xy} & \epsilon_{xz} \\
- \epsilon_{yx} & \epsilon_{yy} & \epsilon_{yz} \\
- \epsilon_{zx} & \epsilon_{zy} & \epsilon_{zz} \end{pmatrix}\\
+ \underline{\varepsilon} &= \begin{pmatrix}
+ \varepsilon_{xx} & \varepsilon_{xy} & \varepsilon_{xz} \\
+ \varepsilon_{yx} & \varepsilon_{yy} & \varepsilon_{yz} \\
+ \varepsilon_{zx} & \varepsilon_{zy} & \varepsilon_{zz} \end{pmatrix}\\
  \underline{\sigma} &= \begin{pmatrix}
  \sigma_{xx} & \sigma_{xy} & \sigma_{xz} \\
  \sigma_{yx} & \sigma_{yy} & \sigma_{yz} \\
  \sigma_{zx} & \sigma_{zy} & \sigma_{zz} \end{pmatrix}
  \end{align}
  \begin{align}
- \vec{\epsilon} &= \begin{pmatrix}
- \epsilon_{xx} & \epsilon_{yy} & \epsilon_{zz} & 2\epsilon_{xy} & 2\epsilon_{yz} & 2\epsilon_{zx} \end{pmatrix}^T\\
+ \vec{\varepsilon} &= \begin{pmatrix}
+ \varepsilon_{xx} & \varepsilon_{yy} & \varepsilon_{zz} & 2\varepsilon_{xy} & 2\varepsilon_{yz} & 2\varepsilon_{zx} \end{pmatrix}^T\\
  \vec{\sigma} &= \begin{pmatrix}
  \sigma_{xx} & \sigma_{yy} & \sigma_{zz} & \sigma_{xy} & \sigma_{yz} & \sigma_{zx} \end{pmatrix}^T
  \end{align}
- In the case of isotropic materials the strains and stresses are symmetrical, i.e. $\epsilon_{xy} = \epsilon_{yx}, \epsilon_{xz} = \epsilon_{zx}, \epsilon_{yz} = \epsilon_{zy}$ and $\sigma_{xy} = \sigma_{yx}, \sigma_{xz} = \sigma_{zx}, \sigma_{yz} = \sigma_{zy}$. As stated in \cite{steinke2005finite} the relation between displacements and strains is as follows:
+ In the case of isotropic materials the strains and stresses are symmetrical, i.e. $\varepsilon_{xy} = \varepsilon_{yx}, \varepsilon_{xz} = \varepsilon_{zx}, \varepsilon_{yz} = \varepsilon_{zy}$ and $\sigma_{xy} = \sigma_{yx}, \sigma_{xz} = \sigma_{zx}, \sigma_{yz} = \sigma_{zy}$. As stated in \cite{steinke2005finite} the relation between displacements and strains is as follows:
  \begin{align}\label{eq:displ_strain_relation}
- \underline{\epsilon} &= \frac{1}{2}\left(\nabla\vec{u} + \vec{u}\:\nabla \right) \\
- \vec{\epsilon} &= \underline{L}\vec{u} \nonumber
+ \underline{\varepsilon} &= \frac{1}{2}\left(\nabla\vec{u} + \vec{u}\:\nabla \right) \\
+ \vec{\varepsilon} &= \underline{L}\vec{u} \nonumber
  \end{align}
- Equation \ref{eq:displ_strain_relation} relates the displacement vector field $\vec{u}$ with the strain field $\underline{\epsilon}$, or $\vec{\epsilon}$ respectively. Here, $\underline{L}$ is a differential operator. This strain-displacement relation is also called \textit{kinematic relationship} \cite{steinke2005finite}.
+ Equation \eqref{eq:displ_strain_relation} relates the displacement vector field $\vec{u}$ with the strain field $\underline{\varepsilon}$, or $\vec{\varepsilon}$ respectively. Here, $\underline{L}$ is a differential operator. This strain-displacement relation is also called \textit{kinematic relationship} \cite{steinke2005finite}.
  
- In general initial strains can exist inside the material for example due to temperature changes or shrinkage. Such initial strains are denoted $\vec{\epsilon_0}$ and the stresses will be influenced by the difference between the actual and initial strains. Additionally one could imagine initial residual stresses $\vec{\sigma_0}$ that can be added to the general equation:
+ In general initial strains can exist inside the material for example due to temperature changes or shrinkage. Such initial strains are denoted $\vec{\varepsilon_0}$ and the stresses will be influenced by the difference between the actual and initial strains. Additionally one could imagine initial residual stresses $\vec{\sigma_0}$ that can be added to the general equation:
  \begin{equation}\label{eq:stress-strain-relation}
- \vec{\sigma} = \underline{D}\left(\vec{\epsilon}-\vec{\epsilon_0}\right)+\vec{\sigma_0}
+ \vec{\sigma} = \underline{D}\left(\vec{\varepsilon}-\vec{\varepsilon_0}\right)+\vec{\sigma_0}
  \end{equation}
  where $\underline{D}$ is the material matrix. In the simplest case of linear elasticity with isotropy, $\underline{D}$ only contains two parameters, namely the elastic modulus $E$ (also known as the Young's modulus) and the Poisson's ratio $\nu$. The former one defines the relationship between the stress and strain in a material, the latter one results as the quotient of the fraction of expansion and the fraction of compression for small changes.
  
- In the following the initial conditions are ignored, resulting in the a simpler form of equation \ref{eq:stress-strain-relation}:
+ In the following the initial conditions are ignored, resulting in the a simpler form of equation \eqref{eq:stress-strain-relation}:
  \begin{equation}
- \vec{\sigma} = \underline{D}\ \vec{\epsilon}
+ \vec{\sigma} = \underline{D}\ \vec{\varepsilon}
  \end{equation}
  For the said isotropic case $\underline{D}$ results in \cite{zienkiewicz2000finite}:
  \begin{equation}
@@ -55,6 +55,12 @@
  0 & 0 & \frac{1-\nu}{2}
  \end{pmatrix}
  \end{equation}
+ 
+ The equilibrium conditions as described in \cite{steinke2005finite}, are as follows:
+ \begin{equation}\label{eq:equilibrium-conditions}
+ \underline{L} \vec{\sigma} + \vec{b} = \vec{0}
+ \end{equation}
+ where the vector $\vec{b}$ describes internal volume forces and $\vec{0}$ is the zero vector.
  
  Two different boundary conditions are distinguished: Essential and natural boundary conditions. The first one is geometrically described. An initial displacement $\vec{u^0}$ is impressed on a surface part $\Omega_u$ of the object:
  \begin{equation}
@@ -76,7 +82,15 @@
  \end{pmatrix}
  \end{align}
  
- 
+ In \cite{steinke2005finite} the principle of the total potential for the fundamental equations of linear elasticity is illustrated. Initial point is the weak formulation of the equilibrium conditions \eqref{eq:equilibrium-conditions} for a body $V$:
+ \begin{equation}
+ \int_{V} \left(\underline{L} \vec{\sigma} + \vec{b}\right) \vec{\lambda}\ dV = 0
+ \end{equation}
+ The introduction of Lagrange multipliers $\vec{\lambda}$ leads to a weighting and can be expressed as variation of $\delta \vec{u} = \vec{\lambda}$. The result of the derivation of the above equation is the expression of the total potential $\Pi$:
+ \begin{equation}
+ \Pi = \frac{1}{2} \int_{V} \vec{\sigma}^T \vec{\varepsilon}\ dV - \left(\int_{V}\vec{b}^T \vec{u}\ dV - \int_{\Omega_p} \vec{p^0}^T \vec{u}\ d\Omega_p\right) = \Pi_D - \Pi_e
+ \end{equation}
+ The first term describes the elastic deformation energy $\Pi_D$, the two terms in brackets combine the potential of the external forces $\Pi_e$
  
  \subsection{Plane Element}\label{sec:Shell-Plane}
   Plane elements are characterized by that loads are only apply in the mid-surface directions of an element and all displacements, strains and stresses happen in the mid-surface, too. In this section plane elements are discussed in more detail and two different discretizations, a three-node triangular element and a four-node quadrilateral element, are described.
@@ -134,23 +148,23 @@
   \end{equation}
   The vector for the strain components:
   \begin{equation}
-  \vec{\epsilon}=\begin{pmatrix}
-  \epsilon_{xx} & \epsilon_{yy} & 2\epsilon_{xy}
+  \vec{\varepsilon}=\begin{pmatrix}
+  \varepsilon_{xx} & \varepsilon_{yy} & 2\varepsilon_{xy}
   \end{pmatrix}^T
   \end{equation}
-  Sometimes $2\epsilon_{xy}$ is shortened to $\gamma_{xy}$ \cite{steinke2005finite}.
+  Sometimes $2\varepsilon_{xy}$ is shortened to $\gamma_{xy}$ \cite{steinke2005finite}.
   The vector holding the stress components is similar to that of the strain's vector:
   \begin{equation}
   \vec{\sigma}=\begin{pmatrix}
   \sigma_{xx} & \sigma_{yy} & \sigma_{xy}
   \end{pmatrix}^T
   \end{equation}
-  The kinematic relationship $\vec{\epsilon}=\underline{L}\vec{u}$ (eq.\ \ref{eq:displ_strain_relation}) linking the displacements $\vec{u}$ with the strains $\vec{\epsilon}$ can be written at full length:
+  The kinematic relationship $\vec{\varepsilon}=\underline{L}\vec{u}$ (eq.\ \eqref{eq:displ_strain_relation}) linking the displacements $\vec{u}$ with the strains $\vec{\varepsilon}$ can be written at full length:
   \begin{equation}\label{eq:t3displ-str-rel}
-  \vec{\epsilon} = \begin{pmatrix}
-  \epsilon_{xx} \\
-  \epsilon_{yy} \\
-  2\epsilon_{xy}
+  \vec{\varepsilon} = \begin{pmatrix}
+  \varepsilon_{xx} \\
+  \varepsilon_{yy} \\
+  2\varepsilon_{xy}
   \end{pmatrix} =
   \begin{pmatrix}
   \frac{\partial u}{\partial x} \\
@@ -168,7 +182,7 @@
   \end{pmatrix}
   = \underline{L} \vec{u}
   \end{equation}
-  With the strains known and considering equation \ref{eq:displ_strain_relation} one can calculate the stresses $\vec{\sigma}$:
+  With the strains known and considering equation \eqref{eq:displ_strain_relation} one can calculate the stresses $\vec{\sigma}$:
   \begin{equation}\label{eq:sigma=D*eps}
   \vec{\sigma} = \begin{pmatrix}
   \sigma_{xx} \\
@@ -179,10 +193,10 @@
   \nu & 1 & 0 \\
   0 & 0 & \frac{1-\nu}{2}
   \end{pmatrix} \begin{pmatrix}
-  \epsilon_{xx} \\
-  \epsilon_{yy} \\
-  2\epsilon_{xy}
-  \end{pmatrix} = \underline{D} \vec{\epsilon} = \underline{D}\; \underline{L} \vec{u}
+  \varepsilon_{xx} \\
+  \varepsilon_{yy} \\
+  2\varepsilon_{xy}
+  \end{pmatrix} = \underline{D} \vec{\varepsilon} = \underline{D}\; \underline{L} \vec{u}
   \end{equation}
   %- Randbedingungen: q0 Streckenlast beschreiben, aber angeben, dass sie hier nicht beachtet werden, punktf. Ladungen werden hier benutzt\newline
 
@@ -198,7 +212,7 @@
   
   The total potential of the plane element problem looks as follows \cite{steinke2005finite}:
   \begin{equation}
-  \Pi = \frac{1}{2} \int_{V}\vec{\epsilon}^T\vec{\sigma}dV - \int_{V} \vec{u}^T \vec{b}\ dV - \int_{\Gamma_q}\vec{u}^T \vec{q}\ d\gamma -\vec{u}^T \vec{F}
+  \Pi = \frac{1}{2} \int_{V}\vec{\varepsilon}^T\vec{\sigma}dV - \int_{V} \vec{u}^T \vec{b}\ dV - \int_{\Gamma_q}\vec{u}^T \vec{q}\ d\gamma -\vec{u}^T \vec{F}
   \end{equation}
   The first term describes the elastic strain energy, the last three terms describe the different external forces. The first of the three describes the potential of the volume forces $\vec{b}^T = \rho \begin{pmatrix}
   g_x & g_y
@@ -206,7 +220,7 @@
   
   The external forces are summarized in this work to the last term only. Line loads and volume forces can be converted to nodal load, assuming a linear distribution over the edges and the interior of the element, respectively \cite{steinke2005finite}. Therefore, the total potential of the plane element shrinks to the following:
   \begin{equation}\label{eq:planeFunctional}
-  \Pi = \frac{1}{2} \int_{V}\vec{\epsilon}^T\vec{\sigma}dV - \vec{u}^T \vec{F}
+  \Pi = \frac{1}{2} \int_{V}\vec{\varepsilon}^T\vec{\sigma}dV - \vec{u}^T \vec{F}
   \end{equation}
   
   
@@ -217,7 +231,7 @@
   
   
   \subsubsection{Tri-3 Plane Element}\label{sec:Shell-Plane-Tri}
-  In section \ref{sec:Shell-Plane-ProbDef} the plane element's functional was derived (eq. \ref{eq:planeFunctional}). Now the focus is on the functional's discretization. The constructed finite element will be a three-node triangular element in the following also denoted as \textbf{Tri-3}. Figure \ref{fig:plane_triangulation} shows a general, planar object defined to be placed in the xy-plane. The first discretization step is to divide the object into single triangles approximating the shape of it. This process is called triangulation. Every one of these triangles then represents a finite element with one node at every corner. The finer the triangulation is done the better the object and its boundary are matched by its discrete complement, but also the more finite elements have to be considered in later calculations.
+  In section \ref{sec:Shell-Plane-ProbDef} the plane element's functional was derived (eq. \eqref{eq:planeFunctional}). Now the focus is on the functional's discretization. The constructed finite element will be a three-node triangular element in the following also denoted as \textbf{Tri-3}. Figure \ref{fig:plane_triangulation} shows a general, planar object defined to be placed in the xy-plane. The first discretization step is to divide the object into single triangles approximating the shape of it. This process is called triangulation. Every one of these triangles then represents a finite element with one node at every corner. The finer the triangulation is done the better the object and its boundary are matched by its discrete complement, but also the more finite elements have to be considered in later calculations.
   \begin{figure}[htbp]% Bild von trianguliertem Körper
     	\centering
     	%\includegraphics[width=1.0\linewidth]{figures/plane_triangulation}
@@ -251,7 +265,7 @@
     	\put(10.85,1.05){$7$}
     	\put(13.2,3.4){$8$}
     	\end{picture}
-    	\caption{Subdividing plane object with triangular elements}
+    	\caption{A plane object is partitioned into several triangular elements. This process is called triangulation.}
     	\label{fig:plane_triangulation}
   \end{figure}
     
@@ -297,7 +311,7 @@
 	\put(12.2,3.2){\vector(0,1){1}}
 	\put(12.0,4.3){$F_{y_2}$}
 	\end{picture}
-  	\caption{Three node triangular element with its coordinates, nodal displacements and nodal forces}
+  	\caption{A three-node triangular element is shown with its coordinates projected onto the axes. For the first node its nodal displacements and for the second node its nodal forces are exemplarily illustrated.}
   	\label{fig:plane_triangle}
   \end{figure}
     
@@ -353,7 +367,7 @@
 	\put(2.8,2.2){$L_2 = 0$}
 	\put(7,4){$L_1 = 0$}
 	\end{picture}
-  	\caption{Triangular coordinates $L_1,L_2,L_3$ and sampling point $P$ within the triangular element}
+  	\caption{Triangular coordinates $L_1,L_2,L_3$ and sampling point $P$ within a triangular element. The nodes and edges represent special cases of triangular coordinates.}
   	\label{fig:tri_coords}
   \end{figure}
   
@@ -387,7 +401,7 @@
   \psi_1 \\ \psi_2 \\ \psi_3
   \end{pmatrix}
   \end{equation}
-  If one put equation \ref{eq:t3_coeffsA} into \ref{eq:t3_ansatz}, the shape functions for the three node triangular finite element will be derived, as described in \cite{steinke2005finite}:
+  If one put equation \eqref{eq:t3_coeffsA} into \eqref{eq:t3_ansatz}, the shape functions for the three node triangular finite element will be derived, as described in \cite{steinke2005finite}:
   \begin{align}\label{eq:t3SF}
   u &= \vec{x}^T \vec{a} = \vec{x}^T \underline{A}^{-1}\vec{u} = \vec{N}^T\vec{u} \nonumber\\
   \vec{N}^T &= \vec{x}^T \underline{A}^{-1} =
@@ -404,7 +418,7 @@
   N_1 & N_2 & N_3
   \end{pmatrix}
   \end{align}
-  Characteristically for a shape functions $N_i$ is, as stated in \cite{steinke2005finite}, that it evaluates to 1 at node $i$ and to 0 at the two other nodes. The functions are linear with respect to $L_1$ and $L_2$ which can be noticed in equation \ref{eq:t3SF}. As stated before, these shape functions are the same for displacement $u$ and $v$. With the knowledge of the displacement values of the element's nodes one can formulate the displacement functions in triangular coordinate notation as follows:
+  Characteristically for a shape functions $N_i$ is, as stated in \cite{steinke2005finite}, that it evaluates to 1 at node $i$ and to 0 at the two other nodes. The functions are linear with respect to $L_1$ and $L_2$ which can be noticed in equation \eqref{eq:t3SF}. As stated before, these shape functions are the same for displacement $u$ and $v$. With the knowledge of the displacement values of the element's nodes one can formulate the displacement functions in triangular coordinate notation as follows:
   \begin{align}
   u &= N_1 u_1 + N_2 u_2 + N_3 u_3 \nonumber\\
   v &= N_1 v_1 + N_2 v_2 + N_3 v_3
@@ -421,9 +435,9 @@
   u_1 \\ v_1 \\ u_2 \\ v_2 \\ u_3 \\ v_3
   \end{pmatrix}
   \end{align}
-  The vector $\vec{\tilde{u}}$ describes the element's displacements as product of matrix $\underline{N}$ containing the shape functions and vector $\vec{u}$ containing the displacements of the single triangle's nodes. Now, one can put equation \ref{eq:t3u=Nu} into \ref{eq:t3displ-str-rel}:
+  The vector $\vec{\tilde{u}}$ describes the element's displacements as product of matrix $\underline{N}$ containing the shape functions and vector $\vec{u}$ containing the displacements of the single triangle's nodes. Now, one can put equation \eqref{eq:t3u=Nu} into \eqref{eq:t3displ-str-rel}:
   \begin{equation}\label{eq:t3eps=Bu}
-  \vec{\epsilon} = \underline{L}\vec{\tilde{u}} = \underline{L}\;\underline{N} \vec{u} = \underline{B} \vec{u}
+  \vec{\varepsilon} = \underline{L}\vec{\tilde{u}} = \underline{L}\;\underline{N} \vec{u} = \underline{B} \vec{u}
   \end{equation}
   The product of $\underline{L}$ and $\underline{N}$ is called \textit{strain-displacement matrix} $\underline{B}$.
   In order to calculate the strain-displacement matrix, one has to assemble the $\underline{L}$ matrix containing the first partial derivatives of the triangular element. With the chain rule applied, the partial derivatives look as follows:
@@ -456,7 +470,7 @@
   x &= x_1L_1 + x_2L_2 + x_3L_3 = (x_1-x_3)L_1 + (x_2-x_3)L2 + x_3\\
   y &= y_1L_1 + y_2L_2 + y_3L_3 = (y_1-y_3)L_1 + (y_2-y_3)L2 + y_3 \nonumber
   \end{align}
-  Considering equation \ref{eq:triCoord<->CartCoord} the Jacobian matrix can now be calculated:
+  Considering equation \eqref{eq:triCoord<->CartCoord} the Jacobian matrix can now be calculated:
   \begin{equation}
   J = \begin{pmatrix}
   \frac{\partial x}{\partial L_1} = x_1-x_3 = x_{13} & \frac{\partial y}{\partial L_1} = y_1-y_3 = y_{13}\\
@@ -473,7 +487,7 @@
   -x_{23} & x_{13}
   \end{pmatrix}
   \end{equation}
-  The determinant of the Jacobian matrix is two times the area of the triangle. With the help of equation \ref{eq:t3invJac}, \ref{eq:t3NablaTilde} can be reorganized
+  The determinant of the Jacobian matrix is two times the area of the triangle. With the help of equation \eqref{eq:t3invJac}, \eqref{eq:t3NablaTilde} can be reorganized
   \begin{equation}\label{eq:nabla=invJ*nabla-tilde}
   \nabla = \underline{J}^{-1} \tilde{\nabla}
   \end{equation}
@@ -507,13 +521,13 @@
   \end{align}
   
   % Einsetzen in Gesamtpotential + Variation\\
-  With $\underline{B}$ known, one can insert equation \ref{eq:t3eps=Bu} into \ref{eq:sigma=D*eps} to get the stresses:
+  With $\underline{B}$ known, one can insert equation \eqref{eq:t3eps=Bu} into \eqref{eq:sigma=D*eps} to get the stresses:
   \begin{equation} \label{eq:t3sigma=DBu}
   \vec{\sigma} = \underline{D}\;\underline{B} \vec{u}
   \end{equation}
-  Finally, every term of the plane element's functional \ref{eq:planeFunctional} can be filled with the above discretized terms:
+  Finally, every term of the plane element's functional \eqref{eq:planeFunctional} can be filled with the above discretized terms:
   \begin{align}\label{eq:t3functional}
-  \Pi &= \frac{1}{2} \int_{V}\vec{\epsilon}^T\vec{\sigma}\;dV - \vec{u}^T \vec{F} \nonumber\\
+  \Pi &= \frac{1}{2} \int_{V}\vec{\varepsilon}^T\vec{\sigma}\;dV - \vec{u}^T \vec{F} \nonumber\\
       &= \frac{1}{2} \int_{V}\vec{u}^T \underline{B}^T\underline{D}\;\underline{B}\vec{u}\;dV - \vec{u}^T \vec{F} \nonumber\\
       &= \frac{1}{2} \vec{u}^T \int_{V} \underline{B}^T\underline{D}\;\underline{B}\;dV \vec{u}- \vec{u}^T \vec{F} \nonumber\\
       &= \frac{1}{2}\vec{u}^T \underline{K} \vec{u} - \vec{u}^T \vec{F}
@@ -521,7 +535,7 @@
   with $\underline{K}$ the stiffness matrix and $\vec{F}$ the nodal force vector.
   
   % Bestimmung von K kürzen: wichtig ist nur s.221 K = t*int(H*dA,A) mit dV = t*dA
-  The variation of the functional \ref{eq:t3functional} is as follows \cite{steinke2005finite}:
+  The variation of the functional \eqref{eq:t3functional} is as follows \cite{steinke2005finite}:
   \begin{align}
   \delta\Pi &= \frac{\partial\Pi}{\partial \vec{u}}\delta\vec{u} = 0 \nonumber\\
             &= \frac{1}{2}\delta\vec{u}^T\frac{\partial\vec{u}^T}{\partial\vec{u}^T}\underline{K}\vec{u} + \frac{1}{2}\vec{u}^T\underline{K}\frac{\partial\vec{u}}{\partial\vec{u}}\delta\vec{u} - \delta\vec{u}\frac{\partial\vec{u}^T}{\partial\vec{u}^T}\vec{F} \nonumber\\
@@ -647,7 +661,7 @@
   \phi_1\\\phi_2\\\phi_3\\\phi_4
   \end{pmatrix}
   \end{equation}
-  If the last equation is inserted into \ref{eq:q4basis} one gets the shape functions $\vec{N}$ for the quadrilateral element:
+  If the last equation is inserted into \eqref{eq:q4basis} one gets the shape functions $\vec{N}$ for the quadrilateral element:
   \begin{align}
   \phi &= \vec{x}^T\underline{A}^{-1}\vec{\phi} \nonumber\\
     &= \vec{N}^T\vec{\phi} \nonumber\\
@@ -709,15 +723,15 @@
   (x_{12}+x_{34})\xi  - x_{13} - x_{24} & (y_{12} + y_{34})\xi  - y_{13} + y_{24}
   \end{pmatrix}
   \end{align}
-  Next, equation \ref{eq:q4derivRS=J*derivXY} can be rearranged to get the derivatives with respect to $x$ and $y$:
+  Next, equation \eqref{eq:q4derivRS=J*derivXY} can be rearranged to get the derivatives with respect to $x$ and $y$:
   \begin{equation}
   \vec{\phi} = \underline{J}^{-1}\vec{\tilde{\phi}}
   \end{equation}
   
   %- dehnungs-verschiebungs-beziehung
-  With the derivatives calculated, the strain-displacement relation \ref{eq:displ_strain_relation} can be obtained \cite{cook2002concepts}:
+  With the derivatives calculated, the strain-displacement relation \eqref{eq:displ_strain_relation} can be obtained \cite{cook2002concepts}:
   \begin{align}
-  \vec{\epsilon} &= \begin{pmatrix}
+  \vec{\varepsilon} &= \begin{pmatrix}
   \frac{\partial u}{\partial x} \\
   \frac{\partial v}{\partial y} \\
   \frac{\partial u}{\partial y} + \frac{\partial v}{\partial x}
@@ -764,7 +778,7 @@
   
 
   %- stefigkeitsmatrix $K = int_V(B^TDBdV) = t*int_V(B^TDBdA) = t*int_-1^1 int_-1^1(B^TDB|J|dsdr)$ + erwähnen, dass |J| Flächeninhalt angibt (ref finden)
-  Together with the functional equation \ref{eq:t3functional} and the material matrix $\underline{D}$ (eq. \ref{eq:sigma=D*eps}), the stiffness matrix for the quadrilateral isoparametric element can be written as:
+  Together with the functional equation \eqref{eq:t3functional} and the material matrix $\underline{D}$ (eq. \eqref{eq:sigma=D*eps}), the stiffness matrix for the quadrilateral isoparametric element can be written as:
   \begin{equation}
   \underline{K} = \int_V \underline{B}^T \underline{D}\,\underline{B}\, dV = t\int_A \underline{B}^T \underline{D}\,\underline{B}\, dA = t\int_{-1}^{1}\int_{-1}^{1} \underline{B}^T \underline{D}\,\underline{B}\, |\underline{J}| d\xi d\eta
   \end{equation}
@@ -837,14 +851,14 @@
   The deformation $w$ suffices to explain the whole displacement vector. The two derivatives in the equations above describe the torsions around the x- and y-axis.
 
   % dehnungs-verschiebungs-beziehung
-  Similar to the plane element, the Kirchhoff plate element can have a plane strain or plane stress, respectively \cite{steinke2005finite}, i.e. equation \ref{eq:displ_strain_relation} can be applied here, too:
+  Similar to the plane element, the Kirchhoff plate element can have a plane strain or plane stress, respectively \cite{steinke2005finite}, i.e. equation \eqref{eq:displ_strain_relation} can be applied here, too:
   \begin{align}
   \vec{\hat{u}} &= \begin{pmatrix}
   u\\v
   \end{pmatrix} = -z \begin{pmatrix}
   \frac{\partial w}{\partial x}\\ \frac{\partial w}{\partial y}
   \end{pmatrix} = -z \nabla w \nonumber\\
-  \vec{\epsilon} &= \underline{L} \vec{\hat{u}} = -z \underline{L} \nabla w = -z \vec{\Delta} w = -z \vec{\kappa} \label{eq:eps=-z*kappa}\\
+  \vec{\varepsilon} &= \underline{L} \vec{\hat{u}} = -z \underline{L} \nabla w = -z \vec{\Delta} w = -z \vec{\kappa} \label{eq:eps=-z*kappa}\\
   \vec{\Delta} &= \underline{L} \nabla = \begin{pmatrix}
   \frac{\partial}{\partial x} & 0\\
   0 & \frac{\partial}{\partial y}\\
@@ -864,9 +878,9 @@
   \end{align}
   
   % stoffgleichung (krümmungs-momenten-beziehung) -> führt auf Dp und Querkräfte Qx,Qy
-  Referring \cite{klein2013fem} ($\sigma_{zz} = 0, \tau_{xz} = \tau_{yz} = 0$), equation \ref{eq:stress-strain-relation} can be filled with the above information:
+  Referring \cite{klein2013fem} ($\sigma_{zz} = 0, \tau_{xz} = \tau_{yz} = 0$), equation \eqref{eq:stress-strain-relation} can be filled with the above information:
   \begin{align}\label{eq:sigma=-z*D*kappa}
-  \vec{\sigma} &= \underline{D} \vec{\epsilon} = -z \underline{D} \vec{\kappa} \nonumber\\
+  \vec{\sigma} &= \underline{D} \vec{\varepsilon} = -z \underline{D} \vec{\kappa} \nonumber\\
                &= -\frac{E z}{1-\nu^2} \begin{pmatrix}
                1&\nu&0\\
                \nu&1&0\\
@@ -898,11 +912,11 @@
   \frac{\partial M_{yy}}{\partial y} + \frac{\partial M_{xy}}{\partial x} + Q_y &= 0
   \end{align}
   % gleichgewichtsbeziehung der platte (p ist flächenlast; näher untersuchen)
-  Putting equation \ref{eq:dMxx+dMxy+Qx=0} into \ref{eq:dQx+dQy+p=0} results in:
+  Putting equation \eqref{eq:dMxx+dMxy+Qx=0} into \eqref{eq:dQx+dQy+p=0} results in:
   \begin{equation}\label{eq:Delta^T*M=p}
   \frac{\partial^2 M_{xx}}{\partial x^2} + \frac{\partial^2 M_{yy}}{\partial y^2} + 2\frac{\partial^2 M_{xy}}{\partial x\partial y} = \vec{\Delta}^T \vec{M} = p
   \end{equation}
-  Now, one can insert the kinematic equation \ref{eq:kappa=Delta*w} into equation \ref{eq:M=-Dp*kappa} and then into the equilibrium relation \ref{eq:Delta^T*M=p}:
+  Now, one can insert the kinematic equation \eqref{eq:kappa=Delta*w} into equation \eqref{eq:M=-Dp*kappa} and then into the equilibrium relation \eqref{eq:Delta^T*M=p}:
   \begin{align}
   \vec{\kappa} &= \vec{\Delta}w \nonumber\\
   \vec{M} &= -\underline{D}_p \vec{\kappa} = -\underline{D}_p \vec{\Delta} w \nonumber\\
@@ -967,11 +981,11 @@
   % funktional der platte
   The plate's functional as described in \cite{steinke2005finite} is given below:
   \begin{equation}
-  \frac{1}{2} \int_V \vec{\epsilon}^T \vec{\sigma}\, d\:\!V
+  \frac{1}{2} \int_V \vec{\varepsilon}^T \vec{\sigma}\, d\:\!V
   \end{equation}
-  One can insert equation \ref{eq:eps=-z*kappa} and \ref{eq:sigma=-z*D*kappa} into the functional:
+  One can insert equation \eqref{eq:eps=-z*kappa} and \eqref{eq:sigma=-z*D*kappa} into the functional:
   \begin{equation}
-  \frac{1}{2} \int_V \vec{\epsilon}^T \vec{\sigma}\, d\:\!V = \frac{1}{2}\int_V \vec{\kappa}^T \underline{D} \vec{\kappa} z^2\, d\!V = \frac{1}{2} \int_A \vec{\kappa}^T \underline{D}_p \vec{\kappa}\, d\!A
+  \frac{1}{2} \int_V \vec{\varepsilon}^T \vec{\sigma}\, d\:\!V = \frac{1}{2}\int_V \vec{\kappa}^T \underline{D} \vec{\kappa} z^2\, d\!V = \frac{1}{2} \int_A \vec{\kappa}^T \underline{D}_p \vec{\kappa}\, d\!A
   \end{equation}
   Together with the potential of the external forces the overall potential of the Kirchhoff plate is:
   \begin{equation}\label{eq:plateFunctional}
@@ -1032,7 +1046,7 @@
   \end{align}
   
   % interpolationsbedingungen
-  The twists $\theta_x$ and $\theta_y$ are to be described in Cartesian coordinates. They must be transformed into triangular coordinates with the help of equation \ref{eq:t3NablaTilde}:
+  The twists $\theta_x$ and $\theta_y$ are to be described in Cartesian coordinates. They must be transformed into triangular coordinates with the help of equation \eqref{eq:t3NablaTilde}:
   \begin{equation}
   \vec{\theta} = \begin{pmatrix}
   \theta_x\\\theta_y
@@ -1080,7 +1094,7 @@
   \end{pmatrix}
   \end{equation}
   where $x_{ij}$ and $y_{ij}$ denotes the differences of the node's coordinates $x_i-x_j$ and $y_i-y_j$.
-  Now, the coefficients can be inserted into equation \ref{eq:platet3w=x*a}:
+  Now, the coefficients can be inserted into equation \eqref{eq:platet3w=x*a}:
   \begin{equation}\label{eq:w=NT*vecw}
   w = \vec{x}^T \vec{a} = \vec{x}^T \underline{A}^{-1} \vec{w} = \vec{N}^T \vec{w}
   \end{equation}
@@ -1102,7 +1116,7 @@
   Similar to the plane elements, one can check the correctness of the shape functions by evaluating them at the triangular coordinates of the three triangle's nodes. For example, shape function $N_7$ will evaluate to 1 for the coordinates $(L_1 = 0, L_2 = 0)$ (node 3) and will be zero for $(L_1 = 1, L_2 = 0)$ (node 1) and $(L_1 = 0, L_2 = 1)$ (node 2).
   
   % krümmungs-verschiebungs-beziehung\\
-  The displacement-strain relation \ref{eq:eps=-z*kappa} introduced for the plate element contains an operator living in the Cartesian space. It has to be converted into triangular coordinates. With equation \ref{eq:nabla=invJ*nabla-tilde} ($\nabla = \underline{J}^{-1}\tilde{\nabla}$) one can describe a second order derivative operator $\Delta$:
+  The displacement-strain relation \eqref{eq:eps=-z*kappa} introduced for the plate element contains an operator living in the Cartesian space. It has to be converted into triangular coordinates. With equation \eqref{eq:nabla=invJ*nabla-tilde} ($\nabla = \underline{J}^{-1}\tilde{\nabla}$) one can describe a second order derivative operator $\Delta$:
   \begin{align}
   \Delta &= \nabla \nabla^T = \underline{J}^{-1}\tilde{\nabla}\left(\underline{J}^{-1}\tilde{\nabla}\right)^T = \underline{J}^{-1} \tilde{\nabla} \tilde{\nabla}^T \left(\underline{J}^{-1}\right)^T = \underline{J}^{-1} \tilde{\Delta} \left(\underline{J}^{-1}\right)^T\\
   \Delta &= \begin{pmatrix}
@@ -1124,11 +1138,11 @@
   \end{pmatrix} \nonumber\\
   \vec{\Delta} &= \underline{Y} \vec{\tilde{\Delta}}
   \end{align}
-  Next, equation \ref{eq:eps=-z*kappa} can be rewritten for triangular coordinates:
+  Next, equation \eqref{eq:eps=-z*kappa} can be rewritten for triangular coordinates:
   \begin{equation}
-  \vec{\epsilon} = -z \vec{\Delta} w = -z \underline{Y} \vec{\tilde{\Delta}} w = -z \vec{\kappa}
+  \vec{\varepsilon} = -z \vec{\Delta} w = -z \underline{Y} \vec{\tilde{\Delta}} w = -z \vec{\kappa}
   \end{equation}
-  And additionally, with the help of equation \ref{eq:w=NT*vecw}, this yields a new version of equation \ref{eq:kappa=Delta*w}:
+  And additionally, with the help of equation \eqref{eq:w=NT*vecw}, this yields a new version of equation \eqref{eq:kappa=Delta*w}:
   \begin{equation}\label{eq:kappa=YBw}
   \vec{\kappa} = \vec{\Delta} w = \underline{Y} \vec{\tilde{\Delta}} \vec{N}^T \vec{w} = \underline{Y}\:\underline{\tilde{B}} \vec{w} = \underline{B} \vec{w}
   \end{equation}
@@ -1141,7 +1155,7 @@
   \end{equation}
   
   % steifigkeitsmatrix
-  With the help of equation \ref{eq:kappa=YBw}, the first term (denoted as $\Pi_1$) of the plate element's functional \ref{eq:plateFunctional} can be written out:
+  With the help of equation \eqref{eq:kappa=YBw}, the first term (denoted as $\Pi_1$) of the plate element's functional \eqref{eq:plateFunctional} can be written out:
   \begin{align}\label{eq:t3_pi1=0.5wTKw}
   \Pi_1 &= \frac{1}{2} \int_A \vec{\kappa}^T \underline{D}_p \vec{\kappa}\ d\!A \nonumber\\
         &= \frac{1}{2} \vec{w}^T \int_A \underline{B}^T \underline{D}_p \underline{B}\ d\!A \vec{w} \nonumber\\
@@ -1151,7 +1165,7 @@
   \begin{equation}
   \underline{K} = 2 A_\triangle \sum_{i=1}^{3} \omega_i \underline{B}^T(L_{1_i}, L_{2_i}) \underline{D}_p \underline{B}(L_{1_i}, L_{2_i})
   \end{equation}
-  The plate's functional \ref{eq:plateFunctional} has two more terms including the surface load $p$ and edge loads $V_n$. These two can now be written as follows (see also \cite{steinke2005finite}):
+  The plate's functional \eqref{eq:plateFunctional} has two more terms including the surface load $p$ and edge loads $V_n$. These two can now be written as follows (see also \cite{steinke2005finite}):
   \begin{equation}
   \int_A p\ w\ d\!A = \vec{w}^T \vec{F}_p = \vec{w}^T p \int_A \vec{N}\ d\!A = 2 \vec{w}^T A_\triangle p \int_{0}^{1}\left(\int_{0}^{1-L_1} \vec{N}\ d\,\!L_2\right)\ d\,\!L_1
   \end{equation}
@@ -1205,7 +1219,7 @@
   \begin{equation}
   \Pi = \frac{1}{2} \int_A \vec{\kappa}^T \underline{D}_p \vec{\kappa}\ d\!A
   \end{equation}
-  where $\underline{D}_p$ is the material matrix as defined previously (equation \ref{eq:M=-Dp*kappa}) and $\vec{\kappa}$ denotes:
+  where $\underline{D}_p$ is the material matrix as defined previously (equation \eqref{eq:M=-Dp*kappa}) and $\vec{\kappa}$ denotes:
   \begin{equation}
   \vec{\kappa} = \begin{pmatrix}
   \frac{\partial \beta_x}{\partial x}\\
@@ -1361,13 +1375,13 @@
   \end{pmatrix}
   \end{equation}
   The expressions $\vec{H_\xi^x}, \vec{H_\eta^x}, \vec{H_\xi^y}$ and $\vec{H_\eta^y}$ are vectors containing the derivatives of the corresponding components of the vectors $\vec{H^x}$ and $\vec{H^y}$ with respect to $\xi$ and $\eta$, respectively.
-  And the matrix $\underline{B}$ can then be inserted into the displacement-strain relation, like equation \ref{eq:kappa=YBw}:
+  And the matrix $\underline{B}$ can then be inserted into the displacement-strain relation, like equation \eqref{eq:kappa=YBw}:
   \begin{equation}
   \vec{\kappa} = \underline{B} \vec{w}
   \end{equation}
   
   % steifigkeitsmatrix
-  Next, $\vec{\kappa} = \underline{B} \vec{w}$ can be used in the functional to get the first term like equation \ref{eq:t3_pi1=0.5wTKw}:
+  Next, $\vec{\kappa} = \underline{B} \vec{w}$ can be used in the functional to get the first term like equation \eqref{eq:t3_pi1=0.5wTKw}:
   \begin{align}
   \Pi_1 &= \frac{1}{2} \int_A \vec{\kappa}^T \underline{D}_p \vec{\kappa}\ d\!A \nonumber\\
   &= \frac{1}{2} \vec{w}^T \int_A \underline{B}^T \underline{D}_p \underline{B}\ d\!A \vec{w}\nonumber\\
@@ -1554,7 +1568,7 @@
  
  \subsection{Shell Element}\label{sec:Shell-Shell}
  % The combination of the two previous parts and the transformations results in the final shell element\newline
- Shell elements combine the capability of both, plane and plate elements. Every time a thin walled structure like a car body, dome structure or container with multiaxial pressures is to be simulated, shell elements provide a good solution. In this work only the so-called flat shell elements are described and used in the implementation. Details about curved shell elements, shells of revolution and general shells can be found in Cook et al. \cite{cook2002concepts}.
+ Shell elements combine the capability of both, plane and plate elements. Every time a thin walled structure like a car body, dome structure or container with multi-axial pressures is to be simulated, shell elements provide a good solution. In this work only the so-called flat shell elements are described and used in the implementation. Details about curved shell elements, shells of revolution and general shells can be found in Cook et al. \cite{cook2002concepts}.
  
  Flat shell elements have a state of bending and membrane stress that can be described by superposition of the plane and plate element \cite{klein2013fem}. Figure \ref{fig:shell_triangle} shows the superposition of plane and plate elements to a flat shell element. The degrees of freedom of plane and plate at every node are combined at the node of the shell element. Obviously the plane and plate element must be of the same finite element's type, for example three node triangular or eight node quadrilateral.
  \begin{figure}[htbp] % bild wie bei 8.7 von scheibe und platte und kombination zu schale + erklärungen, welche unbekannten und kräfte man bei welchem teil hat
@@ -1633,7 +1647,7 @@
  \vec{F}_1\\\vec{F}_2\\\vec{F}_3\\\vec{F}_4
  \end{pmatrix}
  \end{align}
- where the vectors $\vec{u}_i$ are the same as in equation \ref{eq:shell_u_i}. The single submatrices $\underline{K}_{ij}$ of $\underline{K}$ were created by the superposition of the stiffness matrices of the plane and the plate:
+ where the vectors $\vec{u}_i$ are the same as in equation \eqref{eq:shell_u_i}. The single submatrices $\underline{K}_{ij}$ of $\underline{K}$ were created by the superposition of the stiffness matrices of the plane and the plate:
  \begin{equation}
  \underline{K}_{ij} = \left(\underline{\hat{K}}_{ij}\right)_m + \left(\underline{\hat{K}}_{ij}\right)_p
  \end{equation}
@@ -1711,7 +1725,7 @@
  The degree of freedom $\theta_z$ does not exists in both, the plane and the plate element, and were introduced with the shell element. Therefore $(\underline{K}_{ij})_{66}$ is zero. The sixth degree of freedom is necessary because the missing stiffness regarding a rotation around the axis normal to the element could produce singularities in the overall stiffness matrix. This happens for example, if all neighboring elements of a node lie in the same plane, i.e. they are coplanar. A singularity can lead to a non-solvable system, so this case needs be excluded \cite{steinke2005finite}. One way is to introduce this sixth degree of freedom and give it a value that is so small that it does not influence the displacements and stresses too much. The number of this values varies: Werkle suggests a value of $1/10000$ of the smallest diagonal entry of $\underline{K}_{ij}$ \cite{werkle1995finite}, whereas \cite{kansara2004development} used $1/1000$ of the smallest diagonal entry of $\underline{K}_{ij}$. The value must be small, but big enough to prevent the singularities. Since this value is an approximation, one has to modify it, if the solution is not as expected or one cannot get a solution at all due to the addressed singularities.
  
  % Dann muss die (Rück-)Transformationsmatrix $T$ erstellt werden, da SKM im lokalen KoSys definiert ist, aber in die globale Systemmatrix einsortiert werden muss
- The stiffness matrix for the shell element was constructed in a local coordinate system as described in section \ref{sec:Shell-Plane}, \ref{sec:Shell-Plate} and \ref{sec:Shell-CoTrafo}. The overall stiffness matrix containing information about all elements need to be described in a global coordinate system. Before the element stiffness matrix is added to the global stiffness matrix, it has to be transformed from local to global. This can be achieved by transforming the single blocks of $\underline{K}$ from equation \ref{eq:shell_K_ij} with the relation:
+ The stiffness matrix for the shell element was constructed in a local coordinate system as described in section \ref{sec:Shell-Plane}, \ref{sec:Shell-Plate} and \ref{sec:Shell-CoTrafo}. The overall stiffness matrix containing information about all elements need to be described in a global coordinate system. Before the element stiffness matrix is added to the global stiffness matrix, it has to be transformed from local to global. This can be achieved by transforming the single blocks of $\underline{K}$ from equation \eqref{eq:shell_K_ij} with the relation:
  \begin{equation}\label{eq:shell_K_ij u_j=F_i}
  \underline{\check{K}}_{ij} \vec{\check{u}}_j = \vec{\check{F}}_i
  \end{equation}
@@ -1720,7 +1734,7 @@
  \check{\vec{u}}_j = \underline{\tilde{T}} \vec{u}_j\\
  \check{\vec{F}}_i = \underline{\tilde{T}} \vec{F}_i
  \end{align}
- Since the load vector is to be defined in a global coordinate system and the resulting displacements are to be defined globally, too, equation \ref{eq:shell_K_ij u_j=F_i} will be multiplied by $\underline{\tilde{T}}^T$ from left:
+ Since the load vector is to be defined in a global coordinate system and the resulting displacements are to be defined globally, too, equation \eqref{eq:shell_K_ij u_j=F_i} will be multiplied by $\underline{\tilde{T}}^T$ from left:
  \begin{equation}
  \underline{\tilde{T}}^T \underline{\check{K}}_{ij} \underline{\tilde{T}} \vec{u}_j = \underline{\tilde{T}}^T \underline{\tilde{T}} \vec{F}_i = \vec{F}_i
  \end{equation}

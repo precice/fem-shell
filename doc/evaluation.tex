@@ -1,5 +1,5 @@
 \section{Framework Evaluation}
-Part of the thesis was to find several frameworks which ease the work with the finite element method. An evaluation of frameworks was done to select a suitable one for the given task. The evaluation's criteria are presented as well as a short description of the studied frameworks.
+Part of the thesis was to analyze several frameworks which ease the work with the finite element method. An evaluation of frameworks was done to select a suitable one for the given task. The evaluation's criteria are presented in this chapter together with a short description of the studied frameworks and a motivation for the library that were finally chosen.
  
  
  
@@ -53,7 +53,7 @@ Part of the thesis was to find several frameworks which ease the work with the f
   
   
   \subsubsection{MFEM}
-  The "`Modular Finite Element Method"' library acts as a toolbox that provides the building blocks for developing finite element algorithms. MFEM aims to enable research and development of scalable finite element discretization and solver algorithms through general finite element abstractions. It has a wide variety of 2D and 3D finite element types, for example triangular and quadrilateral 2D elements, curved boundary elements or topologically periodic meshes. In addition to Galerkin methods, MFEM supports mixed finite elements, discontinuous Galerkin (DG) methods, or isogeometric analysis methods, for instance. The framework supports MPI-based parallelism throughout the library with minimal changes to the code to make the serial code parallel. A variety of solvers are available for the resulting linear algebra systems, including serial and parallel smoothers, solvers such as PCG, MINRES and GMRES, high-performance preconditioners from the hypre library,
+  The ``Modular Finite Element Method'' library acts as a toolbox that provides the building blocks for developing finite element algorithms. MFEM aims to enable research and development of scalable finite element discretization and solver algorithms through general finite element abstractions. It has a wide variety of 2D and 3D finite element types, for example triangular and quadrilateral 2D elements, curved boundary elements or topologically periodic meshes. In addition to Galerkin methods, MFEM supports mixed finite elements, discontinuous Galerkin (DG) methods, or isogeometric analysis methods, for instance. The framework supports MPI-based parallelism throughout the library with minimal changes to the code to make the serial code parallel. A variety of solvers are available for the resulting linear algebra systems, including serial and parallel smoothers, solvers such as PCG, MINRES and GMRES, high-performance preconditioners from the hypre library,
   to name a few \cite{mfem}. The latest release of MFEM is dated January, 2015 but it is still under active development. The library is used in several publications \cite{mfemPubs}.
   
   

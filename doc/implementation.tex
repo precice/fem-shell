@@ -350,7 +350,7 @@ for (; el != end_el; ++el)
    d_{ij} = \frac{1}{1000}\max \left\lbrace m_{2i,2j}, m_{2i+1,2j+1}, p_{3i,3j}, p_{3i+1,3j+1}, p_{3i+2,3j+2} \right\rbrace 
    \end{equation*}
    After this step, the local stiffness matrix for the shell element is finally constructed. Before it can be added to the overall system stiffness matrix, it must be transformed back to the global coordinate system as discussed in section \ref{sec:Shell-CoTrafo}.
-   For this purpose let $\tilde{T}$ be the $6\!\times\! 6$ transformation matrix from equation \ref{eq:trafoTtilde}. Now, every submatrix $K_{ij}$ from $K$ must be transformed in the following way (equation \ref{eq:Kij=Tt Kij T}):
+   For this purpose let $\tilde{T}$ be the $6\!\times\! 6$ transformation matrix from equation \eqref{eq:trafoTtilde}. Now, every submatrix $K_{ij}$ from $K$ must be transformed in the following way (equation \eqref{eq:Kij=Tt Kij T}):
    \begin{equation*}
    \bar{K}_{ij} = \tilde{T}^T K_{ij} \tilde{T}
    \end{equation*}

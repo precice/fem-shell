@@ -5,69 +5,69 @@
 \citation{petsc2015url}
 \citation{laspack2015url}
 \citation{kirk2013case}
-\@writefile{toc}{\contentsline {section}{\numberline {4}FEM Code Implementation}{45}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Introduction to libMesh}{45}}
-\newlabel{sec:Impl-Intro}{{4.1}{45}}
-\newlabel{lst:example-libmesh}{{1}{45}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {1}Example libMesh program}{45}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}FEM Code Implementation}{48}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Introduction to libMesh}{48}}
+\newlabel{sec:Impl-Intro}{{4.1}{48}}
+\newlabel{lst:example-libmesh}{{1}{48}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1}Example libMesh program}{48}}
 \citation{petsc-user-ref}
 \citation{petsc-user-ref}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Implementation Details}{47}}
-\newlabel{sec:Impl-Details}{{4.2}{47}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.1}Initialization}{47}}
-\newlabel{sec:Impl-Details-Init}{{4.2.1}{47}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Implementation Details}{50}}
+\newlabel{sec:Impl-Details}{{4.2}{50}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.1}Initialization}{50}}
+\newlabel{sec:Impl-Details-Init}{{4.2.1}{50}}
 \citation{gmsh-manual}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.2}Mesh file import}{48}}
-\newlabel{sec:Impl-Details-MeshFileImport}{{4.2.2}{48}}
-\newlabel{lst:xda}{{2}{48}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {2}Example xda mesh file}{48}}
-\newlabel{lst:msh}{{3}{49}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3}Example GMSH mesh file}{49}}
-\newlabel{lst:example_f}{{4}{50}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {4}Example force file}{50}}
-\newlabel{lst:load_mesh}{{5}{50}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {5}Loading mesh and prepare for use}{50}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.3}System setup}{50}}
-\newlabel{sec:Impl-Details-SystemSetup}{{4.2.3}{50}}
-\newlabel{lst:setup_system}{{6}{51}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {6}Setting up the equation system}{51}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.4}Matrix and vector assembly}{52}}
-\newlabel{sec:Impl-Details-Assembly}{{4.2.4}{52}}
-\newlabel{lst:assemble}{{7}{53}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {7}Assemble System Matrix and RHS}{53}}
-\newlabel{lst:formatChange}{{8}{56}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {8}Bring stiffness matrix into libMesh conform format}{56}}
-\newlabel{lst:contribRHS}{{9}{56}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {9}Contribute RHS function}{56}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.5}Solving the system}{57}}
-\newlabel{sec:Impl-Details-Solving}{{4.2.5}{57}}
-\newlabel{lst:solve_system}{{10}{57}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {10}Solve the system and build solution}{57}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.6}Output}{58}}
-\newlabel{sec:Impl-Details-Output}{{4.2.6}{58}}
-\newlabel{lst:output}{{11}{58}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {11}Store results in mesh file}{58}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Parallelization with MPI}{59}}
-\newlabel{sec:Impl-Parallel}{{4.3}{59}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.1}libMesh requirements}{59}}
-\newlabel{sec:Impl-Parallel-Requirements}{{4.3.1}{59}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.2}Partitioning the mesh}{59}}
-\newlabel{sec:Impl-Parallel-Partitioning}{{4.3.2}{59}}
-\newlabel{lst:partitioners}{{12}{60}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {12}Mesh partitioning example}{60}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.3}Local elements}{60}}
-\newlabel{sec:Impl-Parallel-Local}{{4.3.3}{60}}
-\newlabel{lst:local-elements}{{13}{60}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {13}Local elements iterator}{60}}
-\newlabel{lst:global-elements}{{14}{61}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {14}Global nodes iterator}{61}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.4}Assembly changes}{61}}
-\newlabel{sec:Impl-Parallel-Assembly}{{4.3.4}{61}}
-\newlabel{lst:rhs-mpi}{{15}{62}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {15}Process local nodes only}{62}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.2}Mesh file import}{51}}
+\newlabel{sec:Impl-Details-MeshFileImport}{{4.2.2}{51}}
+\newlabel{lst:xda}{{2}{51}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {2}Example xda mesh file}{51}}
+\newlabel{lst:msh}{{3}{52}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3}Example GMSH mesh file}{52}}
+\newlabel{lst:example_f}{{4}{53}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {4}Example force file}{53}}
+\newlabel{lst:load_mesh}{{5}{53}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {5}Loading mesh and prepare for use}{53}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.3}System setup}{53}}
+\newlabel{sec:Impl-Details-SystemSetup}{{4.2.3}{53}}
+\newlabel{lst:setup_system}{{6}{54}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {6}Setting up the equation system}{54}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.4}Matrix and vector assembly}{55}}
+\newlabel{sec:Impl-Details-Assembly}{{4.2.4}{55}}
+\newlabel{lst:assemble}{{7}{56}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {7}Assemble System Matrix and RHS}{56}}
+\newlabel{lst:formatChange}{{8}{59}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {8}Bring stiffness matrix into libMesh conform format}{59}}
+\newlabel{lst:contribRHS}{{9}{59}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {9}Contribute RHS function}{59}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.5}Solving the system}{60}}
+\newlabel{sec:Impl-Details-Solving}{{4.2.5}{60}}
+\newlabel{lst:solve_system}{{10}{60}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {10}Solve the system and build solution}{60}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.6}Output}{61}}
+\newlabel{sec:Impl-Details-Output}{{4.2.6}{61}}
+\newlabel{lst:output}{{11}{61}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {11}Store results in mesh file}{61}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Parallelization with MPI}{62}}
+\newlabel{sec:Impl-Parallel}{{4.3}{62}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.1}libMesh requirements}{62}}
+\newlabel{sec:Impl-Parallel-Requirements}{{4.3.1}{62}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.2}Partitioning the mesh}{62}}
+\newlabel{sec:Impl-Parallel-Partitioning}{{4.3.2}{62}}
+\newlabel{lst:partitioners}{{12}{63}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {12}Mesh partitioning example}{63}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.3}Local elements}{63}}
+\newlabel{sec:Impl-Parallel-Local}{{4.3.3}{63}}
+\newlabel{lst:local-elements}{{13}{63}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {13}Local elements iterator}{63}}
+\newlabel{lst:global-elements}{{14}{64}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {14}Global nodes iterator}{64}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.4}Assembly changes}{64}}
+\newlabel{sec:Impl-Parallel-Assembly}{{4.3.4}{64}}
+\newlabel{lst:rhs-mpi}{{15}{65}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {15}Process local nodes only}{65}}
 \@setckpt{implementation}{
-\setcounter{page}{63}
-\setcounter{equation}{132}
+\setcounter{page}{66}
+\setcounter{equation}{135}
 \setcounter{enumi}{0}
 \setcounter{enumii}{0}
 \setcounter{enumiii}{0}
