@@ -1,6 +1,6 @@
 \section{Validation}\label{sec:valid}
-In the scope of this thesis a program was developed that implements flat shell elements. Two different discretizations of shell elements are provided: A three-node triangular element and a four-node quadrilateral element. A plane and a plate bending element were superimposed to the final flat shell element. This chapter attends the validation, i.e. the accuracy and convergence properties, of the two shell element discretizations as well as their parts, the plane and the plate element. Several problems were chosen that show the correctness of the discretized elements. The tests were taken from different sources, namely \cite{kansara2004development}, \cite{macneal1985proposed}, \cite{wilson1996three} and \cite{jin1994analysis}. Many example problems have analytical results to be compared with, the examples from \cite{kansara2004development} used a commercial software called \textit{SAP2000} \cite{sap-2000} as a benchmark for comparison. Since this software is used in practice for over 30 years, it will be used here as a benchmark as well.
- \subsection{Test A: Plane Displacement with Tri-3 Element}\label{sec:valid-A}
+The developed program implemented flat shell elements. Two different discretizations of shell elements are provided: A three-node triangular element (Tri-3) and a four-node quadrilateral element (Quad-4). A plane and plate bending element were superimposed to the final shell element. This chapter attends the validation with respect to accuracy and convergence properties of the two shell element discretizations as well as their components, the plane and plate elements. Several example problems were chosen that show the correctness of the finite element types. The tests were taken from different sources, namely \cite{kansara2004development}, \cite{macneal1985proposed}, \cite{wilson1996three} and \cite{jin1994analysis}. Many example problems have analytical results to be compared with, the examples from \cite{kansara2004development} used a commercial software called \textit{SAP2000} \cite{sap-2000} as a benchmark for comparison. Since this software is used in practice for over 30 years, it will be used here as a benchmark as well.
+ \subsection{Test A: Tri-3 Plane Element Displacement}\label{sec:valid-A}
   The three-node triangular plane element \textbf{Tri-3} is validated with a cantilever beam shown in Figure \ref{fig:testA}. The example problem was taken from \cite{kansara2004development} (Test Example 2).
  \begin{figure}[htbp]
    	\centering
@@ -32,28 +32,28 @@ In the scope of this thesis a program was developed that implements flat shell e
    	\put(0.56,1.55){$9$}  \put(1.56,1.55){$10$} \put(2.56,1.55){$11$} \put(3.56,1.55){$12$} \put(4.56,1.55){$13$} \put(5.56,1.55){$14$} \put(6.56,1.55){$15$} \put(7.56,1.55){$16$} \put(8.56,1.55){$17$}
    	\put(0.56,2.55){$18$} \put(1.56,2.55){$19$} \put(2.56,2.55){$20$} \put(3.56,2.55){$21$} \put(4.56,2.55){$22$} \put(5.56,2.55){$23$} \put(6.56,2.55){$24$} \put(7.56,2.55){$25$} \put(8.56,2.55){$26$}
    	\end{picture}
-   	\caption{Cantilever beam consisting of 32 triangular elements, clamped at the left side and a total force of 40 kips applied in positive y-direction at the right side}
+   	\caption{Cantilever beam consisting of 32 triangular elements, clamped at the left side and a total force of 40 kips applied in positive y-direction at the right side. The numbers next to the elements denote the node IDs.}
    	\label{fig:testA}
    \end{figure}
       
    \begin{itemize}
    \item \textbf{Mesh dimensions}\\
-   Length $l = 48\ inch$\\
-   Depth $h = 12\ inch$\\
-   Thickness $t = 1\ inch$
+   Length $l = 48\ in$\\
+   Depth $h = 12\ in$\\
+   Thickness $t = 1\ in$
    
    \item \textbf{Material properties}\\
    Young's Modulus $E = 30000 ksi$\\
    Poisson's ratio $\nu = 0.25$
    
    \item \textbf{Boundary conditions}\\
-   Clamped boundary conditions at node 0, 9 and 18, i.e.\ left side of the cantilever beam.
+   Clamped boundary conditions at node 0, 9 and 18, i.e. left side of the cantilever beam.
    
    \item \textbf{Loading}\\
    A concentrated load of $40 kips$ in total. Node 8 and 26 has a load of $6 \frac{2}{3}$, node 17 has a load of $26 \frac{2}{3}$.
    \end{itemize}
    
-   \paragraph{Results:} The displacements in x- and y-direction at node 22 and 26 are presented in Table \ref{tab:testA} together with the results from the \textit{SAP2000} software presented in \cite{kansara2004development}. The displacements of the thesis' program deviate from the commercial software in all cases for at most $0.027\%$. The triangle orientation in the example mesh contains both, the square diagonal facing the upper right and facing the lower right corner of the square. To show that the mixed usage of these orientation types increases the accuracy, two additional tests were made, one with only triangles having their hypotenuse facing the upper right corner of the square ($\boxslash$) and one with only triangles of the other type ($\boxbackslash$). The results of those tests can only be compared to the first test's results of the program, since no benchmark values are available. What can first be seen is that either of the new variants is less accurate than the mixed version. Second, the $\boxslash$-variant is more accurate than the $\boxbackslash$-variant and third, the accuracy in x-direction is better than in y-direction, particularly for the $\boxbackslash$-orientation.
+   \paragraph{Results:} The displacements in x- and y-direction at node 22 and 26 are presented in Table \ref{tab:testA} together with the results from the \textit{SAP2000} software showed in \cite{kansara2004development}. The displacements of the thesis' program deviate from the commercial software in all cases for at most $0.027\%$. The triangle orientation in the example mesh contains both, the square diagonal facing the upper right as well as the lower right corner of the square. To show that the mixed usage of these orientation types increases the accuracy, two additional tests were made, one with triangles only having their hypotenuse facing the upper right corner of the square ($\boxslash$) and one with triangles of the other type ($\boxbackslash$) only. The results of these tests can only be compared to the first test results of the program, since no benchmark values are available. What can first be seen is that either of the new variants is less accurate than the mixed version. Second, the $\boxslash$-variant is more accurate than the $\boxbackslash$-variant and third, the accuracy in x-direction is better than in y-direction, particularly for the $\boxbackslash$-orientation.
    
    \begin{table}[htbp]
    \centering
@@ -77,8 +77,8 @@ In the scope of this thesis a program was developed that implements flat shell e
    \end{table}
    
    
- \subsection{Test B: Plane Displacement with Quad-4}\label{sec:valid-B}
-  The four-node quadrilateral plane element \textbf{Quad-4} is validated with the same cantilever beam that was used in Test A. It is shown in Figure \ref{fig:testB}. The example problem was also taken from \cite{kansara2004development} (Test Example 5).
+ \subsection{Test B: Quad-4 Plane Element Displacement}\label{sec:valid-B}
+  The four-node quadrilateral plane element \textbf{Quad-4} is validated with the same cantilever beam that was used in Test A. The mesh configuration is shown in Figure \ref{fig:testB}. The example problem was also taken from \cite{kansara2004development} (Test Example 5).
   \begin{figure}[htbp]
     \centering
   	\setlength\unitlength{1.65cm}
@@ -103,28 +103,28 @@ In the scope of this thesis a program was developed that implements flat shell e
    	\put(0.56,1.55){$9$}  \put(1.56,1.55){$10$} \put(2.56,1.55){$11$} \put(3.56,1.55){$12$} \put(4.56,1.55){$13$} \put(5.56,1.55){$14$} \put(6.56,1.55){$15$} \put(7.56,1.55){$16$} \put(8.56,1.55){$17$}
    	\put(0.56,2.55){$18$} \put(1.56,2.55){$19$} \put(2.56,2.55){$20$} \put(3.56,2.55){$21$} \put(4.56,2.55){$22$} \put(5.56,2.55){$23$} \put(6.56,2.55){$24$} \put(7.56,2.55){$25$} \put(8.56,2.55){$26$}
    	\end{picture}
-   	\caption{Cantilever beam consisting of 16 quadrilateral elements, clamped at the left side and a total force of 40 kips applied in positive y-direction at the right side}
+   	\caption{Cantilever beam consisting of 16 quadrilateral elements, clamped at the left side and a total force of 40 kips applied in positive y-direction at the right side. The numbers next to the elements denote the node IDs.}
    	\label{fig:testB}
   \end{figure}
 
   \begin{itemize}
    \item \textbf{Mesh dimensions}\\
-   Length $l = 48\ inch$\\
-   Depth $h = 12\ inch$\\
-   Thickness $t = 1\ inch$
+   Length $l = 48\ in$\\
+   Depth $h = 12\ in$\\
+   Thickness $t = 1\ in$
 
    \item \textbf{Material properties}\\
    Young's Modulus $E = 30000 ksi$\\
    Poisson's ratio $\nu = 0.25$
 
    \item \textbf{Boundary conditions}\\
-   Clamped boundary conditions at node 0, 9 and 18, i.e.\ left side of the cantilever beam.
+   Clamped boundary conditions at node 0, 9 and 18, i.e. left side of the cantilever beam.
 
    \item \textbf{Loading}\\
    A concentrated load of $40 kips$ in total. Node 8 and 26 has a load of $6 \frac{2}{3}$, node 17 has a load of $26 \frac{2}{3}$.
   \end{itemize}
 
-  \paragraph{Results:} The displacements in x- and y-direction at node 22 and 26 are presented in Table \ref{tab:testB}. The results of \textit{SAP2000} were used for comparison. The displacements calculated by the thesis' program deviate from the commercial software in all cases for at most $0.03\%$ and thus can be accepted as satisfactory accurate.
+  \paragraph{Results:} The displacements in x- and y-direction at node 22 and 26 are presented in Table \ref{tab:testB}. The results of \textit{SAP2000} were used for comparison. The displacements calculated by the thesis' program deviate from the commercial software in all cases for at most $0.03\%$.
 
   \begin{table}[htbp]
    \centering
@@ -139,8 +139,8 @@ In the scope of this thesis a program was developed that implements flat shell e
    \label{tab:testB}
    \end{table}
      
- \subsection{Test C: Plate Displacement with Tri-3}\label{sec:valid-C}
-  In this test the three-node triangular plate element \textbf{Tri-3} was validated. The example problem was taken from \cite{wilson1996three} (8.9.2). The geometry of the test is shown in Figure \ref{fig:testC}. Four different tests were made: At first the square plate were subdivided into $4\!\times\!4$ squares. Each square were divided into two triangles by a diagonal. Here, two possibilities are given: From the upper left to the lower right ($\boxbackslash$) or from the upper right to the lower left ($\boxslash$). This variant is shown in Figure \ref{fig:testC}. The other two tests were made with the same triangle variants but with a $16\!\times\!16$ mesh subdivision.
+ \subsection{Test C: Tri-3 Plate Element Displacement}\label{sec:valid-C}
+  In this test the three-node triangular plate element \textbf{Tri-3} was validated. The example problem was taken from \cite{wilson1996three}. The geometry of the mesh is shown in Figure \ref{fig:testC}. Four different tests were made: At first the square plate were subdivided into $4\!\times\!4$ squares. Each square were divided into two triangles by a diagonal. Here, two possibilities are given: From the upper left to the lower right ($\boxbackslash$) corner or from the upper right to the lower left ($\boxslash$) corner. The former variant is shown in Figure \ref{fig:testC}. The other two tests were made with the same triangle variants but with a $16\!\times\!16$ mesh subdivision.
   \begin{figure}[htbp]
   	\centering
   	\setlength\unitlength{1.05cm}
@@ -171,7 +171,7 @@ In the scope of this thesis a program was developed that implements flat shell e
   	\put(1.06,5.55){$15$}\put(2.56,5.55){$16$}\put(4.06,5.55){$17$}\put(5.56,5.55){$18$}\put(7.06,5.55){$19$}
   	\put(1.06,7.05){$20$}\put(2.56,7.05){$21$}\put(4.06,7.05){$22$}\put(5.56,7.05){$23$}\put(7.06,7.05){$24$}
   	\end{picture}
-  	\caption{A square plate simply supported on all four sides is shown with a mesh subdivision of $4\!\times\!4$ squares. Each square is divided into two triangles through a diagonal going from the lower left to the upper right corner. This orientation is symbolized by ``$\boxslash$''. In the center of the plate a concentrated load $P$ is applied.}
+  	\caption{A square plate simply supported on all four sides with a mesh subdivision of $4\!\times\!4$ squares. Each square is divided into two triangles through a diagonal going from the lower left to the upper right corner (``$\boxslash$''). In the center of the plate, a concentrated load $P$ is applied. The numbers denote the node IDs as defined in the mesh file.}
   	\label{fig:testC}
   \end{figure}
   
@@ -191,7 +191,7 @@ In the scope of this thesis a program was developed that implements flat shell e
   	A concentrated load of $1.0$ is applied on the center node of the square.
   \end{itemize}
   
-  \paragraph{Results:} Wilson \cite{wilson1996three} states that the exact thin-plate displacement of the central node for this problem is $w_c = 1.16$. The results of the test is presented in Table \ref{tab:testC}. The program's result is compared to the exact value as well as to the results of the Dircrete Kirchhoff Element (DKE) presented in \cite{wilson1996three}. The DKE is also a three-node triangular plate bending element. At first, the results show that no difference exists between the different orientations of the triangles. For the $4\!\times\!4$ mesh subdivision the difference between the program's result and the benchmark is $10.69\%$ while it is only $8.69\%$ compared with the exact value. The relative big difference can be explained by the simple formulation of the Tri-3 element. For the $16\!\times\!16$ mesh subdivision the difference shrinks to only $0.72\%$ compared to the exact value and $0.97\%$ to the benchmark.  
+  \paragraph{Results:} Wilson \cite{wilson1996three} states that the exact thin-plate displacement of the central node for this problem is $w_c = 1.16$. The results of the test is presented in Table \ref{tab:testC}. The program's result is compared to the exact value as well as to the results of the Dircrete Kirchhoff Element (DKE) presented in \cite{wilson1996three}. The DKE is also a three-node triangular plate bending element. At first, the results show that no difference exists between the different orientations of the triangles. For the $4\!\times\!4$ mesh subdivision the difference between the program's result and the benchmark is $10.69\%$ while it is only $8.69\%$ compared with the exact value. For the $16\!\times\!16$ mesh subdivision the difference shrinks to only $0.72\%$ compared to the exact value and $0.97\%$ to the benchmark.  
   \begin{table}[htbp]
   	\centering
   	\begin{tabular}{C{1.5cm}|C{3.0cm}|C{2.5cm}|C{2.5cm}|C{2.7cm}}
@@ -206,8 +206,11 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
   	\caption{Displacements and deviations for Test C}
   	\label{tab:testC}
   \end{table}
- \subsection{Test D: Plate Displacement with Quad-4}\label{sec:valid-D}
- This example problem tests the four-node quadrilateral plate element \textbf{Quad-4}. The test was taken from \cite{jin1994analysis} (4.2.1, 4.2.2). Several different configurations were made: The square plate was subdivided into 4, 8 and 16 square elements on each direction. Each mesh subdivision was then tested with a concentrated load of 30000 on the central node and with a uniformly distributed load of 300 per square unit. The geometry of for one of the six test configurations is shown in Figure \ref{fig:testD}.
+  
+  
+  
+ \subsection{Test D: Quad-4 Plate Element Displacement}\label{sec:valid-D}
+ This example problem tests the four-node quadrilateral plate element \textbf{Quad-4}. The test was taken from \cite{jin1994analysis}. Several different configurations were made: The square plate was subdivided into 4, 8 and 16 square elements on each direction. Each mesh subdivision was then tested with a concentrated load of $30000$ applied on the central node and with a uniformly distributed load of $300$ per square unit. The geometry of one of the six test configurations is shown in Figure \ref{fig:testD}.
   \begin{figure}[htbp]
   	\centering
   	\setlength\unitlength{1.05cm}
@@ -241,13 +244,13 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
   	\put(1.06,5.55){$54$}\put(4.06,5.55){$58$}\put(7.06,5.55){$62$}
   	\put(1.06,7.05){$72$}\put(4.06,7.05){$76$}\put(7.06,7.05){$80$}
   	\end{picture}
-  	\caption{The mesh of test D is shown with a $8\!\times\!8$ subdivision and concentrated central loading configuration. The mesh can be subdivided coarser of finer and the loading can be applied uniformly over the whole plate. The square plate is in all cases simply supported on all four sides.}
+  	\caption{The mesh of test D is shown with a subdivision level of $8\!\times\!8$ and concentrated central loading configuration. The mesh can be subdivided coarser or finer and the loading can be applied uniformly over the whole plate. The square plate is in all cases simply supported on all four sides.}
   	\label{fig:testD}
   \end{figure}
   
   \begin{itemize}
    \item \textbf{Mesh dimensions}\\
-   Side length $l = 10.0$\\
+   Side length $a = 10.0$\\
    Thickness $t = 0.5$
     	
    \item \textbf{Material properties}\\
@@ -258,7 +261,7 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
    All sides of the square plate are simply supported.
     	
    \item \textbf{Loading}\\
-   A uniform load of $300$ is applied on the whole plate in a first test, while a concentrated load of $30,000$ is applied on the center node of the square in a second test.
+   A uniform load of $300$ is applied on the whole plate in a first test, while a concentrated load of $30000$ is applied on the center node of the square in a second test.
   \end{itemize}
     
   \paragraph{Results:} For the test with the uniform load, \cite{jin1994analysis} states that the displacement of the central node $w_c^*$ can be evaluated exactly with the help of the plate theory, that is:
@@ -269,13 +272,16 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
   \begin{equation*}
   w_c^* = 0.00406 \frac{300 * 10^4}{\frac{10^7 0.5^3}{12(1-0.3^2)}} = 0.1064045
   \end{equation*}
-  The results with the different mesh subdivision levels are very accurate, the $8\!\times\!8$-subdivision if less than a thousands percents different to the analytical solution and even the coarse level with only 4 elements per direction has only $0.35\%$ difference to the exact value.\\
+  The results with the different mesh subdivision levels are very accurate, the $8\!\times\!8$-subdivision is less than a thousands percents different to the analytical solution and even the coarse level with only 4 elements per direction has only $0.35\%$ difference to the exact value.\\
   For the concentrated load test, \cite{jin1994analysis} also proposes an analytic solution, namely:
   \begin{equation}\label{eq:test-WC*P}
   w_c^* = \alpha \frac{P a^2}{D}
   \end{equation}
-  where $\alpha = 0.0115999$ and $P = 30000$ is the concentrated load at the center node. The rest of the variables stays the same as in the uniform load test. The analytical solution to this example problem is then $
-  w_c^* = 0.30401019$. The program's results are far more inaccurate compared to the uniform load test with a maximum difference of $8.62\%$. The fine subdivision of $16\!\times\!16$ elements is though acceptably accurate with less than a percent difference to the analytically exact value.
+  where $\alpha = 0.0115999$ and $P = 30000$ is the concentrated load at the center node. The rest of the variables stays the same as in the uniform load test. The analytical solution to this example problem is:
+  \begin{equation*}
+  w_c^* = 0.0115999 \frac{30000 * 10^2}{\frac{10^7 0.5^3}{12(1-0.3^2)}} = 0.30401019
+  \end{equation*}
+  The program's results are far more inaccurate compared to the uniform load test with a maximum difference of $8.62\%$. The fine subdivision of $16\!\times\!16$ elements is though acceptably accurate with less than a percent difference to the analytically exact value.
   \begin{table}[htbp]
    \centering
    \begin{tabular}{C{2.0cm}|C{3.0cm}|C{2.5cm}|C{2.5cm}|C{2.7cm}}
@@ -292,8 +298,8 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
     	\caption{Displacements and deviations for Test D}
     	\label{tab:testD}
     \end{table}
- \subsection{Test E: Shell Displacement}\label{sec:valid-E}
- In Test A to D the single components of the Tri-3 and Quad-4 flat shell elements were validated. This test shows the accuracy of the shell elements by an example problem taken from \cite{kansara2004development} (Test Example 13 and 17). An I-beam is clamped on one end while loads are applied at the flanges of the other end's corners. Figure \ref{fig:testE} shows details on the geometry. The force causes the beam to get twisted around the global x-axis. The I-beam will have deformations in every direction for which shell elements are needed. The Tri-3 element is validated as well as the Quad-4 with the same geometry and load configuration.
+ \subsection{Test E: Shell Elements Displacement}\label{sec:valid-E}
+ In Test A to D the single components of the Tri-3 and Quad-4 shell elements were validated. This test shows the accuracy of the shell elements by an example problem taken from \cite{kansara2004development}. An I-beam is clamped on one end while loads are applied at the flanges of the other end's corners. Figure \ref{fig:testE} shows details on the mesh geometry. The force causes the beam to get twisted around the global x-axis. The I-beam will have deformations in every direction for which shell elements are qualified. The Tri-3 element is validated as well as the Quad-4 with the same geometry and load configuration.
  \begin{figure}[htbp]
   \centering
   \setlength\unitlength{1.00cm}
@@ -357,13 +363,13 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
   Poisson's ratio $\nu = 0.3$
      	
   \item \textbf{Boundary conditions}\\
-  The left end of the I-beam is clamped, i.e. nodes 0,9,18,27,36 and 45
+  The left end of the I-beam is clamped, i.e. nodes 0, 9, 18, 27, 36 and 45.
      	
   \item \textbf{Loading}\\
   Two separate loads of $1.6$ are applied on the flanges of the non-clamped end's corner. One on the top of the I-beam (node 53), the other on the bottom mirrored at the xz-plane (node 26). The forces pointing horizontally to the middle of the I-beam, cf. \ref{fig:testE}.
  \end{itemize}
  
- \paragraph{Results:} In comparison to the commercial software SAP2000 shown in Table \ref{tab:testE} the thesis' elements does not provide as good accuracy as can be. The triangular element has a difference of at most $3.31\%$ for the planar displacements $u_x$ and $u_y$ and at most $5.67\%$ for the vertical displacement $u_z$. The quadrilateral element is with about $10\%$ difference much less accurate. 
+ \paragraph{Results:} In comparison to the commercial software SAP2000 shown in Table \ref{tab:testE} the thesis' elements does not provide as good accuracy as can be. The Tri-3 element has a difference of at most $3.31\%$ for the planar displacements $u_x$ and $u_y$ and at most $5.67\%$ for the vertical displacement $u_z$. The Quad-4 element is with about $10\%$ difference less accurate.
  \begin{table}[htbp]
   \centering
   \begin{tabular}{c|C{3.0cm}|C{2.5cm}|C{2.5cm}|C{2.7cm}}
@@ -388,7 +394,7 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
  \end{table}
 
  \subsection{Test F: Convergence (increasing number of elements)}\label{sec:valid-F}
-  In this test an example problem from \cite{macneal1985proposed} is used. To convergence of the Quad-4 element is validated by way of example. For this, the number of elements of a rectangular plate is increased from one test to the other. The mesh has four different configurations: A clamped and simply supported boundary condition variant as well as a uniform and a concentrated load at the central node of the mesh. Each of the four configurations are tested with a mesh subdivision level of $n={2,4,8,16,32,64}$, i.e. the mesh is subdivided into $n$ elements in each direction. An example for a $4\!\times\!4$ subdivision can be seen in Figure \ref{fig:testF}.
+  In this test an example problem from \cite{macneal1985proposed} is used. The convergence of the Quad-4 element is validated as an example. For this, the number of elements of a rectangular plate is increased from one test to the other. The mesh has four different configurations: A clamped and simply supported boundary condition variant as well as a uniform and a concentrated loading at the central node of the mesh. Each of the four configurations are tested with a mesh subdivision level of $n={2,4,8,16,32,64}$, i.e. the mesh is subdivided into $n$ elements in each direction. An example for a $4\!\times\!4$ subdivision can be seen in Figure \ref{fig:testF}.
   
   \begin{figure}[htbp]
   	\centering
@@ -417,7 +423,7 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
   	\put(1.06,2.05){$10$}\put(6.06,2.05){$12$}\put(11.06,2.05){$14$}
   	\put(1.06,3.05){$20$}\put(6.06,3.05){$22$}\put(11.06,3.05){$24$}
   	\end{picture}
-  	\caption{Example of the mesh geometry of Test F: A rectangular simply supported plate with a side length ratio of $1:5$. In this configuration a concentrated load $P$ is applied to the center node (12) and the mesh is subdivided into 4 elements per axis. For better visibility only a part of the node IDs are shown.}
+  	\caption{Example of the mesh geometry of Test F: A rectangular simply supported plate with a side length ratio of $1:5$. In this configuration a concentrated load $P$ is applied to the center node (12) and the mesh is subdivided into 4 elements per axis. For better visibility, only some of the node IDs are drawn.}
   	\label{fig:testF}
   \end{figure}
   \begin{itemize}
@@ -435,8 +441,8 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
     CLA-configuration: All sides of the plate are clamped.
        	
     \item \textbf{Loading}\\
-    UNI-configuration: A uniform load of $10^{-4}$ per square unit is applied on the entire plate.\\
-    CON-configuration: A concentrated load of $4\times 10^{-4}$ is applied to the center node of the plate. For the different subdivision level, that is in increasing order: Node 4, 12, 40, 144, 544 and 2112.
+    UNI-configuration: A uniform load of $10^{-4}$ per square unit is applied to the entire plate.\\
+    CON-configuration: A concentrated load of $4\times 10^{-4}$ is applied to the center node of the plate. For the different subdivision levels, that is in increasing order the node with ID 4, 12, 40, 144, 544 and 2112.
    \end{itemize}
    
    \paragraph{Results:} For the analytical solution to these problems one can use equation \eqref{eq:test-WC*q} for the uniform loadings and \eqref{eq:test-WC*P} for the concentrated loadings, that is:
@@ -445,14 +451,14 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
    \end{equation*}
    For the four configurations the following exact solutions can be calculated:
    \begin{align*}
-   w_c^* &= \frac{\alpha q_0 a^4}{D} = \frac{0.01297 * 10^{-4} * 2^4}{1.6} = 12.97\times 10^{-6}\quad \text{(simply supported, uniform load)}\\
-   w_c^* &= \frac{\alpha q_0 a^4}{D} = \frac{0.00256 * 10^{-4} * 2^4}{1.6} = 2.56\times 10^{-6}\quad \text{(clamped, uniform load)}\\
-   w_c^* &= \frac{\alpha q_0 a^4}{D} = \frac{0.01695 * 10^{-4} * 2^4}{1.6} = 16.95\times 10^{-6}\quad \text{(simply supported, point load)}\\
-   w_c^* &= \frac{\alpha q_0 a^4}{D} = \frac{0.00725 * 10^{-4} * 2^4}{1.6} = 7.25\times 10^{-6}\quad \text{(clamped point load)}
+   w_c^* &= \alpha \frac{q_0 a^4}{D} = 0.01297 \frac{10^{-4} * 2^4}{1.6} = 12.97\times 10^{-6}\quad \text{(simply supported, uniform load)}\\
+   w_c^* &= \alpha \frac{q_0 a^4}{D} = 0.00256 \frac{10^{-4} * 2^4}{1.6} = 2.56\times 10^{-6}\quad \text{(clamped, uniform load)}\\
+   w_c^* &= \alpha \frac{P a^2}{D} = 0.01695 \frac{4 * 10^{-4} * 2^2}{1.6} = 16.95\times 10^{-6}\quad \text{(simply supported, concentr. load)}\\
+   w_c^* &= \alpha \frac{P a^2}{D} = 0.00725 \frac{4 * 10^{-4} * 2^2}{1.6} = 7.25\times 10^{-6}\quad \text{(clamped concentr. load)}
    \end{align*}
-   These values are the benchmarks that were compared with the program's solutions. The results are displayed in Table \ref{tab:testF}. A subdivision of only 2 elements on every axis leads to a very poor accuracy that lies in the range from $11.03\%$ to $57.81\%$ difference to the exact value. The accuracy gets better for each increase in the subdivision level with two exceptions: The accuracy for the tests with a uniform loading and clamped boundary conditions stuck at a accuracy of about $1.7\%$. The other exception is the $4\!\times\!4$ subdivision of the simply supported plate with concentrated loading: The accuracy is much better than the following and the subdivision level of 32 is the first mesh that has better accuracy. Both phenomena cannot be explained so far, since it is not a caused by the type of boundary condition or the type of loading. Otherwise the other two configurations would not show as expected: A monotonically increasing accuracy with the level of subdivision. What can be said is that with a mesh subdivided into $64\!\times\!64$ elements, the analytically exact value is approximated well with nearly all tests below $1\%$ of difference to it.
+   These values are the benchmarks that were compared with the program's solutions. The results are displayed in Table \ref{tab:testF}. A subdivision of only 2 elements on every axis leads to a very poor accuracy that lies in the range from $11.03\%$ to $57.81\%$ difference to the exact value. The accuracy gets better for each increase in the subdivision level with two exceptions: The accuracy for the tests with a uniform loading and clamped boundary conditions stuck at an accuracy of about $1.7\%$. The other exception is the $4\!\times\!4$ subdivision of the simply supported plate with concentrated loading: The accuracy is much better than the following and a refinement of 32 is the first mesh that has better accuracy. Both phenomena cannot be explained so far, since it is neither caused by the type of boundary condition nor by the type of loading. Otherwise the other two configurations would not show as expected: A monotonically increasing accuracy with the level of refinement. What can be said is that with a mesh subdivided into $64\!\times\!64$ elements, the analytically exact value is approximated well with nearly all tests below $1\%$ of difference to it.
     
-   One difference between the two boundary conditions can be seen in the results: The simply supported tests are more and faster accurate than the ones with clamped boundary conditions. This is due to the discretization of the element: The Quad-4 element were designed with Kirchhoff's plate theory. This ignored transverse shear deformation. When the plate is simply supported the elements at the boundary can receive twists while the clamped elements cannot get any deformation. This increase of stiffness at the boundary cannot be simulated good enough with the thin-plate theory of Kirchhoff. With increasing number of elements the boundary part of the mesh gets smaller and so the bias are weighted less in the overall result.
+   One difference between the two boundary conditions can be seen in the results: The simply supported tests are more and faster accurate than the ones with clamped boundary condition. This is due to the discretization of the element: The Quad-4 element were designed with Kirchhoff's plate theory. This ignored transverse shear deformation. When the plate is simply supported the elements at the boundary can receive twists while the clamped elements cannot get any deformation. This increase of stiffness at the boundary cannot be simulated good enough with the thin-plate theory of Kirchhoff. With increasing number of elements the boundary part of the mesh gets smaller and so the bias are weighted less in the overall result.
    \begin{table}[htbp]
     \centering
     \begin{tabular}{C{1.75cm}|C{2.3cm}|C{2.7cm}|C{2.25cm}|C{1.8cm}}
@@ -488,7 +494,7 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
     \label{tab:testF}
    \end{table}
  \subsection{Test G: MPI (increasing number of processes)}\label{sec:valid-G}
-  This test aims to show the benefits of a parallel execution of the thesis' program with respect to runtime optimization. As example problem the mesh that was used in Test D (\ref{sec:valid-D)} is taken for this test, too. A mesh subdivision of $64\!\times\!64$ elements was chosen in the test with the Quad-4 element. For the Tri-3 element test, every such square element were divided at its diagonal creating two triangular elements. The testing machine's hardware was as follows: Intel Core i3 CPU M380 @ $2.53\text{GHz} \times 4$ (Dual-Core + Intel Hyper-Threading), 4 GB RAM, 64-bit ubuntu 14.04 LTS. It was tested with 1, 2, 3 and 4 processes. In order to measure the time, the built-in performance logging from libMesh was included in the program. It collects data about the number and execution time a user-defined part of the code is processed. For this test three time measurements were made. First, the overall execution time from the beginning of the program to the last line of code. Second, the time needed to assemble the system matrix and right-hand side and third the time the solver needs to calculate the system's solution. What is not measures is the initialization and mesh importing step, the setup of the system, the applying of the resulting displacements to the mesh and the writing of the output file. These parts are basically independent from the parallelization. While the solving step is done by libMesh, or more precisely by PETSc which is used in parallel execution (cf. Section \ref{sec:Impl-Parallel-Requirements}), the assembly code is program-specific.
+  This test aims to show the benefits of a parallel execution of the thesis' program with respect to runtime optimization. As example problem the same mesh as in Test D (\ref{sec:valid-D} was used, too. A refinement of $64\!\times\!64$ elements was chosen in the test with the Quad-4 element. For the Tri-3 element test, every such square element were divided at its diagonal creating two triangular elements. The testing machine's hardware was as follows: Intel Core i3 CPU M380 @ $2.53\text{GHz} \times 4$ (Dual-Core + Intel Hyper-Threading), 4 GB RAM, 64-bit ubuntu 14.04 LTS. It was tested with 1, 2, 3 and 4 processes. In order to measure the time, the built-in performance logging from libMesh was included in the program. It collects data concerning the number a specified part of the code is processed and the time it takes for this. Three time measurements were made for this test: First, the overall execution time from the beginning of the program to the last line of code. Second, the time needed to assemble the system matrix and right-hand side and third, the time the system solver needs to calculate the solution. What is not explicitly measured, is the time for the initialization and mesh importing step, the setup of the system, the applying of the resulting displacements to the mesh and the writing of the output file. These parts are basically independent from the parallelization. While the solving step is done by libMesh, or more precisely by PETSc which is used in parallel execution (cf. Section \ref{sec:Impl-Parallel-Requirements}), the assembly code is program-specific.
   
   \begin{itemize}
    \item \textbf{Mesh dimensions}\\
@@ -503,12 +509,12 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
    All sides of the plate are simply supported.
         	
    \item \textbf{Loading}\\
-   A concentrated load of $30000$ is applied to the center node (144) of the plate.
+   A concentrated load of $30000$ is applied to the center node of the plate.
   \end{itemize}
   
-  \paragraph{Results:} The exact solution to this problem is the same as in \ref{sec:valid-D}: $w_c^* = 0.1064045$. Independently from the number of processes the solutions are the same for each of the two elements, namely: $0.106465$ for Quad-4 ($0.056\%$ difference) and $0.106413$ for Tri-3 ($0.008\%$ difference). Each of the four test runs for each element was repeated five times. Thus, a minimum, a maximum and an average time followed from each run. The results are displayed in Table \ref{tab:testG} and visualized as graphs in Figure \ref{fig:solver-times}, \ref{fig:assembly-times} and \ref{fig:overall-times}.
+  \paragraph{Results:} The exact solution to this problem is the same as in \ref{sec:valid-D}: $w_c^* = 0.1064045$. Independently from the number of processes the solutions are the same for each of the two elements, namely: $0.106465$ for Quad-4 ($0.056\%$ difference) and $0.106413$ for Tri-3 ($0.008\%$ difference). Each of the four test runs for each element was repeated five times. Thus, a minimum, a maximum and an average time followed from each test series. The results are illustrated in Table \ref{tab:testG} and visualized as graphs in Figure \ref{fig:solver-times}, \ref{fig:assembly-times} and \ref{fig:overall-times}.
   
-  What can be seen without further analysis is that the runtime for every studied code part is shorter when using multiple processes in comparison to the serial execution. Although the mesh for the Quad-4 and Tri-3 was mainly the same, the test with the triangular element had twice as much elements and the structure of the two system matrices differ. Therefore the time for solving the system with the Quad-4 element cannot be compared to the time for solving the Tri-3-system, although the times for both elements were combined in the resulting graphs. The reduction in time for the solving step by using multiple processes is largely dependent on the programming of PETSc and cannot be reasoned, but only displayed in the scope of this thesis. Nevertheless, one can see a benefit of using multiple processes. A phenomenon that can be seen in all graphs is an increase in time for three processes compared to two processes. This is due to the processor configuration used for the tests: It is a dual-core processor that uses hyper-threading. When using three processes it is imaginable that either the operating system or the processor controller have difficulties to handle the extra logical core besides the two physical cores that are used. This could lead to extra managements like communication, memory transfer or context switches that slows down the execution time. Though, when using four processes the hyper-threading is beneficial: The two logical cores reduces the execution time for each code part further. The improvement is not as much as if four physical cores would be used, as the hyper-threading technology can only enhance the efficiency of a core and not replace an extra physical processor.
+  What can be seen without further analysis is that the runtime for every studied code part is shorter when using multiple processes in comparison to the sequential execution. Although the mesh for the Quad-4 and Tri-3 was mainly the same, the test with the triangular element has twice as much elements and the structure of the two system matrices differ. Therefore the time for solving the system with the Quad-4 element cannot be compared to the time for solving the Tri-3-system. The times for both elements were nonetheless combined in the resulting graphs. The reduction in time for the solving step by using multiple processes is largely dependent on the programming of PETSc and cannot be reasoned, but only displayed in the framework of this thesis. One can see a benefit of using multiple processes: Every time measurement for tests with multiple processes is shorter than the serial execution test. A phenomenon that can be seen in all graphs is an relative increase in time for three processes compared to two processes. This might be due to the processor configuration used for the tests: It is a dual-core processor that uses hyper-threading. When using four processes the hyper-threading is beneficial: The two logical cores further reduce the execution time for each code part. The improvement is not as much as if four physical cores would be used, as the hyper-threading technology can only enhance the efficiency of a core and not replace an extra physical processor.
   
   The biggest improvement in performance can be seen for the assembly time. Here, two processes nearly halved the time required for every element to contribute to the system matrix and the system right-hand side. The two elements differ slightly in time, mostly due to the complexer mathematics for the Quad-4 element (cf. \ref{sec:Shell-Plate-Tri} and \ref{sec:Shell-Plate-Quad}) and the one extra node to be considered.
   \begin{table}[htbp]
@@ -705,5 +711,55 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
    	\label{fig:overall-times}
    \end{figure}
  \subsection{Test H: Coupled ``Bending Tower''}\label{sec:valid-H}
+  The developed program is tested in a fluid-structure interaction. In the simulation the program gets coupled with a fluid solver developed with OpenFOAM, an open-source software for computational fluid dynamics \cite{openfoam-url}. As example problem a simple channel flow around a tower-like obstacle is simulated. The geometry configuration can be seen in Figure \ref{fig:testH}. The fluid solver simulates the flow coming from the left side of the channel and moving towards the right side. The tower is placed at the bottom side of the channel and has a simply supported boundary condition at this edge. It is simulated by the thesis' program. When the flow reaches the left side of the tower, it will bend to the right side due to the force steadily increasing by the flow. The coupling interface region in this test is the left, top and right edge of the tower.
   
+  \begin{figure}[htbp]
+  	\centering
+  	\setlength\unitlength{1.0cm}
+  	\begin{picture}(11,4)
+  	\thicklines
+  	\put(0.3,0.3){\vector(1,0){10.5}}\put(10.9,0.2){$x$}
+  	\put(0.3,0.3){\vector(0,1){3.5}}\put(0.2,3.9){$z$}
+  	\linethickness{0.5mm}
+  	\polygon(0.3,0.3)(0.3,3)(10.3,3)(10.3,0.3)
+  	\thicklines
+  	\polyline(3.3,0.3)(3.3,1.634)(4,1.634)(4,0.3)  	
+  	\thinlines
+  	\polygon(3.3,0.3)(3.15,0.15)(3.45,0.15)\polygon(4,0.3)(3.85,0.15)(4.15,0.15)
+  	\multiput(0.5,0.6)(0,0.5){5}{\vector(1,0){0.5}}
+  	\multiput(9.6,0.6)(0,0.5){5}{\vector(1,0){0.5}}
+  	
+  	{\scriptsize \put(-0.15,2.9){$0.4$}\put(-0.15,1.53){$0.2$}
+  		\put(0.05,0.05){$0$}
+  		\put(3.05,-0.14){$0.45$}\put(3.77,-0.14){$0.55$}\put(10.12,-0.14){$1.5$}}
+  	\end{picture}
+  	\caption{Sketch of the ``Bending Tower'' example. An rectangular obstacle is put into a channel and flow is driven from the left side towords the right side where it leaves the fluid domain. The tower-like obstacle is represented by the structure mesh, the channel by the fluid mesh.}
+  	\label{fig:testH}
+  \end{figure}
+  \begin{itemize}
+  	\item \textbf{Mesh dimensions}\\
+  	Tower height $h_t = 0.2$\\
+  	Tower length $l_t = 0.1$\\
+  	Tower thickness $t = 0.01$\\
+  	Channel height $h_c = 0.4$\\
+  	Channel length $l_c = 1.5$  	
+  	
+  	\item \textbf{Material properties}\\
+  	Young's Modulus $E = 1.0 \times 10^4$\\
+  	Poisson's ratio $\nu = 0.4$
+  	
+  	\item \textbf{Boundary conditions}\\
+  	The bottom side of the tower is simply supported.
+  	
+  \end{itemize}
+  
+  \paragraph{Results:} 
+  \begin{table}[htbp]
+  	\centering
+  	\begin{tabular}{C{2.3cm}|C{2.7cm}|C{1.8cm}}
+  		\small\textbf{Displacement} & \small\textbf{Results from program} & \small\textbf{Difference (\%)}\\\hline\hline
+  	\end{tabular}
+  	\caption{Displacements and deviations for Test H}
+  	\label{tab:testH}
+  \end{table}
 \newpage

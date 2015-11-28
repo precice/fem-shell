@@ -25,50 +25,51 @@
 \contentsline {subsection}{\numberline {4.2}Implementation Details}{50}
 \contentsline {subsubsection}{\numberline {4.2.1}Initialization}{50}
 \contentsline {subsubsection}{\numberline {4.2.2}Mesh file import}{51}
-\contentsline {subsubsection}{\numberline {4.2.3}System setup}{53}
+\contentsline {subsubsection}{\numberline {4.2.3}System setup}{54}
 \contentsline {subsubsection}{\numberline {4.2.4}Matrix and vector assembly}{55}
 \contentsline {subsubsection}{\numberline {4.2.5}Solving the system}{60}
-\contentsline {subsubsection}{\numberline {4.2.6}Output}{61}
+\contentsline {subsubsection}{\numberline {4.2.6}Output}{62}
 \contentsline {subsection}{\numberline {4.3}Parallelization with MPI}{62}
 \contentsline {subsubsection}{\numberline {4.3.1}libMesh requirements}{62}
-\contentsline {subsubsection}{\numberline {4.3.2}Partitioning the mesh}{62}
-\contentsline {subsubsection}{\numberline {4.3.3}Local elements}{63}
-\contentsline {subsubsection}{\numberline {4.3.4}Assembly changes}{64}
-\contentsline {section}{\numberline {5}Coupling through preCICE}{66}
-\contentsline {subsection}{\numberline {5.1}Overview of preCICE}{66}
-\contentsline {subsection}{\numberline {5.2}Coupling Methods}{67}
-\contentsline {subsubsection}{\numberline {5.2.1}Explicit Coupling Schemes}{67}
-\contentsline {subsubsection}{\numberline {5.2.2}Implicit Coupling Schemes}{68}
-\contentsline {subsection}{\numberline {5.3}Data Mapping}{69}
-\contentsline {subsubsection}{\numberline {5.3.1}Conservative vs.\ Consistent}{69}
-\contentsline {subsubsection}{\numberline {5.3.2}Nearest-Neighbor}{70}
-\contentsline {subsubsection}{\numberline {5.3.3}Nearest-Projection}{70}
-\contentsline {subsubsection}{\numberline {5.3.4}Radial Basis Function}{71}
-\contentsline {subsection}{\numberline {5.4}Communication}{71}
-\contentsline {subsubsection}{\numberline {5.4.1}MPI Communication}{71}
-\contentsline {subsubsection}{\numberline {5.4.2}Socket Communication}{72}
-\contentsline {subsection}{\numberline {5.5}Implementation}{72}
-\contentsline {subsubsection}{\numberline {5.5.1}preCICE Code Example}{72}
-\contentsline {subsubsection}{\numberline {5.5.2}Additional Boundary Conditions}{73}
-\contentsline {subsubsection}{\numberline {5.5.3}Partitioned Coupling Surface}{74}
-\contentsline {subsubsection}{\numberline {5.5.4}Integration of preCICE}{76}
-\contentsline {section}{\numberline {6}Validation}{81}
-\contentsline {subsection}{\numberline {6.1}Test A: Plane Displacement with Tri-3 Element}{81}
-\contentsline {paragraph}{\nonumberline Results:}{82}
-\contentsline {subsection}{\numberline {6.2}Test B: Plane Displacement with Quad-4}{82}
+\contentsline {subsubsection}{\numberline {4.3.2}Partitioning the mesh}{63}
+\contentsline {subsubsection}{\numberline {4.3.3}Local elements}{64}
+\contentsline {subsubsection}{\numberline {4.3.4}Assembly changes}{65}
+\contentsline {section}{\numberline {5}Coupling through preCICE}{67}
+\contentsline {subsection}{\numberline {5.1}Overview of preCICE}{67}
+\contentsline {subsection}{\numberline {5.2}Coupling Methods}{68}
+\contentsline {subsubsection}{\numberline {5.2.1}Explicit Coupling Schemes}{69}
+\contentsline {subsubsection}{\numberline {5.2.2}Implicit Coupling Schemes}{69}
+\contentsline {subsection}{\numberline {5.3}Data Mapping}{70}
+\contentsline {subsubsection}{\numberline {5.3.1}Conservative vs.\ Consistent}{71}
+\contentsline {subsubsection}{\numberline {5.3.2}Nearest-Neighbor}{71}
+\contentsline {subsubsection}{\numberline {5.3.3}Nearest-Projection}{72}
+\contentsline {subsubsection}{\numberline {5.3.4}Radial Basis Function}{72}
+\contentsline {subsection}{\numberline {5.4}Communication}{72}
+\contentsline {subsubsection}{\numberline {5.4.1}MPI Communication}{72}
+\contentsline {subsubsection}{\numberline {5.4.2}Socket Communication}{73}
+\contentsline {subsection}{\numberline {5.5}Implementation}{73}
+\contentsline {subsubsection}{\numberline {5.5.1}preCICE Code Example}{73}
+\contentsline {subsubsection}{\numberline {5.5.2}Additional Boundary Conditions}{74}
+\contentsline {subsubsection}{\numberline {5.5.3}Partitioned Coupling Surface}{75}
+\contentsline {subsubsection}{\numberline {5.5.4}Integration of preCICE}{77}
+\contentsline {section}{\numberline {6}Validation}{82}
+\contentsline {subsection}{\numberline {6.1}Test A: Tri-3 Plane Element Displacement}{82}
 \contentsline {paragraph}{\nonumberline Results:}{83}
-\contentsline {subsection}{\numberline {6.3}Test C: Plate Displacement with Tri-3}{84}
-\contentsline {paragraph}{\nonumberline Results:}{85}
-\contentsline {subsection}{\numberline {6.4}Test D: Plate Displacement with Quad-4}{85}
-\contentsline {paragraph}{\nonumberline Results:}{87}
-\contentsline {subsection}{\numberline {6.5}Test E: Shell Displacement}{88}
-\contentsline {paragraph}{\nonumberline Results:}{89}
-\contentsline {subsection}{\numberline {6.6}Test F: Convergence (increasing number of elements)}{89}
+\contentsline {subsection}{\numberline {6.2}Test B: Quad-4 Plane Element Displacement}{83}
+\contentsline {paragraph}{\nonumberline Results:}{84}
+\contentsline {subsection}{\numberline {6.3}Test C: Tri-3 Plate Element Displacement}{84}
+\contentsline {paragraph}{\nonumberline Results:}{86}
+\contentsline {subsection}{\numberline {6.4}Test D: Quad-4 Plate Element Displacement}{86}
+\contentsline {paragraph}{\nonumberline Results:}{88}
+\contentsline {subsection}{\numberline {6.5}Test E: Shell Elements Displacement}{88}
 \contentsline {paragraph}{\nonumberline Results:}{90}
-\contentsline {subsection}{\numberline {6.7}Test G: MPI (increasing number of processes)}{91}
-\contentsline {paragraph}{\nonumberline Results:}{93}
-\contentsline {subsection}{\numberline {6.8}Test H: Coupled ``Bending Tower''}{96}
-\contentsline {section}{\numberline {7}Summary and Conclusions}{97}
-\contentsline {subsection}{\numberline {7.1}Summary}{97}
-\contentsline {subsection}{\numberline {7.2}Conclusion}{98}
-\contentsline {subsection}{\numberline {7.3}Future Development}{100}
+\contentsline {subsection}{\numberline {6.6}Test F: Convergence (increasing number of elements)}{91}
+\contentsline {paragraph}{\nonumberline Results:}{92}
+\contentsline {subsection}{\numberline {6.7}Test G: MPI (increasing number of processes)}{92}
+\contentsline {paragraph}{\nonumberline Results:}{94}
+\contentsline {subsection}{\numberline {6.8}Test H: Coupled ``Bending Tower''}{95}
+\contentsline {paragraph}{\nonumberline Results:}{98}
+\contentsline {section}{\numberline {7}Summary and Conclusions}{99}
+\contentsline {subsection}{\numberline {7.1}Summary}{99}
+\contentsline {subsection}{\numberline {7.2}Conclusion}{100}
+\contentsline {subsection}{\numberline {7.3}Future Development}{102}

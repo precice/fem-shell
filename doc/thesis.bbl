@@ -53,6 +53,17 @@ Feel++ Consortium.
 \newblock Feel++ - finite element embedded library in c++.
 \newblock \url{http://www.feelpp.org}.
 
+\bibitem[eig]{eigen-url}
+Eigen -- a c++ template library for linear algebra: matrices, vectors,
+  numerical solvers, and related algorithms.
+\newblock \url{http://eigen.tuxfamily.org}.
+
+\bibitem[Fou]{openfoam-url}
+Open{FOAM} Foundation.
+\newblock Open{FOAM}{\textregistered} | open source {CFD} | the open{FOAM}
+  foundation.
+\newblock \url{http://www.openfoam.org}.
+
 \bibitem[Gat15]{gatzhammer2015efficient}
 Bernhard Gatzhammer.
 \newblock {\em Efficient and flexible partitioned simulation of fluid-structure
