@@ -37,7 +37,7 @@
  \end{align}
  Equation \eqref{eq:displ_strain_relation} relates the displacement vector field $\vec{u}$ with the strain field $\underline{\varepsilon}$, or $\vec{\varepsilon}$ respectively. Here, $\underline{L}$ is a differential operator. This strain-displacement relation is also called \textit{kinematic relationship} \cite{steinke2005finite}.
  
- In general initial strains can exist inside the material for example due to temperature changes or shrinkage. Such initial strains are denoted $\vec{\varepsilon_0}$ and the stresses will be influenced by the difference between the actual and initial strains. Additionally one could imagine initial residual stresses $\vec{\sigma_0}$ that can be added to the general equation:
+ In general initial strains can exist inside the material, for example due to temperature changes or shrinkage. Such initial strains are denoted $\vec{\varepsilon_0}$ and the stresses will be influenced by the difference between the actual and initial strains. Additionally one could imagine initial residual stresses $\vec{\sigma_0}$ that can be added to the general equation:
  \begin{equation}\label{eq:stress-strain-relation}
  \vec{\sigma} = \underline{D}\left(\vec{\varepsilon}-\vec{\varepsilon_0}\right)+\vec{\sigma_0}
  \end{equation}
@@ -93,7 +93,7 @@
  The first term describes the elastic deformation energy $\Pi_D$, the two terms in brackets combine the potential of the external forces $\Pi_e$
  
  \subsection{Plane Element}\label{sec:Shell-Plane}
-  Plane elements are characterized by that loads are only apply in the mid-surface directions of an element and all displacements, strains and stresses happen in the mid-surface, too. In this section plane elements are discussed in more detail and two different discretizations, a three-node triangular element and a four-node quadrilateral element, are described.
+  Plane elements are characterized by that loads are only applied in mid-surface directions of an element and all displacements, strains and stresses happen in the mid-surface, too. In this section plane elements are discussed in more detail and two different discretizations, a three-node triangular element and a four-node quadrilateral element, are described.
   
   
   \subsubsection{Problem Definition}\label{sec:Shell-Plane-ProbDef}
@@ -127,11 +127,11 @@
 \caption{Schematic view of a plane object with main dimension $l$ and thickness $t$. The two cover-surfaces are located at $z=\pm \frac{t}{2}$, the mid-surface at $z=0$.}
 \label{fig:plane}
 \end{figure}
-  In Figure \ref{fig:plane} an object is shown which extends to the x and y axis as its primary direction. The extend in z-direction is smaller and denoted by thickness $t$. The mid-surface located in between the top and bottom surface areas has the coordinate $z=0$. Its local z-axis equals the normal vector of the mid place. Such an object is called \textit{plane} in the following.
+  In Figure \ref{fig:plane} an object is shown which extends to the x and y axis as its primary direction. The extend in z-direction is smaller and denoted by thickness $t$. The mid-surface located in between the top and bottom surface areas has the coordinate $z=0$. Its local z-axis equals the normal vector of the mid place. In the following, such an object is called \textit{plane}.
   
   %- Bed. für ebenen Spannungszustand (eb. Dehnungszustand erwähnen und auf Ref (z.B. Zienkiewicz) verweisen)
   There are two different formulations regarding plane elements: Plane stress and plane strain. The directions of displacements $u$ and $v$ along the orthogonal local x and y axis defining its displacement field is a common feature of both problems. Also, both have in common, that only strains and stresses in the xy plane have to be considered: Instead of nine, only three components remain. While in the case of plane stress all other stress components are zero, in plane strain the stress in direction perpendicular to the xy plane is non-zero. In this thesis only plane stress will be discussed in further detail. More information about plane strain is given in \cite{zienkiewicz2000finite} and \cite{braess2007finite}, for instance.
-  The following conditions must be satisfied such that a plane can be in \textit{plane stress} \cite{steinke2005finite}:
+  The following conditions must be satisfied, such that a plane can be in \textit{plane stress} \cite{steinke2005finite}:
   \begin{itemize}
   	\item The thickness $t$ varies only slightly and it must hold: $t/l \ll 1$, with $l$ the extent of the larger side of the plane element.
   	\item The load is applied to the mid-surface.
@@ -182,7 +182,7 @@
   \end{pmatrix}
   = \underline{L} \vec{u}
   \end{equation}
-  With the strains known and considering equation \eqref{eq:displ_strain_relation} one can calculate the stresses $\vec{\sigma}$:
+  With the strains known and considering equation \eqref{eq:displ_strain_relation}, one can calculate the stresses $\vec{\sigma}$:
   \begin{equation}\label{eq:sigma=D*eps}
   \vec{\sigma} = \begin{pmatrix}
   \sigma_{xx} \\
@@ -391,7 +391,7 @@
   \psi_1 \\ \psi_2 \\ \psi_3
   \end{pmatrix}
   \end{align}
-  Now, inverting matrix $A$ the coefficients can be found:
+  With inverting of matrix $A$ the coefficients can be found:
   \begin{equation}\label{eq:t3_coeffsA}
   \vec{a} = \underline{A}^{-1} \vec{\psi} = \begin{pmatrix}
   0 & 0 & 1\\
@@ -401,7 +401,7 @@
   \psi_1 \\ \psi_2 \\ \psi_3
   \end{pmatrix}
   \end{equation}
-  If one put equation \eqref{eq:t3_coeffsA} into \eqref{eq:t3_ansatz}, the shape functions for the three node triangular finite element will be derived, as described in \cite{steinke2005finite}:
+  If one puts equation \eqref{eq:t3_coeffsA} into \eqref{eq:t3_ansatz}, the shape functions for the three-node triangular finite element will be derived, as described in \cite{steinke2005finite}:
   \begin{align}\label{eq:t3SF}
   u &= \vec{x}^T \vec{a} = \vec{x}^T \underline{A}^{-1}\vec{u} = \vec{N}^T\vec{u} \nonumber\\
   \vec{N}^T &= \vec{x}^T \underline{A}^{-1} =
@@ -418,7 +418,7 @@
   N_1 & N_2 & N_3
   \end{pmatrix}
   \end{align}
-  Characteristically for a shape functions $N_i$ is, as stated in \cite{steinke2005finite}, that it evaluates to 1 at node $i$ and to 0 at the two other nodes. The functions are linear with respect to $L_1$ and $L_2$ which can be noticed in equation \eqref{eq:t3SF}. As stated before, these shape functions are the same for displacement $u$ and $v$. With the knowledge of the displacement values of the element's nodes one can formulate the displacement functions in triangular coordinate notation as follows:
+  Characteristically for a shape function $N_i$ is that it evaluates to 1 at node $i$ and to 0 at the two other nodes, as stated in \cite{steinke2005finite}. The functions are linear with respect to $L_1$ and $L_2$ which can be noticed in equation \eqref{eq:t3SF}. As stated before, these shape functions are the same for displacement $u$ and $v$. With the knowledge of the displacement values of the element's nodes one can formulate the displacement functions in triangular coordinate notation as follows:
   \begin{align}
   u &= N_1 u_1 + N_2 u_2 + N_3 u_3 \nonumber\\
   v &= N_1 v_1 + N_2 v_2 + N_3 v_3
@@ -559,7 +559,7 @@
   %- see Steinke \cite{steinke2005finite} page 237-250 + Cook \cite{cook2002concepts} page 202-208\\
   One solution to this problem is the use of isoparametric elements. They can be non-rectangular. The trick is to use reference coordinates which map the physical element into a reference element that is a square. Thus, the physical element can have a more general shape, but a coordinate transformation and numerical integration is needed which brings in more mathematical complexity \cite{cook2002concepts}.
   
-  In this section a quadrilateral isoparametric elements consisting of four nodes is described and denoted by \textbf{Quad-4}. One can expand it to eight- or nine-node elements. Figure \ref{fig:coord_trafo} shows the two abstraction layers: On the left side the original element is shown in physical space, on the right side the reference element is shown. The square has a side length of $2$. The coordinate system with the $\xi$ and $\eta$ axis has its origin in the center of the square. Also note the numbering of the nodes is again counter-clockwise.
+  In this section a quadrilateral isoparametric elements consisting of four nodes is described and denoted by \textbf{Quad-4}. One can expand it to eight- or nine-node elements. Figure \ref{fig:coord_trafo} shows the two abstraction layers: On the left side the original element is shown in physical space, on the right side the reference element is shown. The square has a side length of $2$. The coordinate system with the $\xi$ and $\eta$ axis has its origin in the center of the square. Also note the numbering of the nodes is again counterclockwise.
   \begin{figure}[htbp]%- bild von original- und bildebene Bild 7.17 steinke oder 6.2-1. cook
   	\centering
   	%\includegraphics[width=0.97\linewidth]{figures/coord_trafo}
@@ -788,7 +788,7 @@
   \end{equation}
  
  \subsection{Plate Bending Element}\label{sec:Shell-Plate}
-  In contrast to the plane element, the load at the plate (bending) elements are applied transversal to the element's mid-surface producing plate bending. It has one deformation degree of freedom and two rotational degrees of freedom. Plate elements are often used to model floors or ceilings. In this section, the plate element is discussed in more detail and two discretizations are described: The three-node triangular plate element and the four-node quadrilateral plate element.  
+  In contrast to the plane element, the loads at the plate elements are applied transversal to the element's mid-surface producing plate bending. It has one deformation degree of freedom and two rotational degrees of freedom. Plate elements are often used to model floors or ceilings. In this section, the plate element is discussed in more detail and two discretizations are described: The three-node triangular plate element and the four-node quadrilateral plate element.  
   
   \subsubsection{Problem Definition}\label{sec:Shell-Plate-ProbDef}
   %\cite{steinke2005finite} ch8.1
@@ -825,7 +825,7 @@
   	\caption{Schematic drawing of a Kirchhoff plate with its main dimension $l$, thickness $t$ and loading $p$ normal to the mid-surface}
   	\label{fig:plate}
   \end{figure}
-  In contrast to a plane, where the load is located planar with respect to the plane, the load is perpendicular to the mid place at a plate. Therefore plate element problems are important for supporting structures of bridges or ceilings and floors in buildings, for example. In Figure \ref{fig:plate} one can see a generalized plate object. It has a main dimension of $l$ and a constant thickness $t$. With the assumption that $t \ll l$, the problem becomes two dimensional and, instead of the whole object, only the middle plane between the two surface areas will be considered. The object has a local coordinate system with its xy-plane the mid plane and its z-axis perpendicular to this plane. The surface areas are located at $z = \pm t/2$. As stated in the beginning, the load is applied in z-direction, i.e. normal to the mid-surface.
+  In contrast to a plane, where the load is located planar with respect to the mid-surface, the load is perpendicular to the mid-surface at a plate. Therefore plate element problems are important for supporting structures of bridges or ceilings and floors in buildings, for instance. In Figure \ref{fig:plate} one can see a generalized plate object. It has a main dimension of $l$ and a constant thickness $t$. With the assumption that $t \ll l$, the problem becomes two dimensional and, instead of the whole object, only the middle plane between the two surface areas will be considered. The object has a local coordinate system with its xy-plane the mid-surface and its z-axis perpendicular to this plane. The cover-surfaces are located at $z = \pm t/2$. As stated in the beginning, the load is applied in z-direction, i.e. normal to the mid-surface.
   
   % hier wird die kirchhoff-platten-theorie verwendet
   In this work Kirchhoff's theory of thin plates is used. For thick plates or laminated plates, the theory of Reissner-Mindlin is more applicable \cite{werkle1995finite}. The main difference is that with Reissner-Mindlin plates one takes the shear deformations into account. Thus, the normal to the mid-surface remains straight but not necessarily perpendicular to it; instead of a Kirchhoff plate: Here, the normal remains normal to the mid-surface even after deformation.
@@ -851,7 +851,7 @@
   The deformation $w$ suffices to explain the whole displacement vector. The two derivatives in the equations above describe the torsions around the x- and y-axis.
 
   % dehnungs-verschiebungs-beziehung
-  Similar to the plane element, the Kirchhoff plate element can have a plane strain or plane stress, respectively \cite{steinke2005finite}, i.e. equation \eqref{eq:displ_strain_relation} can be applied here, too:
+  Similar to the plane element, the Kirchhoff plate element can be in plane strain or plane stress, respectively \cite{steinke2005finite}, i.e. equation \eqref{eq:displ_strain_relation} can be applied here, too:
   \begin{align}
   \vec{\hat{u}} &= \begin{pmatrix}
   u\\v
@@ -902,11 +902,11 @@
   Q_y &= \int_{-t/2}^{t/2}\sigma_{yz} dz = \int_{-t/2}^{t/2} \sigma_{yz}^{\max} \left(1-4\left(\frac{z}{t}\right)^2\right)dz = \frac{2}{3} \sigma_{yz}^{\max} t \nonumber\\
   &= \frac{2}{3} \sigma_{yz}(z=0) t
   \end{align}
-  The transverse stress is distributed quadratically over the thickness t, i.e. they have their maximum at $z=0$ and vanish at $z = \pm t/2$. The equilibrium of forces in z-direction leads to:
+  The transverse stress is distributed quadratically over the thickness t, i.e. they have their maximum at $z=0$ and vanish at $z = \pm \frac{t}{2}$. The equilibrium of forces in z-direction leads to:
   \begin{equation}\label{eq:dQx+dQy+p=0}
   \frac{\partial Q_x}{\partial x} + \frac{\partial Q_y}{\partial y} + p = 0
   \end{equation}
-  with $p$ the load applied perpendicular to the mid-surface. Additionally the equilibrium of moments around the x- and y-axis:\\
+  with $p$ being the load applied perpendicular to the mid-surface. Additionally the equilibrium of moments around the x- and y-axis:\\
   \begin{align}\label{eq:dMxx+dMxy+Qx=0}
   \frac{\partial M_{xx}}{\partial x} + \frac{\partial M_{xy}}{\partial y} + Q_x &= 0 \nonumber\\
   \frac{\partial M_{yy}}{\partial y} + \frac{\partial M_{xy}}{\partial x} + Q_y &= 0
@@ -966,7 +966,7 @@
   	\caption{Part of a plate's boundary with its essential and natural boundary conditions}
   	\label{fig:plate_boundary}
   \end{figure}
-  Let $P$ be a point on the continuous boundary of the plate with a local Cartesian coordinate system as described in \cite{steinke2005finite} (see Figure \ref{fig:plate_boundary}): The $n$ coordinate is perpendicular to the boundary surface, the $s$ axis tangential to it. The third axis equals the global z-axis of the plate. There are three essential and three natural boundary conditions defined for $P$: The displacement $w$, the drills $\theta_n = \partial w/\partial s, \theta_s = -\partial w/\partial n$, the shear force $Q_n$ and the moments $M_{ns}$ and $M_{nn}$. Since this leads to an inconsistency with the differential equation above, \cite{steinke2005finite} stated that Kirchhoff introduced new forces:
+  Let $P$ be a point on the continuous boundary of the plate with a local Cartesian coordinate system as described in \cite{steinke2005finite} (see Figure \ref{fig:plate_boundary}): The $n$ coordinate is perpendicular to the boundary surface, the $s$ axis tangential to it. The third axis equals the global z-axis of the plate. There are three essential and three natural boundary conditions defined for $P$: The displacement $w$, the twists $\theta_n = \partial w/\partial s, \theta_s = -\partial w/\partial n$, the shear force $Q_n$ and the moments $M_{ns}$ and $M_{nn}$. Since this leads to an inconsistency with the differential equation above, \cite{steinke2005finite} stated that Kirchhoff introduced new forces:
   \begin{equation}
   V_n = Q_n - \frac{\partial M_{ns}}{\partial s}
   \end{equation}
@@ -995,7 +995,7 @@
   \end{equation}
   
   % forderungen an plattenelement
-  Klein \cite{klein2013fem} states that for the plate element discretization additional conditions must be satisfied. They are: The bending $w(x,y)$ as well as the normal derivative $\partial w/\partial n$ at the element's boundary must be continuous to the neighboring elements. This would be the case if the bending and the normal derivative are explicitly determined by the nodal parameters at the border. Further, Klein lists requirements for a plate element ansatz:
+  Klein \cite{klein2013fem} states that for the plate element discretization additional conditions must be satisfied. They are: The bending $w(x,y)$ as well as the normal derivative $\partial w/\partial n$ at the element's boundary must be continuous to the neighboring elements. This would be the case if the bending and the normal derivative are explicitly determined by the nodal parameters at the border. Further, \cite{klein2013fem} lists requirements for a plate element approach:
   \begin{itemize}
   	\item Totality of the displacement approach in order to guarantee good convergence.
   	\item The terms $1, x, y, x^2, xy, y^2$ should be included to get variable strains, curvatures and rigid body motion.
@@ -1009,9 +1009,7 @@
   The following sections show details of two discretizations of plate elements: A triangular element with three nodes and a quadrilateral element with four nodes.
   
   \subsubsection{Tri-3 Plate Element}\label{sec:Shell-Plate-Tri}
-  There exist many different types of triangular plate elements, for example Batoz et al. \cite{batoz1980study}, Tocher \cite{tocher1963analysis} or Specht \cite{specht1988modified}. The three node triangular element from \cite{tocher1963analysis} has three degrees of freedom (d.o.f) ($w, \theta_x, \theta_y$) per node. His basis function was a complete cubic polynomial. The term $xy$ was left out, because the polynomial has one coefficient more than the element has d.o.f. This leads to the problem that no constant state of bending can be described (non-conforming element) and this leads to wrong results at convergence \cite{steinke2005finite}. Therefore, Steinke challenges the practical use of this element.
-  A possible way to use a complete cubic polynomial would be to add another node in the center of mass of the triangle and assign the only degree of freedom $w$ to it \cite{steinke2005finite}. But the problem of non-conformity persist, as the nodal twists don't suffice to describe the twists along the element's edges, which are quadric. Here, additional nodes on the edges would be needed.
-  To get a conforming element one can choose a basis function with a complete polynomial of fifth order. It has 21 coefficients and d.o.f. They are distributed as follows: Every node has six d.o.f $(w, \partial w/\partial x, \partial w/\partial y, \partial^2 w/\partial x^2, \partial^2 w/\partial y^2, \partial^2 w/\partial x\partial y)$ and the mid node of every edge gets the degree of freedom $\partial w/\partial n$. A conform element with continuous twists at its edges follows from that. But the 21 d.o.f. per element leads to high computational effort and second order derivatives at the boundaries are needed. Hence, Steinke advices against using it in practice \cite{steinke2005finite}.
+  There exist many different types of triangular plate elements, introduced for example in \cite{batoz1980study}, \cite{tocher1963analysis} and \cite{specht1988modified}. The three-node triangular element from \cite{tocher1963analysis} has three degrees of freedom (d.o.f) ($w, \theta_x, \theta_y$) per node. Its basis function is a complete cubic polynomial. The term $xy$ was left out, because the polynomial has one coefficient more than the element has d.o.f. This leads to the problem that no constant state of bending can be described (non-conforming element) and this leads to wrong results at convergence \cite{steinke2005finite}. Therefore, \cite{steinke2005finite} challenges the practical use of this element. A possible way to use a complete cubic polynomial would be to add another node in the triangle's center of mass and assign $w$ as the only degree of freedom to it \cite{steinke2005finite}. But the problem of non-conformity persists, as the nodal twists don't suffice to describe the twists along the element's edges, which are quadric. Here, additional nodes on the edges would be needed. To get a conforming element, one can choose a basis function with a complete polynomial of fifth order. It has 21 coefficients and d.o.f. They are distributed as follows: Every node has six d.o.f $(w, \partial w/\partial x, \partial w/\partial y, \partial^2 w/\partial x^2, \partial^2 w/\partial y^2, \partial^2 w/\partial x\partial y)$ and the mid node of every edge gets the degree of freedom $\partial w/\partial n$. A conform element with continuous twists at its edges follows from that. But the 21 d.o.f. per element leads to high computational effort and second order derivatives at the boundaries are needed. Hence, Steinke advices against using it in practice \cite{steinke2005finite}.
   
   % ansatzfunktion nach specht\\
   In this work an element from Specht \cite{specht1988modified} was implemented which is also described in \cite{steinke2005finite}. It has three nodes and also three d.o.f. per node: The deformation $w$ and the two twists $\theta_x$ and $\theta_y$. The basis function for the deformation $w$ is as follows:
@@ -1116,7 +1114,7 @@
   Similar to the plane elements, one can check the correctness of the shape functions by evaluating them at the triangular coordinates of the three triangle's nodes. For example, shape function $N_7$ will evaluate to 1 for the coordinates $(L_1 = 0, L_2 = 0)$ (node 3) and will be zero for $(L_1 = 1, L_2 = 0)$ (node 1) and $(L_1 = 0, L_2 = 1)$ (node 2).
   
   % krümmungs-verschiebungs-beziehung\\
-  The displacement-strain relation \eqref{eq:eps=-z*kappa} introduced for the plate element contains an operator living in the Cartesian space. It has to be converted into triangular coordinates. With equation \eqref{eq:nabla=invJ*nabla-tilde} ($\nabla = \underline{J}^{-1}\tilde{\nabla}$) one can describe a second order derivative operator $\Delta$:
+  The displacement-strain relation \eqref{eq:eps=-z*kappa} introduced for the plate element contains an operator living in the Cartesian space. It has to be converted into triangular coordinates. With equation \eqref{eq:nabla=invJ*nabla-tilde} ($\nabla = \underline{J}^{-1}\tilde{\nabla}$), one can describe a second order derivative operator $\Delta$:
   \begin{align}
   \Delta &= \nabla \nabla^T = \underline{J}^{-1}\tilde{\nabla}\left(\underline{J}^{-1}\tilde{\nabla}\right)^T = \underline{J}^{-1} \tilde{\nabla} \tilde{\nabla}^T \left(\underline{J}^{-1}\right)^T = \underline{J}^{-1} \tilde{\Delta} \left(\underline{J}^{-1}\right)^T\\
   \Delta &= \begin{pmatrix}
@@ -1374,7 +1372,7 @@
   \vec{H_\xi^x}\\\vec{H_\eta^x}\\\vec{H_\xi^y}\\\vec{H_\eta^y}
   \end{pmatrix}
   \end{equation}
-  The expressions $\vec{H_\xi^x}, \vec{H_\eta^x}, \vec{H_\xi^y}$ and $\vec{H_\eta^y}$ are vectors containing the derivatives of the corresponding components of the vectors $\vec{H^x}$ and $\vec{H^y}$ with respect to $\xi$ and $\eta$, respectively.
+  The expressions $\vec{H_\xi^x}, \vec{H_\eta^x}, \vec{H_\xi^y}$ and $\vec{H_\eta^y}$ are vectors containing the derivatives of the corresponding components of the vectors $\vec{H^x}$ and $\vec{H^y}$ with respect to $\xi$ and $\eta$ respectively.
   And the matrix $\underline{B}$ can then be inserted into the displacement-strain relation, like equation \eqref{eq:kappa=YBw}:
   \begin{equation}
   \vec{\kappa} = \underline{B} \vec{w}
@@ -1523,7 +1521,7 @@
   	\label{fig:quadrilateral}
   \end{figure}
   
-  The other element described in this work is the quadrilateral. Let an arbitrary quadrilateral be given with vertices $\vec{A} = (a_x,\ a_y,\ a_z)^T, \vec{B} = (b_x,\ b_y,\ b_z)^T, \vec{C} = (c_x,\ c_y,\ c_z)^T, \vec{D} = (d_x,\ d_y,\ d_z)^T$ ordered in counter-clockwise direction, cf. Figure \ref{fig:quadrilateral}. Next, let $\vec{I}$ be the midpoint of edge $\overline{AB}$:
+  The other element described in this work is the quadrilateral. Let an arbitrary quadrilateral be given with vertices $\vec{A} = (a_x,\ a_y,\ a_z)^T, \vec{B} = (b_x,\ b_y,\ b_z)^T, \vec{C} = (c_x,\ c_y,\ c_z)^T, \vec{D} = (d_x,\ d_y,\ d_z)^T$ ordered in counterclockwise direction, cf. Figure \ref{fig:quadrilateral}. Next, let $\vec{I}$ be the midpoint of edge $\overline{AB}$:
   \begin{equation*}
    \vec{I} = \vec{A} + \frac{1}{2}\left( \vec{B}-\vec{A}\right)
   \end{equation*}
@@ -1563,7 +1561,7 @@
    \vec{\tilde{x}}_x & \vec{\tilde{x}}_y & \vec{\tilde{x}}_z\\ \vec{\tilde{y}}_x & \vec{\tilde{y}}_y & \vec{\tilde{y}}_z\\ \vec{\tilde{z}}_x & \vec{\tilde{z}}_y & \vec{\tilde{z}}_z
    \end{pmatrix}
   \end{equation}
-  Remark: In order to transform a quadrilateral element from 3D to a local two dimensional space, the nodes of the original element must all be situated on a common plane. Otherwise such a transformation cannot be performed. Such shaped quadrilaterals cannot be used as shell elements.
+  Remark: In order to transform a quadrilateral element from 3D to a local two dimensional space, the nodes of the original element must all be located on a common plane. Otherwise such a transformation cannot be performed. Such shaped quadrilaterals cannot be used as shell elements.
  
  
  \subsection{Shell Element}\label{sec:Shell-Shell}
@@ -1722,10 +1720,10 @@
  
  % Kij weisst in der Spalte theta\_z und Zeile theta\_z $(k_ij)_66$ eine null auf -> erklärung und warum schlecht. ANDERE REFERENZ ERKLÄRT, WAS WIR DESHALB MACHEN (1/1000 der diagonalwerte)
  $\left(\underline{\hat{K}}_{ij}\right)_m$ describes the submatrix of the stiffness matrix of the plane element for node $i$ and $j$ and is marked with the $\circ$-symbol, $\left(\underline{\hat{K}}_{ij}\right)_p$ describes the corresponding matrix part of the plate element's stiffness matrix and is symbolized with a $\star$.
- The degree of freedom $\theta_z$ does not exists in both, the plane and the plate element, and were introduced with the shell element. Therefore $(\underline{K}_{ij})_{66}$ is zero. The sixth degree of freedom is necessary because the missing stiffness regarding a rotation around the axis normal to the element could produce singularities in the overall stiffness matrix. This happens for example, if all neighboring elements of a node lie in the same plane, i.e. they are coplanar. A singularity can lead to a non-solvable system, so this case needs be excluded \cite{steinke2005finite}. One way is to introduce this sixth degree of freedom and give it a value that is so small that it does not influence the displacements and stresses too much. The number of this values varies: Werkle suggests a value of $1/10000$ of the smallest diagonal entry of $\underline{K}_{ij}$ \cite{werkle1995finite}, whereas \cite{kansara2004development} used $1/1000$ of the smallest diagonal entry of $\underline{K}_{ij}$. The value must be small, but big enough to prevent the singularities. Since this value is an approximation, one has to modify it, if the solution is not as expected or one cannot get a solution at all due to the addressed singularities.
+ The degree of freedom $\theta_z$ does not exists in both, the plane and the plate element, and is introduced with the shell element. Therefore $(\underline{K}_{ij})_{66}$ is zero. The sixth degree of freedom is necessary because the missing stiffness regarding a rotation around the axis normal to the element could produce singularities in the overall stiffness matrix. This happens for example, if all neighboring elements of a node lie in the same plane, i.e. they are coplanar. A singularity can lead to a non-solvable system, so this case needs be excluded \cite{steinke2005finite}. One way is to introduce this sixth degree of freedom and give it a value that is so small that it does not influence the displacements and stresses too much. The number of this values varies: Werkle suggests a value of $1/10000$ of the smallest diagonal entry of $\underline{K}_{ij}$ \cite{werkle1995finite}, whereas \cite{kansara2004development} used $1/1000$ of the smallest diagonal entry of $\underline{K}_{ij}$. The value must be small, but big enough to prevent the singularities. Since this value is an approximation, one has to modify it, if the solution is not as expected or one cannot get a solution at all due to the addressed singularities.
  
  % Dann muss die (Rück-)Transformationsmatrix $T$ erstellt werden, da SKM im lokalen KoSys definiert ist, aber in die globale Systemmatrix einsortiert werden muss
- The stiffness matrix for the shell element was constructed in a local coordinate system as described in section \ref{sec:Shell-Plane}, \ref{sec:Shell-Plate} and \ref{sec:Shell-CoTrafo}. The overall stiffness matrix containing information about all elements need to be described in a global coordinate system. Before the element stiffness matrix is added to the global stiffness matrix, it has to be transformed from local to global. This can be achieved by transforming the single blocks of $\underline{K}$ from equation \eqref{eq:shell_K_ij} with the relation:
+ The stiffness matrix for the shell element was constructed in a local coordinate system as described in section \ref{sec:Shell-Plane}, \ref{sec:Shell-Plate} and \ref{sec:Shell-CoTrafo}. The overall stiffness matrix contains information about all elements and needs to be described in a global coordinate system. Before the element stiffness matrix is added to the global stiffness matrix, it has to be transformed from local to global. This can be achieved by transforming the single blocks of $\underline{K}$ from equation \eqref{eq:shell_K_ij} with the relation:
  \begin{equation}\label{eq:shell_K_ij u_j=F_i}
  \underline{\check{K}}_{ij} \vec{\check{u}}_j = \vec{\check{F}}_i
  \end{equation}

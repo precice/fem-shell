@@ -1,7 +1,12 @@
 \newcommand{\etalchar}[1]{$^{#1}$}
-\begin{thebibliography}{CMPW02}
+\begin{thebibliography}{BAA{\etalchar{+}}15b}
 
-\bibitem[BAA{\etalchar{+}}15]{petsc-user-ref}
+\bibitem[AGL05]{ahrens2005paraview}
+James Ahrens, Berk Geveci, and Charles Law.
+\newblock Paraview: An end-user tool for large-data visualization.
+\newblock {\em The Visualization Handbook}, page 717, 2005.
+
+\bibitem[BAA{\etalchar{+}}15a]{petsc-user-ref}
 Satish Balay, Shrirang Abhyankar, Mark~F. Adams, Jed Brown, Peter Brune, Kris
   Buschelman, Lisandro Dalcin, Victor Eijkhout, William~D. Gropp, Dinesh
   Kaushik, Matthew~G. Knepley, Lois Curfman~McInnes, Karl Rupp, Barry~F. Smith,
@@ -9,6 +14,14 @@ Satish Balay, Shrirang Abhyankar, Mark~F. Adams, Jed Brown, Peter Brune, Kris
 \newblock {PETS}c users manual.
 \newblock Technical Report ANL-95/11 - Revision 3.6, Argonne National
   Laboratory, 2015.
+
+\bibitem[BAA{\etalchar{+}}15b]{petsc-web-page}
+Satish Balay, Shrirang Abhyankar, Mark~F. Adams, Jed Brown, Peter Brune, Kris
+  Buschelman, Lisandro Dalcin, Victor Eijkhout, William~D. Gropp, Dinesh
+  Kaushik, Matthew~G. Knepley, Lois~Curfman McInnes, Karl Rupp, Barry~F. Smith,
+  Stefano Zampini, and Hong Zhang.
+\newblock {PETS}c {W}eb page.
+\newblock \url{http://www.mcs.anl.gov/petsc}, 2015.
 
 \bibitem[BBH80]{batoz1980study}
 Jean-Louis Batoz, Klaus-J{\"U}Rgen Bathe, and Lee-Wing Ho.
@@ -179,10 +192,6 @@ Christophe Prud’Homme, Vincent Chabannes, Vincent Doyeux, Mourad Ismail,
   numerical methods.
 \newblock In {\em ESAIM: Proceedings}, volume~38, pages 429--455. EDP Sciences,
   2012.
-
-\bibitem[pet]{petsc2015url}
-{PETS}c web page.
-\newblock \url{http://www.mcs.anl.gov/petsc}.
 
 \bibitem[PR]{getfempp}
 Julien Pommier and Yves Renard.
