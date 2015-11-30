@@ -25,6 +25,12 @@ int main (int argc, char** argv)
     mesh.allow_renumbering(false);
     mesh.read(in_filename);
 
+    /*if (isOutfileSet)
+    {
+        exo_io = new ExodusII_IO(mesh);
+        exo_io->append(true);
+    }*/
+
     // Print information about the mesh to the screen.
     mesh.print_info();
 
@@ -182,8 +188,6 @@ int main (int argc, char** argv)
         //equation_systems.update();//equation_systems.reinit();
         equation_systems.solve();
 
-        std::cout << global_processor_id() << "," << global_n_processors() << "\n";
-
         std::vector<Number> sols;
         equation_systems.build_solution_vector(sols);
         if (global_processor_id() > 0)
@@ -221,7 +225,6 @@ int main (int argc, char** argv)
 
             if (global_processor_id() == 0)
             {
-                //std::cout << "Solution: u_vec=[";
                 MeshBase::const_node_iterator           no = mesh.nodes_begin();
                 const MeshBase::const_node_iterator end_no = mesh.nodes_end();
                 for (; no != end_no; ++no)
@@ -231,15 +234,12 @@ int main (int argc, char** argv)
                     Real displ_x = sols[6*id];
                     Real displ_y = sols[6*id+1];
                     Real displ_z = sols[6*id+2];
-                    //std::cout << "uvw_" << id << " = " << displ_x << ", " << displ_y << ", " << displ_z << "\n";
                     (*nd)(0) += displ_x;
                     (*nd)(1) += displ_y;
                     (*nd)(2) += displ_z;
                 }
-                //std::cout << "]\n" << std::endl;
             }
-
-            writeOutput(mesh, equation_systems);
+            writeOutput(mesh, equation_systems, t);
         }
     }
 
@@ -247,6 +247,10 @@ int main (int argc, char** argv)
     interface.finalize();
     std::cout << "Exiting StructureSolver" << std::endl;
     // libMesh END
+
+    //delete exo_io;
+    //exo_io = NULL;
+
     std::cout << "All done ;)\n";
 
     return 0;
@@ -1217,7 +1221,7 @@ void assemble_elasticity(EquationSystems &es, const std::string &system_name)
     }
 }
 
-void writeOutput(Mesh &mesh, EquationSystems &es)
+void writeOutput(Mesh &mesh, EquationSystems &es, int timestep)
 {
     if (!isOutfileSet)
         return;
@@ -1228,7 +1232,13 @@ void writeOutput(Mesh &mesh, EquationSystems &es)
               << std::setw(3)
               << std::setfill('0')
               << std::right
-              << ".e";
+              << timestep
+              //<< ".e";
+              << ".pvtu";
 
-    ExodusII_IO (mesh).write_equation_systems(file_name.str(), es);
+    VTKIO (mesh).write_equation_systems(file_name.str(), es);
+    //ExodusII_IO exo_io(mesh);//.write_equation_systems(file_name.str(), es);
+    //if (timestep > 0)
+    //    exo_io.append(true);
+    //exo_io.write_timestep(file_name.str(), es, timestep, timestep/(float)220.0);
 }

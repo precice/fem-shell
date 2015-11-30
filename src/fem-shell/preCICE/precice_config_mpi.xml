@@ -54,14 +54,14 @@
 
     <coupling-scheme:serial-implicit>
       <participants first="FLUID" second="STRUCTURE"/>
-      <max-time value="1.0"/>
+      <max-time value="10.0"/>
       <timestep-length value="1e-0" valid-digits="8"/>
       <!--<checkpoint timestep-interval="10"/> -->
       <max-iterations value="40"/>
       <exchange data="Forces"        mesh="Structure_Nodes" from="FLUID" to="STRUCTURE"/>
       <exchange data="Displacements" mesh="Structure_Nodes" from="STRUCTURE" to="FLUID" initialize="true"/>
 <!--         <relative-convergence-measure data="Stresses"        mesh="Structure_Nodes" limit="1e-7"/> -->
-      <relative-convergence-measure data="Displacements" mesh="Structure_Nodes" limit="1e-7"/>
+      <relative-convergence-measure data="Displacements" mesh="Structure_Nodes" limit="1e-5"/>
     </coupling-scheme:serial-implicit>
     
   </solver-interface>

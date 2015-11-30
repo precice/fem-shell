@@ -4,10 +4,10 @@
   
   <log-filter target="debug" component="precice" switch="off" />
   <log-filter target="info"  component="" switch="on"/>
-  <log-filter target="debug" component="precice::cplscheme::impl::IQNILSPostProcessing" switch="on" />
+  <!--<log-filter target="debug" component="precice::cplscheme::impl::IQNILSPostProcessing" switch="on" />
   <log-filter target="debug" component="precice::cplscheme::impl::BaseQNPostProcessing" switch="on" />
   <log-filter target="debug" component="precice::cplscheme::impl::MMPostProcessing" switch="on" />
-  <log-filter target="debug" component="precice::cplscheme::ImplicitCouplingScheme" switch="on" />
+  <log-filter target="debug" component="precice::cplscheme::ImplicitCouplingScheme" switch="on" />-->
   
   <solver-interface dimensions="3">
     
@@ -56,23 +56,23 @@
 
       <coupling-scheme:serial-implicit>
          <participants first="FLUID" second="STRUCTURE"/>
-         <max-time value="1.0"/>
+         <max-time value="10.0"/>
          <timestep-length value="1e-0" valid-digits="8"/>
          <!--<checkpoint timestep-interval="10"/> -->
-         <max-iterations value="40"/>
+         <max-iterations value="20"/>
          <exchange data="Forces"        mesh="Structure_Nodes" from="FLUID" to="STRUCTURE"/>
          <exchange data="Displacements" mesh="Structure_Nodes" from="STRUCTURE" to="FLUID" initialize="true"/>
 <!--         <relative-convergence-measure data="Stresses"        mesh="Structure_Nodes" limit="1e-7"/> -->
-         <relative-convergence-measure data="Displacements" mesh="Structure_Nodes" limit="1e-7"/>
+         <relative-convergence-measure data="Displacements" mesh="Structure_Nodes" limit="1e-4"/>
          <post-processing:IQN-ILS> 
 	    <!-- PostProc always done on the second solver -->
             <data name="Displacements" mesh="Structure_Nodes">
             <!-- <data name="Stresses" mesh="Structure_Nodes" scaling="1e7">  Won't work for a serial scheme--> 
             <initial-relaxation value="0.001"/>
-            <max-used-iterations value="50"/>
-            <timesteps-reused value="8"/>
+            <max-used-iterations value="20"/>
+            <timesteps-reused value="5"/>
             <filter name="QR1-filter"/>
-            <singularity-limit value="1e-13"/>
+            <singularity-limit value="1e-9"/>
          </post-processing:IQN-ILS>
          <extrapolation-order value="2"/>
       </coupling-scheme:serial-implicit>

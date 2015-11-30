@@ -40,14 +40,14 @@ int main (int argc, char **argv)
     }
 
     std::string configFileName(argv[1]);
-    int N        = atoi( argv[2] );
-    if (rank == 0)
+    int N        = 25;//atoi( argv[2] );
+    /*if (rank == 0)
         if (size == 1)
             N = 25;
         else
             N = 13;
     else
-        N = 12;
+        N = 12;*/
     //int localN   = N/size;
     double tau   = atof( argv[3] );
 
@@ -82,6 +82,7 @@ int main (int argc, char **argv)
     double *grid;
     grid = new double[dimensions*N];
 
+    /*
     int sqrtN = 5;//sqrt(N);
     const float meshSize = 10.0;
     float tileSize = meshSize/(float)(sqrtN-1.0);
@@ -96,10 +97,21 @@ int main (int argc, char **argv)
             f_n[i*dimensions+dim] = 0.0;
         }
     }
+    */
+    for (i = 0; i < N; i++)
+    {
+        for (int dim = 0; dim < dimensions; dim++)
+        {
+            d[i*dimensions+dim]   = 1.0;
+            d_n[i*dimensions+dim] = 1.0;
+            f[i*dimensions+dim]   = 0.0;
+            f_n[i*dimensions+dim] = 0.0;
+        }
+    }
 
     if (rank == 0)
     {
-        for (int k = 0; k < N; k++)
+        /*for (int k = 0; k < N; k++)
         {
             double x = 5.0 + (k%sqrtN) * tileSize;
             double y = 2.5 + (k/sqrtN) * tileSize;
@@ -107,17 +119,35 @@ int main (int argc, char **argv)
             grid[k*dimensions+1] = y;
             grid[k*dimensions+2] = -0.1;
             //cout << k << ": [" << x << ", " << y << "]\n";
+        }*/
+        for (int k = 0; k < 11; k++)
+        {
+            grid[k*dimensions]   = 3.0;
+            grid[k*dimensions+1] = -0.001;
+            grid[k*dimensions+2] = k/2.0;
+        }
+        for (int k = 11; k < 22; k++)
+        {
+            grid[k*dimensions]   = 5.0;
+            grid[k*dimensions+1] = -0.001;
+            grid[k*dimensions+2] = (k-11.0)/2.0;
+        }
+        for (int k = 22; k < 25; k++)
+        {
+            grid[k*dimensions]   = 3.5 + (k-22.0)/2.0;
+            grid[k*dimensions+1] = -0.001;
+            grid[k*dimensions+2] = 5.0;
         }
     }
     else
     {
         for (int k = 0; k < N; k++)
         {
-            double x = 5.0 + ((k+13)%sqrtN) * tileSize;
-            double y = 2.5 + ((k+13)/sqrtN) * tileSize;
+            //double x = 5.0 + ((k+13)%sqrtN) * tileSize;
+            //double y = 2.5 + ((k+13)/sqrtN) * tileSize;
             //cout << x << ", " << y << "| ";
-            grid[k*dimensions]   = x;
-            grid[k*dimensions+1] = y;
+            //grid[k*dimensions]   = x;
+            //grid[k*dimensions+1] = y;
             grid[k*dimensions+2] = -0.1;
             //cout << 13+k << ": [" << x << ", " << y << "]\n";
         }
@@ -145,6 +175,8 @@ int main (int argc, char **argv)
         interface.readBlockVectorData(dID, N, vertexIDs, d);
     }
 
+    double counter = 0.0;
+
     while (interface.isCouplingOngoing())
     {
         // When an implicit coupling scheme is used, checkpointing is required
@@ -154,7 +186,17 @@ int main (int argc, char **argv)
         }
 
         if (rank == 0)
-            f[5*3+2] = 1.0; //f[12*3+2] = 1.0;
+        {
+            for (int i = 0; i < 11; i++)
+            {
+                f[i*dimensions] = 1.0+sin(counter/25.0);
+            }
+            for (int i = 11; i < 22; i++)
+            {
+                f[i*dimensions] = -1.0;
+                f[i*dimensions+2] = 0.1;
+            }
+        }//f[5*3+2] = 1.0; //f[12*3+2] = 1.0;
         //for (int i = 0; i < N; i++)
         //    f[i*dimensions+2] = 1.0;
 
@@ -166,6 +208,7 @@ int main (int argc, char **argv)
         { // i.e. not yet converged
             cout << "Iterate" << endl;
             interface.fulfilledAction(actionReadIterationCheckpoint());
+            counter += 1.0;
         }
         else
         {

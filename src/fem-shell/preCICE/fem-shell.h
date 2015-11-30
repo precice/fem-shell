@@ -14,7 +14,8 @@
 #include "libmesh/libmesh.h"
 #include "libmesh/mesh.h"
 #include "libmesh/exodusII_io.h"
-//#include "libmesh/gmsh_io.h"
+#include "libmesh/gmsh_io.h"
+#include "libmesh/vtk_io.h"
 #include "libmesh/linear_implicit_system.h"
 #include "libmesh/equation_systems.h"
 #include "libmesh/fe.h"
@@ -43,6 +44,8 @@ double *forces;
 DenseMatrix<Real> Dp, Dm;
 std::unordered_map<dof_id_type, int> id_map;
 
+//ExodusII_IO *exo_io;
+
 // function prototypes:
 void read_parameters(int argc, char **argv);
 
@@ -62,6 +65,6 @@ void contribRHS(const Elem **elem, DenseVector<Real> &Fe, std::unordered_set<uns
 // Matrix and right-hand side assemble
 void assemble_elasticity(EquationSystems &es, const std::string &system_name);
 
-void writeOutput(Mesh &mesh, EquationSystems &es);
+void writeOutput(Mesh &mesh, EquationSystems &es, int timestep);
 
 #endif // FEMSHELL_H
