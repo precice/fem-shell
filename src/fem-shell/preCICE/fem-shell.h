@@ -34,7 +34,10 @@ using namespace libMesh;
 // global variables
 std::string in_filename;
 std::string out_filename;
+int dimensions; // preCICE
+int ignoredAxis; // preCICE
 std::string config_filename; // preCICE
+double deltaT; // preCICE
 bool debug;
 Real nu;
 Real em;
@@ -44,7 +47,7 @@ double *forces;
 DenseMatrix<Real> Dp, Dm;
 std::unordered_map<dof_id_type, int> id_map;
 
-//ExodusII_IO *exo_io;
+ExodusII_IO *exo_io;
 
 // function prototypes:
 void read_parameters(int argc, char **argv);

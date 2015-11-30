@@ -9,21 +9,21 @@
   <log-filter target="debug" component="precice::cplscheme::impl::MMPostProcessing" switch="on" />
   <log-filter target="debug" component="precice::cplscheme::ImplicitCouplingScheme" switch="on" />
   
-  <solver-interface dimensions="3">
+  <solver-interface dimensions="2">
     
     <!-- Data fields that are exchanged between the solvers -->
-    <data:vector name="Forces"/>
+    <data:vector name="Stresses"/>
     <data:vector name="Displacements"/>
 
     <!-- A common mesh that uses these data fields -->
     <mesh name="Fluid_Nodes">
         <use-data name="Displacements"/>
-        <use-data name="Forces"/>
+        <use-data name="Stresses"/>
     </mesh>
 
     <mesh name="Structure_Nodes">
        <use-data name="Displacements"/>   
-       <use-data name="Forces"/>
+       <use-data name="Stresses"/>
     </mesh>
 
     <!-- Communication method, use TCP sockets -->
@@ -38,27 +38,27 @@
       <use-mesh name="Fluid_Nodes" provide="yes"/>
       <use-mesh name="Structure_Nodes" from="STRUCTURE"/>
       <!-- Define input/output of the solver.  -->
-      <write-data name="Forces" mesh="Fluid_Nodes"/>
+      <write-data name="Stresses" mesh="Fluid_Nodes"/>
       <read-data  name="Displacements" mesh="Fluid_Nodes"/>
-      <mapping:nearest-projection direction="write" from="Fluid_Nodes" to="Structure_Nodes" constraint="conservative" timing="initial"/>
-      <mapping:nearest-projection direction="read"  from="Structure_Nodes" to="Fluid_Nodes" constraint="consistent" timing="initial"/>
+      <mapping:nearest-neighbor direction="write" from="Fluid_Nodes" to="Structure_Nodes" constraint="conservative" timing="initial"/>
+      <mapping:nearest-neighbor direction="read"  from="Structure_Nodes" to="Fluid_Nodes" constraint="consistent" timing="initial"/>
       <master:mpi-single/>
     </participant>
     
     <participant name="STRUCTURE">
       <use-mesh name="Structure_Nodes" provide="yes"/>
       <write-data name="Displacements" mesh="Structure_Nodes"/>
-      <read-data  name="Forces"      mesh="Structure_Nodes"/>
+      <read-data  name="Stresses"      mesh="Structure_Nodes"/>
       <master:mpi-single/>
     </participant>
 
     <coupling-scheme:serial-implicit>
       <participants first="FLUID" second="STRUCTURE"/>
-      <max-time value="10.0"/>
-      <timestep-length value="1e-0" valid-digits="8"/>
+      <max-time value="2.0"/>
+      <timestep-length value="0.01" valid-digits="8"/>
       <!--<checkpoint timestep-interval="10"/> -->
-      <max-iterations value="40"/>
-      <exchange data="Forces"        mesh="Structure_Nodes" from="FLUID" to="STRUCTURE"/>
+      <max-iterations value="20"/>
+      <exchange data="Stresses"        mesh="Structure_Nodes" from="FLUID" to="STRUCTURE"/>
       <exchange data="Displacements" mesh="Structure_Nodes" from="STRUCTURE" to="FLUID" initialize="true"/>
 <!--         <relative-convergence-measure data="Stresses"        mesh="Structure_Nodes" limit="1e-7"/> -->
       <relative-convergence-measure data="Displacements" mesh="Structure_Nodes" limit="1e-5"/>

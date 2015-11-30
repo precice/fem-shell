@@ -28,30 +28,26 @@ int main (int argc, char **argv)
     MPI_Comm_size (MPI_COMM_WORLD, &size);	/* get number of processes */
     cout << "Starting Fluid Solver Dummy (" << rank << "/" << size << ")..." << endl;
 
-    if ( argc != 4 )
+    if ( argc != 2 )
     {
         cout << endl;
-        cout << "Usage: " << argv[0] <<  " configurationFileName N tau" << endl;
+        cout << "Usage: " << argv[0] <<  " configurationFileName" << endl;
         cout << endl;
         cout << "configurationFileName: preCICE XML-configuration file" << endl;
-        cout << "N:     Number of mesh elements, needs to be equal for fluid and structure solver." << endl;
-        cout << "tau:   Dimensionless time step size." << endl;
         return -1;
     }
 
     std::string configFileName(argv[1]);
-    int N        = 25;//atoi( argv[2] );
-    /*if (rank == 0)
+    int N        = 0;
+    if (rank == 0)
         if (size == 1)
             N = 25;
         else
-            N = 13;
+            N = 11;
     else
-        N = 12;*/
-    //int localN   = N/size;
-    double tau   = atof( argv[3] );
+        N = 14;
 
-    std::cout << "N: " << N << " tau: " << tau << std::endl;
+    std::cout << "N: " << std::endl;
 
     std::string solverName = "FLUID";
 
@@ -76,28 +72,12 @@ int main (int argc, char **argv)
     //precice stuff
     int meshID = interface.getMeshID("Fluid_Nodes");
     int dID = interface.getDataID("Displacements", meshID);
-    int fID = interface.getDataID("Forces", meshID);
+    int fID = interface.getDataID("Stresses", meshID);
     int *vertexIDs;
     vertexIDs = new int[N];
     double *grid;
     grid = new double[dimensions*N];
 
-    /*
-    int sqrtN = 5;//sqrt(N);
-    const float meshSize = 10.0;
-    float tileSize = meshSize/(float)(sqrtN-1.0);
-    //cout << "sqrt(" << N << ") = " << sqrtN << endl;
-    for (i = 0; i < N; i++)
-    {
-        for (int dim = 0; dim < dimensions; dim++)
-        {
-            d[i*dimensions+dim]   = 1.0;
-            d_n[i*dimensions+dim] = 1.0;
-            f[i*dimensions+dim]   = 0.0;
-            f_n[i*dimensions+dim] = 0.0;
-        }
-    }
-    */
     for (i = 0; i < N; i++)
     {
         for (int dim = 0; dim < dimensions; dim++)
@@ -111,45 +91,26 @@ int main (int argc, char **argv)
 
     if (rank == 0)
     {
-        /*for (int k = 0; k < N; k++)
-        {
-            double x = 5.0 + (k%sqrtN) * tileSize;
-            double y = 2.5 + (k/sqrtN) * tileSize;
-            grid[k*dimensions]   = x;
-            grid[k*dimensions+1] = y;
-            grid[k*dimensions+2] = -0.1;
-            //cout << k << ": [" << x << ", " << y << "]\n";
-        }*/
         for (int k = 0; k < 11; k++)
         {
-            grid[k*dimensions]   = 3.0;
-            grid[k*dimensions+1] = -0.001;
-            grid[k*dimensions+2] = k/2.0;
-        }
-        for (int k = 11; k < 22; k++)
-        {
-            grid[k*dimensions]   = 5.0;
-            grid[k*dimensions+1] = -0.001;
-            grid[k*dimensions+2] = (k-11.0)/2.0;
-        }
-        for (int k = 22; k < 25; k++)
-        {
-            grid[k*dimensions]   = 3.5 + (k-22.0)/2.0;
-            grid[k*dimensions+1] = -0.001;
-            grid[k*dimensions+2] = 5.0;
+            grid[k*dimensions]   = 0.45;
+            //grid[k*dimensions+1] = -0.001;
+            grid[k*dimensions+1] = k*0.02;
         }
     }
     else
     {
-        for (int k = 0; k < N; k++)
+        for (int k = 0; k < 11; k++)
         {
-            //double x = 5.0 + ((k+13)%sqrtN) * tileSize;
-            //double y = 2.5 + ((k+13)/sqrtN) * tileSize;
-            //cout << x << ", " << y << "| ";
-            //grid[k*dimensions]   = x;
-            //grid[k*dimensions+1] = y;
-            grid[k*dimensions+2] = -0.1;
-            //cout << 13+k << ": [" << x << ", " << y << "]\n";
+            grid[k*dimensions]   = 0.55;
+            //grid[k*dimensions+1] = -0.001;
+            grid[k*dimensions+1] = k*0.02;
+        }
+        for (int k = 11; k < 14; k++)
+        {
+            grid[k*dimensions]   = 0.475 + (k-11.0)*0.025;
+            //grid[k*dimensions+1] = -0.001;
+            grid[k*dimensions+1] = 0.2;
         }
     }
 
@@ -175,8 +136,6 @@ int main (int argc, char **argv)
         interface.readBlockVectorData(dID, N, vertexIDs, d);
     }
 
-    double counter = 0.0;
-
     while (interface.isCouplingOngoing())
     {
         // When an implicit coupling scheme is used, checkpointing is required
@@ -189,26 +148,26 @@ int main (int argc, char **argv)
         {
             for (int i = 0; i < 11; i++)
             {
-                f[i*dimensions] = 1.0+sin(counter/25.0);
+                f[i*dimensions] = 1.0+sin(t/25.01);
             }
-            for (int i = 11; i < 22; i++)
+
+        }
+        else
+        {
+            for (int i = 0; i < 11; i++)
             {
                 f[i*dimensions] = -1.0;
-                f[i*dimensions+2] = 0.1;
             }
-        }//f[5*3+2] = 1.0; //f[12*3+2] = 1.0;
-        //for (int i = 0; i < N; i++)
-        //    f[i*dimensions+2] = 1.0;
+        }
 
         interface.writeBlockVectorData(fID, N, vertexIDs, f);
-        interface.advance(1.0);
+        interface.advance(0.01);
         interface.readBlockVectorData(dID, N, vertexIDs, d);
 
         if (interface.isActionRequired(actionReadIterationCheckpoint()))
         { // i.e. not yet converged
             cout << "Iterate" << endl;
             interface.fulfilledAction(actionReadIterationCheckpoint());
-            counter += 1.0;
         }
         else
         {
