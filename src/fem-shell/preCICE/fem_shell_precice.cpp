@@ -60,7 +60,7 @@ int main (int argc, char** argv)
     n_nodes = preCICEnodes.size();
     dimensions = interface.getDimensions();
     if (debug)
-        std::cout << "dims = " << dimensions << ", n_nodes = " << n_nodes << "\n";
+        std::cout << "dims = " << dimensions << ", ignoredAxis = " << ignoredAxis << ", n_nodes = " << n_nodes << "\n";
     double *displ;
     displ  = new double[dimensions*n_nodes];  // Second dimension (only one cell deep) stored right after the first dimension: see SolverInterfaceImpl::setMeshVertices
     forces = new double[dimensions*n_nodes];
@@ -74,57 +74,15 @@ int main (int argc, char** argv)
     int *vertexIDs;
     vertexIDs = new int[n_nodes];
 
-    std::vector<const Node*>::iterator iter = preCICEnodes.begin();
-    ignoredAxis = 0; // we do not ignore any axis by default
     if (dimensions == 2)
     {
-        const Node *firstNd = (*iter);
-        Real xMin = (*firstNd)(0);
-        Real xMax = xMin;
-        Real yMin = (*firstNd)(1);
-        Real yMax = yMin;
-        Real zMin = (*firstNd)(2);
-        Real zMax = zMin;
-        iter++;
-        for (; iter != preCICEnodes.end(); ++iter)
-        {
-            const Node *nd = *iter;
-            Real cur;
-            cur = (*nd)(0);
-            if (cur < xMin)
-                xMin = cur;
-            if (cur > xMax)
-                xMax = cur;
-            cur = (*nd)(1);
-            if (cur < yMin)
-                yMin = cur;
-            if (cur > yMax)
-                yMax = cur;
-            cur = (*nd)(2);
-            if (cur < zMin)
-                zMin = cur;
-            if (cur > zMax)
-                zMax = cur;
-        }
-        if (xMin != xMax)
-            ignoredAxis += 1;
-        if (yMin != yMax)
-            ignoredAxis += 2;
-        if (zMin != zMax)
-            ignoredAxis += 4;
-        // ignoredAxis = 0 -> x,y,z ignored, --> invalid (0D)
-        //             = 1 -> x used, y,z ignored, --> invalid (1D)
-        //             = 2 -> y used, x,z ignored, --> invalid (1D)
-        //             = 3 -> x,y used, z ignored, --> valid (xy-2D)
-        //             = 4 -> z used, x,y ignored, --> invalid (1D)
-        //             = 5 -> x,z used, y ignored, --> valid (xz-2D)
-        //             = 6 -> y,z used, x ignored, --> valid (yz-2D)
-        //             = 7 -> x,y,z used           --> invalid (3D)
-
-        if (ignoredAxis != 3 && ignoredAxis != 5 && ignoredAxis != 6)
+        if (ignoredAxis != 'x' && ignoredAxis != 'y' && ignoredAxis != 'z')
+            ignoredAxis = '0';
+        if (ignoredAxis == '0')
             libmesh_error_msg("Error: preCICE expects 2D mesh, but mesh file does not provide this requirement.");
     }
-    iter = preCICEnodes.begin();
+
+    std::vector<const Node*>::iterator iter = preCICEnodes.begin();
     for (int i = 0 ; iter != preCICEnodes.end(); ++iter,++i)
     {
         const Node *nd = *iter;
@@ -141,17 +99,17 @@ int main (int argc, char** argv)
         }
         else
         {
-            if (ignoredAxis == 3)
+            if (ignoredAxis == 'z')
             {
                 grid[i*dimensions]   = (*nd)(0);
                 grid[i*dimensions+1] = (*nd)(1);
             }
-            else if (ignoredAxis == 5)
+            else if (ignoredAxis == 'y')
             {
                 grid[i*dimensions]   = (*nd)(0);
                 grid[i*dimensions+1] = (*nd)(2);
             }
-            else
+            else // ignoredAxis == 'x'
             {
                 grid[i*dimensions]   = (*nd)(1);
                 grid[i*dimensions+1] = (*nd)(2);
@@ -269,7 +227,7 @@ int main (int argc, char** argv)
         if (global_n_processors() > 1)
             mesh.comm().broadcast(sols);
 
-        /*std::vector<const Node*>::iterator */iter = preCICEnodes.begin();
+        iter = preCICEnodes.begin();
         for (int i = 0 ; iter != preCICEnodes.end(); ++iter,++i)
         {
             int id = (*iter)->id();
@@ -281,12 +239,12 @@ int main (int argc, char** argv)
             }
             else
             {
-                if (ignoredAxis == 3)
+                if (ignoredAxis == 'z')
                 {
                     displ[i*2]   = sols[6*id];
                     displ[i*2+1] = sols[6*id+1];
                 }
-                else if (ignoredAxis == 5)
+                else if (ignoredAxis == 'y')
                 {
                     displ[i*2]   = sols[6*id];
                     displ[i*2+1] = sols[6*id+2];
@@ -299,11 +257,6 @@ int main (int argc, char** argv)
                 if (debug)
                     std::cout << "displacements [" << displ[i*2] << ", " << displ[i*2+1] << "] at grid position [" << grid[i*2] << ", " << grid[i*2+1] << "\n";
             }
-            // add displacements to mesh:
-            //Node *nd = *no;
-            //(*nd)(0) += sols[6*i];
-            //(*nd)(1) += sols[6*i+1];
-            //(*nd)(2) += sols[6*i+2];
         }
 
         interface.writeBlockVectorData(displID, n_nodes, vertexIDs, displ);
@@ -364,6 +317,7 @@ void read_parameters(int argc, char **argv)
             << "-t: Thickness (required)\n"
             << "-mesh: Input mesh file (*.xda or *.msh, required)\n"
             << "-config: preCICE configuration file (required)\n"
+            << "-axis: dead axis ([x,y,z] optional)\n"
             << "-dt: preCICE max time step length (required, same as in config XML)\n"
             << "-out: Output file name (without extension, optional)\n"
             << "-d: Additional messages (1=on, 0=off (default))\n";
@@ -401,6 +355,9 @@ void read_parameters(int argc, char **argv)
         config_filename = command_line.next("config");
     else
         libmesh_error_msg("ERROR: preCICE configuration file not specified!");
+
+    if ( command_line.search(1, "-axis") )
+        ignoredAxis = command_line.next('0');
 
     if ( command_line.search(1, "-dt") )
         deltaT = command_line.next(0.01);
@@ -1257,17 +1214,17 @@ void contribRHS(const Elem **elem, DenseVector<Real> &Fe, std::unordered_set<uns
                 }
                 else // dimensions == 2 otherwise program would have been exited at the beginning
                 {
-                    if (ignoredAxis == 3) // xy-plane
+                    if (ignoredAxis == 'z') // xy-plane
                     {
                         Fe(side)        = forces[preCICE_id->second*2];
                         Fe(side+nsides) = forces[preCICE_id->second*2+1];
                     }
-                    else if (ignoredAxis == 5) // xz-plane
+                    else if (ignoredAxis == 'y') // xz-plane
                     {
                         Fe(side)          = forces[preCICE_id->second*2];
                         Fe(side+nsides*2) = forces[preCICE_id->second*2+1];
                     }
-                    else if (ignoredAxis == 6) // yz-plane
+                    else // yz-plane
                     {
                         Fe(side+nsides)   = forces[preCICE_id->second*2];
                         Fe(side+nsides*2) = forces[preCICE_id->second*2+1];

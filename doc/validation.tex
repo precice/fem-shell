@@ -711,7 +711,77 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
    	\label{fig:overall-times}
    \end{figure}
  \subsection{Test H: Coupled ``Bending Tower''}\label{sec:valid-H}
-  The developed program is tested in a fluid-structure interaction. In the simulation the program gets coupled with a fluid solver developed with OpenFOAM, an open-source software for computational fluid dynamics \cite{openfoam-url}. As example problem a simple channel flow around a tower-like obstacle is simulated. The geometry configuration can be seen in Figure \ref{fig:testH}. The fluid solver simulates the flow coming from the left side of the channel and moving towards the right side. The tower is placed at the bottom side of the channel and has a simply supported boundary condition at this edge. It is simulated by the thesis' program. When the flow reaches the left side of the tower, it will bend to the right side due to the force steadily increasing by the flow. The coupling interface region in this test is the left, top and right edge of the tower.
+  In order to validate the coupling functionality, the developed program was tested in a coupled simulation. A fluid-structure interaction simulation with a real-world fluid solver was still in progress at the time of the closing of the thesis. For this validation a dummy fluid-solver was used. Its pressure values resulted from simple functions applied to the different mesh nodes. The example is based on a ``bending tower'' problem, i.e. a simple channel flow around a tower-like obstacle is simulated. The setting is displayed in Figure \ref{fig:testH}. At edge \textbf{a} the fluid solver dummy produces forces $\vec{f}_{a_i}$ as follows:
+  \begin{equation*}
+  \vec{f}_{a_i} = \begin{pmatrix}
+  1 & \frac{1}{2}-0.05*i
+  \end{pmatrix}
+  \end{equation*}
+  for $0 \leq i \leq 10$. The forces are applied to the 10 nodes of the edge in positive z-direction starting at $z=0$. At edge \textbf{b} the fluid solver produces forces $\vec{f}_{b_i}$:
+  \begin{equation*}
+  \vec{f}_{b_i} = \begin{pmatrix}
+  -1 + \sin\left(\frac{\tau}{25}\right) & -i*0.01
+  \end{pmatrix}
+  \end{equation*}
+  where $0 \leq \tau \in \mathbb{N}$ denotes the current time step value and $0 \leq i \leq 10$ the node number along the edge starting at $z=0$. The nodes at the top edge does not get forces applied.
+  
+  \begin{figure}[htbp]
+    	\centering
+    	\setlength\unitlength{1.0cm}
+    	\begin{picture}(11,4)
+    	\thicklines
+    	\put(0.3,0.3){\vector(1,0){10.5}}\put(10.9,0.2){$x$}
+    	\put(0.3,0.3){\vector(0,1){3.5}}\put(0.2,3.9){$z$}
+    	\linethickness{0.5mm}
+    	\polygon(0.3,0.3)(0.3,3)(10.3,3)(10.3,0.3)
+    	\thicklines
+    	\polyline(3.3,0.3)(3.3,1.634)(4,1.634)(4,0.3)  	
+    	\thinlines
+    	\polygon(3.3,0.3)(3.15,0.15)(3.45,0.15)\polygon(4,0.3)(3.85,0.15)(4.15,0.15)
+    	\multiput(0.5,0.6)(0,0.5){5}{\vector(1,0){0.5}}
+    	\multiput(9.6,0.6)(0,0.5){5}{\vector(1,0){0.5}}
+    	
+    	{\scriptsize \put(-0.15,2.9){$0.4$}\put(-0.15,1.53){$0.2$}
+    		\put(0.05,0.05){$0$}
+    		\put(3.05,-0.14){$0.45$}\put(3.77,-0.14){$0.55$}\put(10.12,-0.14){$1.5$}}
+    	\end{picture}
+    	\caption{Sketch of the ``Bending Tower'' example. An rectangular obstacle is put into a channel and flow is driven from the left side towords the right side where it leaves the fluid domain. The tower-like obstacle is represented by the structure mesh, the channel by the fluid mesh.}
+    	\label{fig:testH}
+    \end{figure}
+    \begin{itemize}
+     \item \textbf{Mesh dimensions}\\
+     Tower height $h_t = 0.2$\\
+     Tower length $l_t = 0.1$\\
+     Tower thickness $t = 0.01$\\
+     Channel height $h_c = 0.4$\\
+     Channel length $l_c = 1.5$  	
+      	
+     \item \textbf{Material properties}\\
+     Young's Modulus $E = 1.0 \times 10^4$\\
+     Poisson's ratio $\nu = 0.3$
+      	
+     \item \textbf{Boundary conditions}\\
+     The bottom side of the tower is simply supported.
+     
+     \item \textbf{Simulation setting}\\
+     Time step length $dt = 0.01$\\
+     Simulation time $time = 4.0$\\
+     Time steps $\tau_{max} = 400$\\
+     preCICE coupling-scheme: serial-implicit\\
+     preCICE 
+    \end{itemize}
+    \paragraph{Results:} The coupling functionality 
+      \begin{table}[htbp]
+      	\centering
+      	\begin{tabular}{C{2.3cm}|C{2.7cm}|C{1.8cm}}
+      		\small\textbf{Displacement} & \small\textbf{Results from program} & \small\textbf{Difference (\%)}\\\hline\hline
+      	\end{tabular}
+      	\caption{Displacements and deviations for Test H}
+      	\label{tab:testH}
+      \end{table}
+  
+ \subsection{Test H: Coupled ``Bending Tower''}\label{sec:valid-Hb}
+  The developed program is tested in a fluid-structure interaction. In the simulation the program gets coupled with a fluid solver developed with OpenFOAM, an open-source software for computational fluid dynamics \cite{openfoam-url}. As example problem a simple channel flow around a tower-like obstacle is simulated. The geometry configuration can be seen in Figure \ref{fig:testHb}. The fluid solver simulates the flow coming from the left side of the channel and moving towards the right side. The tower is placed at the bottom side of the channel and has a simply supported boundary condition at this edge. It is simulated by the thesis' program. When the flow reaches the left side of the tower, it will bend to the right side due to the force steadily increasing by the flow. The coupling interface region in this test is the left, top and right edge of the tower.
   
   \begin{figure}[htbp]
   	\centering
@@ -729,28 +799,27 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
   	\multiput(0.5,0.6)(0,0.5){5}{\vector(1,0){0.5}}
   	\multiput(9.6,0.6)(0,0.5){5}{\vector(1,0){0.5}}
   	
-  	{\scriptsize \put(-0.15,2.9){$0.4$}\put(-0.15,1.53){$0.2$}
+  	{\scriptsize \put(-0.15,2.9){$4$}\put(-0.15,1.53){$2$}
   		\put(0.05,0.05){$0$}
-  		\put(3.05,-0.14){$0.45$}\put(3.77,-0.14){$0.55$}\put(10.12,-0.14){$1.5$}}
+  		\put(3.05,-0.14){$3$}\put(3.77,-0.14){$4$}\put(10.12,-0.14){$10$}}
   	\end{picture}
   	\caption{Sketch of the ``Bending Tower'' example. An rectangular obstacle is put into a channel and flow is driven from the left side towords the right side where it leaves the fluid domain. The tower-like obstacle is represented by the structure mesh, the channel by the fluid mesh.}
-  	\label{fig:testH}
+  	\label{fig:testHb}
   \end{figure}
   \begin{itemize}
   	\item \textbf{Mesh dimensions}\\
-  	Tower height $h_t = 0.2$\\
-  	Tower length $l_t = 0.1$\\
-  	Tower thickness $t = 0.01$\\
-  	Channel height $h_c = 0.4$\\
-  	Channel length $l_c = 1.5$  	
+  	Tower height $h_t = 2$\\
+  	Tower length $l_t = 1$\\
+  	Tower thickness $t = 0.1$\\
+  	Channel height $h_c = 4$\\
+  	Channel length $l_c = 10$  	
   	
   	\item \textbf{Material properties}\\
-  	Young's Modulus $E = 1.0 \times 10^4$\\
-  	Poisson's ratio $\nu = 0.4$
+  	Young's Modulus $E = 1.0 \times 10^7$\\
+  	Poisson's ratio $\nu = 0.3$
   	
   	\item \textbf{Boundary conditions}\\
   	The bottom side of the tower is simply supported.
-  	
   \end{itemize}
   
   \paragraph{Results:} 
@@ -760,6 +829,6 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
   		\small\textbf{Displacement} & \small\textbf{Results from program} & \small\textbf{Difference (\%)}\\\hline\hline
   	\end{tabular}
   	\caption{Displacements and deviations for Test H}
-  	\label{tab:testH}
+  	\label{tab:testHb}
   \end{table}
 \newpage

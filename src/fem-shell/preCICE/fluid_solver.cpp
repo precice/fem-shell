@@ -41,13 +41,13 @@ int main (int argc, char **argv)
     int N        = 0;
     if (rank == 0)
         if (size == 1)
-            N = 25;
+            N = 43;
         else
             N = 11;
     else
         N = 14;
 
-    std::cout << "N: " << std::endl;
+    std::cout << "N: " << N << std::endl;
 
     std::string solverName = "FLUID";
 
@@ -91,25 +91,22 @@ int main (int argc, char **argv)
 
     if (size == 1)
     {
-        for (int k = 0; k < 11; k++)
+        for (int k = 0; k < 21; k++)
         {
-            grid[k*dimensions]   = 0.45;
-            //grid[k*dimensions+1] = -0.001;
-            grid[k*dimensions+1] = 0.2-k*0.02;
+            grid[k*dimensions]   = 3.0;
+            grid[k*dimensions+1] = k*0.1;
         }
-        for (int k = 11; k < 22; k++)
+        for (int k = 21; k < 42; k++)
         {
-            grid[k*dimensions]   = 0.55;
-            //grid[k*dimensions+1] = -0.001;
-            grid[k*dimensions+1] = (k-11.0)*0.02;
+            grid[k*dimensions]   = 3.25;
+            grid[k*dimensions+1] = (k-21.0)*0.1;
         }
-        for (int k = 22; k < 25; k++)
+        for (int k = 42; k < 43; k++)
         {
-            grid[k*dimensions]   = 0.475 + (k-22.0)*0.025;
-            //grid[k*dimensions+1] = -0.001;
-            grid[k*dimensions+1] = 0.2;
+            grid[k*dimensions]   = 3.125;
+            grid[k*dimensions+1] = 2.0;
         }
-        for (int k = 0; k < 25; k++)
+        for (int k = 0; k < 43; k++)
             cout << "grid [" << grid[k*2] << ", " << grid[k*2+1] << "]\n";
     }
     else
@@ -118,8 +115,7 @@ int main (int argc, char **argv)
         {
             for (int k = 0; k < 11; k++)
             {
-                grid[k*dimensions]   = 0.45;
-                //grid[k*dimensions+1] = -0.001;
+                grid[k*dimensions]   = 3.0;
                 grid[k*dimensions+1] = k*0.02;
             }
         }
@@ -128,13 +124,11 @@ int main (int argc, char **argv)
             for (int k = 0; k < 11; k++)
             {
                 grid[k*dimensions]   = 0.55;
-                //grid[k*dimensions+1] = -0.001;
                 grid[k*dimensions+1] = k*0.02;
             }
             for (int k = 11; k < 14; k++)
             {
                 grid[k*dimensions]   = 0.475 + (k-11.0)*0.025;
-                //grid[k*dimensions+1] = -0.001;
                 grid[k*dimensions+1] = 0.2;
             }
         }
@@ -155,6 +149,11 @@ int main (int argc, char **argv)
         interface.fulfilledAction(actionWriteInitialData());
     }
 
+    for (int i = 0; i < N; i++)
+    {
+        cout << "vertexIDs[" << i << "] = " << vertexIDs[i] << " at grid position (" << grid[2*i] << ", " << grid[2*i+1] << "\n";
+    }
+
     interface.initializeData();
 
     if (interface.isReadDataAvailable())
@@ -172,13 +171,15 @@ int main (int argc, char **argv)
 
         if (size == 1)
         {
-            for (int i = 0; i < 11; i++)
+            for (int i = 0; i < 21; i++)
             {
-                f[i*dimensions] = 1.0+sin(t/25.01);
+                f[i*dimensions] = (1.65+cos(t/25.01))*i*0.05;
+                f[i*dimensions+1] = 0.2-i*0.01;
             }
-            for (int i = 11; i < 22; i++)
+            for (int i = 21; i < 42; i++)
             {
-                f[i*dimensions] = -1.0;
+                f[i*dimensions] = (-1.5+sin(t/25.01))*(1.0-0.006*(i-34)*(i-34));
+                f[i*dimensions+1] = -(i-21)*0.01;
             }
         }
         else

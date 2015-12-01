@@ -35,7 +35,7 @@ using namespace libMesh;
 std::string in_filename;
 std::string out_filename;
 int dimensions; // preCICE
-int ignoredAxis; // preCICE
+char ignoredAxis; // preCICE
 std::string config_filename; // preCICE
 double deltaT; // preCICE
 bool debug;
