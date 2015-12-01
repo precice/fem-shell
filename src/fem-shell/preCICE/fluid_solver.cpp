@@ -89,28 +89,54 @@ int main (int argc, char **argv)
         }
     }
 
-    if (rank == 0)
+    if (size == 1)
     {
         for (int k = 0; k < 11; k++)
         {
             grid[k*dimensions]   = 0.45;
             //grid[k*dimensions+1] = -0.001;
-            grid[k*dimensions+1] = k*0.02;
+            grid[k*dimensions+1] = 0.2-k*0.02;
         }
-    }
-    else
-    {
-        for (int k = 0; k < 11; k++)
+        for (int k = 11; k < 22; k++)
         {
             grid[k*dimensions]   = 0.55;
             //grid[k*dimensions+1] = -0.001;
-            grid[k*dimensions+1] = k*0.02;
+            grid[k*dimensions+1] = (k-11.0)*0.02;
         }
-        for (int k = 11; k < 14; k++)
+        for (int k = 22; k < 25; k++)
         {
-            grid[k*dimensions]   = 0.475 + (k-11.0)*0.025;
+            grid[k*dimensions]   = 0.475 + (k-22.0)*0.025;
             //grid[k*dimensions+1] = -0.001;
             grid[k*dimensions+1] = 0.2;
+        }
+        for (int k = 0; k < 25; k++)
+            cout << "grid [" << grid[k*2] << ", " << grid[k*2+1] << "]\n";
+    }
+    else
+    {
+        if (rank == 0)
+        {
+            for (int k = 0; k < 11; k++)
+            {
+                grid[k*dimensions]   = 0.45;
+                //grid[k*dimensions+1] = -0.001;
+                grid[k*dimensions+1] = k*0.02;
+            }
+        }
+        else
+        {
+            for (int k = 0; k < 11; k++)
+            {
+                grid[k*dimensions]   = 0.55;
+                //grid[k*dimensions+1] = -0.001;
+                grid[k*dimensions+1] = k*0.02;
+            }
+            for (int k = 11; k < 14; k++)
+            {
+                grid[k*dimensions]   = 0.475 + (k-11.0)*0.025;
+                //grid[k*dimensions+1] = -0.001;
+                grid[k*dimensions+1] = 0.2;
+            }
         }
     }
 
@@ -144,19 +170,33 @@ int main (int argc, char **argv)
             interface.fulfilledAction(actionWriteIterationCheckpoint());
         }
 
-        if (rank == 0)
+        if (size == 1)
         {
             for (int i = 0; i < 11; i++)
             {
                 f[i*dimensions] = 1.0+sin(t/25.01);
             }
-
+            for (int i = 11; i < 22; i++)
+            {
+                f[i*dimensions] = -1.0;
+            }
         }
         else
         {
-            for (int i = 0; i < 11; i++)
+            if (rank == 0)
             {
-                f[i*dimensions] = -1.0;
+                for (int i = 0; i < 11; i++)
+                {
+                    f[i*dimensions] = 1.0+sin(t/25.01);
+                }
+
+            }
+            else
+            {
+                for (int i = 0; i < 11; i++)
+                {
+                    f[i*dimensions] = -1.0;
+                }
             }
         }
 

@@ -59,7 +59,8 @@ int main (int argc, char** argv)
     }
     n_nodes = preCICEnodes.size();
     dimensions = interface.getDimensions();
-    std::cout << "dims = " << dimensions << ", n_nodes = " << n_nodes << "\n";
+    if (debug)
+        std::cout << "dims = " << dimensions << ", n_nodes = " << n_nodes << "\n";
     double *displ;
     displ  = new double[dimensions*n_nodes];  // Second dimension (only one cell deep) stored right after the first dimension: see SolverInterfaceImpl::setMeshVertices
     forces = new double[dimensions*n_nodes];
@@ -165,7 +166,9 @@ int main (int argc, char** argv)
     iter = preCICEnodes.begin();
     for (int i = 0 ; iter != preCICEnodes.end(); ++iter,++i)
     {
-        std::pair<dof_id_type, int> pair( (*iter)->id(), vertexIDs[i] );
+        if (debug)
+            std::cout << i << ") libMesh-ID: " << (*iter)->id() << ", vertexID: " << vertexIDs[i] << "\n";
+        std::pair<dof_id_type, int> pair( (*iter)->id(), i);
         id_map.insert(pair);
     }
     std::cout << "Structure: init precice..." << std::endl;
@@ -294,7 +297,7 @@ int main (int argc, char** argv)
                     displ[i*2+1] = sols[6*id+2];
                 }
                 if (debug)
-                    std::cout << "displacements: [" << displ[i*2] << ", " << displ[i*2+1] << "]\n";
+                    std::cout << "displacements [" << displ[i*2] << ", " << displ[i*2+1] << "] at grid position [" << grid[i*2] << ", " << grid[i*2+1] << "\n";
             }
             // add displacements to mesh:
             //Node *nd = *no;
