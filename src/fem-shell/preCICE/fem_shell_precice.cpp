@@ -155,6 +155,8 @@ int main (int argc, char** argv)
                 grid[i*dimensions]   = (*nd)(1);
                 grid[i*dimensions+1] = (*nd)(2);
             }
+            if (debug)
+                std::cout << "grid: [" << grid[i*dimensions] << ", " << grid[i*dimensions+1] << "]\n";
         }
     }
     int t = 0;
@@ -291,6 +293,8 @@ int main (int argc, char** argv)
                     displ[i*2]   = sols[6*id+1];
                     displ[i*2+1] = sols[6*id+2];
                 }
+                if (debug)
+                    std::cout << "displacements: [" << displ[i*2] << ", " << displ[i*2+1] << "]\n";
             }
             // add displacements to mesh:
             //Node *nd = *no;
@@ -448,12 +452,12 @@ void initElement(const Elem **elem, DenseMatrix<Real> &transUV, DenseMatrix<Real
     {
         // transform arbirtrary 3d triangle down to xy-plane with node A at origin (implicit):
         ndi = (*elem)->get_node(0); // node A
-        if (debug) { std::cout << "node A:\n"; ndi->print_info(std::cout); }
+        //if (debug) { std::cout << "node A:\n"; ndi->print_info(std::cout); }
         ndj = (*elem)->get_node(1); // node B
-        if (debug) { std::cout << "node B:\n"; ndj->print_info(std::cout); }
+        //if (debug) { std::cout << "node B:\n"; ndj->print_info(std::cout); }
         U = (*ndj)-(*ndi); // U = B-A
         ndj = (*elem)->get_node(2); // node C
-        if (debug) { std::cout << "node C:\n"; ndj->print_info(std::cout); }
+        //if (debug) { std::cout << "node C:\n"; ndj->print_info(std::cout); }
         V = (*ndj)-(*ndi); // V = C-A
 
         transUV.resize(3,2);
@@ -535,10 +539,10 @@ void initElement(const Elem **elem, DenseMatrix<Real> &transUV, DenseMatrix<Real
     // transform B and C (and D with QUAD4) to local coordinates and store results in the same place
     transUV.left_multiply(trafo);
 
-    if (debug) {
+    /*if (debug) {
         std::cout << "transUV:\n"; transUV.print(std::cout);
         std::cout << "\ntrafo:\n"; trafo.print(std::cout); std::cout << std::endl;
-    }
+    }*/
 
     if (type == TRI3)
     {
@@ -700,14 +704,14 @@ void calcPlate(ElemType type, DenseMatrix<Real> &dphi, Real *area, DenseMatrix<R
         Ke_p.resize(9, 9);
         for (unsigned int i = 0; i < qps.size(); i++)
         {
-            if (debug)
+            /*if (debug)
                 std::cout << "quadrature point (" << qps[i][0] << "," << qps[i][1] << ")\n";
 
             if (debug) {
                 std::cout << "Hcoeffs:\n";
                 Hcoeffs.print(std::cout);
                 std::cout << std::endl;
-            }
+            }*/
 
             DenseMatrix<Real> B;
             evalBTri(Hcoeffs, qps[i][0], qps[i][1], dphi, B);
@@ -724,11 +728,11 @@ void calcPlate(ElemType type, DenseMatrix<Real> &dphi, Real *area, DenseMatrix<R
             Y(2,2) = -dphi(2,0)*dphi(1,1)-dphi(1,0)*dphi(2,1);
             Y *= 1.0/(4.0*pow(*area,2.0));
 
-            if (debug) {
+            /*if (debug) {
                 std::cout << "B:\n";
                 B.print(std::cout);
                 std::cout << std::endl;
-            }
+            }*/
 
             DenseMatrix<Real> temp;
             temp = Dp; // temp = 3x3
@@ -753,8 +757,8 @@ void calcPlate(ElemType type, DenseMatrix<Real> &dphi, Real *area, DenseMatrix<R
         sidelen[2] = pow(dphi(2,0), 2.0) + pow(dphi(2,1), 2.0); // side CD, x34^2 + y34^2
         sidelen[3] = pow(dphi(3,0), 2.0) + pow(dphi(3,1), 2.0); // side DA, x41^2 + y41^2
 
-        if (debug)
-            std::cout << "lij^2 = (" << sidelen[0] << ", " << sidelen[1] << ", " << sidelen[2] << ", " << sidelen[3] << ")\n";
+        //if (debug)
+        //    std::cout << "lij^2 = (" << sidelen[0] << ", " << sidelen[1] << ", " << sidelen[2] << ", " << sidelen[3] << ")\n";
 
         Hcoeffs.resize(5,4); // [ a_k, b_k, c_k, d_k, e_k ], k=5,6,7,8
         for (int i = 0; i < 4; i++)
@@ -766,11 +770,11 @@ void calcPlate(ElemType type, DenseMatrix<Real> &dphi, Real *area, DenseMatrix<R
             Hcoeffs(4,i) = (0.25 * pow(dphi(i,1), 2.0) - 0.5 * pow(dphi(i,0), 2.0))/sidelen[i]; // e_k
         }
 
-        if (debug) {
+        /*if (debug) {
             std::cout << "Hcoeffs:\n";
             Hcoeffs.print(std::cout);
             std::cout << std::endl;
-        }
+        }*/
 
         // resize the current element matrix and vector to an appropriate size
         Ke_p.resize(12, 12);
@@ -787,8 +791,8 @@ void calcPlate(ElemType type, DenseMatrix<Real> &dphi, Real *area, DenseMatrix<R
             {
                 Real s = pow(-1.0, jj) * root; // +/- sqrt(1/3)
 
-                if (debug)
-                    std::cout << "(r,s) = " << r << ", " << s << "\n";
+                //if (debug)
+                //    std::cout << "(r,s) = " << r << ", " << s << "\n";
 
                 J(0,0) = (dphi(0,0)+dphi(2,0))*s - dphi(0,0) + dphi(2,0);
                 J(0,1) = (dphi(0,1)+dphi(2,1))*s - dphi(0,1) + dphi(2,1);
@@ -796,15 +800,15 @@ void calcPlate(ElemType type, DenseMatrix<Real> &dphi, Real *area, DenseMatrix<R
                 J(1,1) = (dphi(0,1)+dphi(2,1))*r - dphi(1,1) + dphi(3,1);
                 J *= 0.25;
 
-                if (debug) {
+                /*if (debug) {
                     std::cout << "J:\n";
                     J.print(std::cout);
                     std::cout << std::endl;
-                }
+                }*/
 
                 Real det = J.det();
-                if (debug)
-                    std::cout << "|J| = " << det << "\n";
+                //if (debug)
+                //    std::cout << "|J| = " << det << "\n";
 
                 Jinv(0,0) =  J(1,1);
                 Jinv(0,1) = -J(0,1);
@@ -812,20 +816,20 @@ void calcPlate(ElemType type, DenseMatrix<Real> &dphi, Real *area, DenseMatrix<R
                 Jinv(1,1) =  J(0,0);
                 Jinv *= 1.0/det;
 
-                if (debug) {
+                /*if (debug) {
                     std::cout << "Jinv:\n";
                     Jinv.print(std::cout);
                     std::cout << std::endl;
-                }
+                }*/
 
                 DenseMatrix<Real> B;
                 evalBQuad(Hcoeffs, r, s, Jinv, B);
 
-                if (debug) {
+                /*if (debug) {
                     std::cout << "B:\n";
                     B.print(std::cout);
                     std::cout << std::endl;
-                }
+                }*/
 
                 DenseMatrix<Real> temp;
                 temp = Dp; // temp = 3x3
