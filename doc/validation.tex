@@ -369,7 +369,13 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
   Two separate loads of $1.6$ are applied on the flanges of the non-clamped end's corner. One on the top of the I-beam (node 53), the other on the bottom mirrored at the xz-plane (node 26). The forces pointing horizontally to the middle of the I-beam, cf. \ref{fig:testE}.
  \end{itemize}
  
- \paragraph{Results:} In comparison to the commercial software SAP2000 shown in Table \ref{tab:testE} the thesis' elements does not provide as good accuracy as can be. The Tri-3 element has a difference of at most $3.31\%$ for the planar displacements $u_x$ and $u_y$ and at most $5.67\%$ for the vertical displacement $u_z$. The Quad-4 element is with about $10\%$ difference less accurate.
+ \paragraph{Results:} In Table \ref{tab:testE} the results of the test are presented; Figure \ref{fig:testEimg} shows a visualization of the example problem after deformation where the displacement in x-direction is displayed. In comparison to the commercial software SAP2000 the thesis' elements does not provide as good accuracy as can be. The Tri-3 element has a difference of at most $3.31\%$ for the planar displacements $u_x$ and $u_y$ and at most $5.67\%$ for the vertical displacement $u_z$. The Quad-4 element is with about $10\%$ difference less accurate.
+ \begin{figure}[htbp]
+ 	\centering
+ 	\includegraphics[width=0.75\linewidth]{figures/i-beam}
+ 	\caption{A screenshot from ParaView of the I-beam from Test E with Quad-4 elements. The displacement in x-direction $u$ is visualized by a color-map. Node 35 and 44 at located at the right end of the beam at the blue colored corners, the forces were applied at the red colored corners.}
+ 	\label{fig:testEimg}
+ \end{figure}
  \begin{table}[htbp]
   \centering
   \begin{tabular}{c|C{3.0cm}|C{2.5cm}|C{2.5cm}|C{2.7cm}}
@@ -710,54 +716,49 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
    	\caption{Overall Times}
    	\label{fig:overall-times}
    \end{figure}
- \subsection{Test H: Coupled ``Bending Tower''}\label{sec:valid-H}
-  In order to validate the coupling functionality, the developed program was tested in a coupled simulation. A fluid-structure interaction simulation with a real-world fluid solver was still in progress at the time of the closing of the thesis. For this validation a dummy fluid-solver was used. Its pressure values resulted from simple functions applied to the different mesh nodes. The example is based on a ``bending tower'' problem, i.e. a simple channel flow around a tower-like obstacle is simulated. The setting is displayed in Figure \ref{fig:testH}. At edge \textbf{a} the fluid solver dummy produces forces $\vec{f}_{a_i}$ as follows:
+ \subsection{Test H: Coupled ``Bending Tower'' with fluid solver dummy}\label{sec:valid-H}
+  In order to validate the coupling functionality, the developed program was tested in a coupled simulation. A fluid-structure interaction simulation with a real-world fluid solver is still in progress at the time this thesis was completed. For this validation, a fluid solver dummy was used. Its pressure values resulted from simple algebraic and trigonometric functions applied to the different mesh nodes. The example is based on a ``bending tower'' problem, i.e. a simple channel flow around a tower-like obstacle is simulated. The setting of the test is displayed in Figure \ref{fig:testHa0}. The mesh is composed of Tri-3 elements with $\boxslash$-orientation and 2 divided square elements in x-direction and 20 divided square elements in z-direction. The coupling interface to between the two solvers are left, top and right boundary of the tower structure, i.e. 43 nodes; 21 at every long side and one at the tip of the tower. At edge \textbf{a} the fluid solver dummy produces forces $\vec{f}_{a_i}$ as follows:
   \begin{equation*}
   \vec{f}_{a_i} = \begin{pmatrix}
-  1 & \frac{1}{2}-0.05*i
+  1.65 + \cos\left(\frac{\tau}{25}\right) \\ 0.1 - i*0.005
   \end{pmatrix}
   \end{equation*}
-  for $0 \leq i \leq 10$. The forces are applied to the 10 nodes of the edge in positive z-direction starting at $z=0$. At edge \textbf{b} the fluid solver produces forces $\vec{f}_{b_i}$:
+  for $0 \leq i \leq 20$. The forces are applied to the 10 nodes of the edge in positive z-direction starting at $z=0$. At edge \textbf{b} the fluid solver produces forces $\vec{f}_{b_i}$:
   \begin{equation*}
   \vec{f}_{b_i} = \begin{pmatrix}
-  -1 + \sin\left(\frac{\tau}{25}\right) & -i*0.01
+  -1.5 + \sin\left(\frac{\tau}{25}\right) \\ -i*0.005
   \end{pmatrix}
   \end{equation*}
-  where $0 \leq \tau \in \mathbb{N}$ denotes the current time step value and $0 \leq i \leq 10$ the node number along the edge starting at $z=0$. The nodes at the top edge does not get forces applied.
+  where $\tau \in \mathbb{N}^0$ denotes the current time step value and $0 \leq i \leq 20$ the node number along the $b$-edge starting at $z=0$. The node at the top edge does not get forces applied.
   
   \begin{figure}[htbp]
     	\centering
     	\setlength\unitlength{1.0cm}
-    	\begin{picture}(11,4)
+    	\begin{picture}(7,4)
     	\thicklines
-    	\put(0.3,0.3){\vector(1,0){10.5}}\put(10.9,0.2){$x$}
+    	\put(0.3,0.3){\vector(1,0){6.5}}\put(6.9,0.2){$x$}
     	\put(0.3,0.3){\vector(0,1){3.5}}\put(0.2,3.9){$z$}
-    	\linethickness{0.5mm}
-    	\polygon(0.3,0.3)(0.3,3)(10.3,3)(10.3,0.3)
     	\thicklines
-    	\polyline(3.3,0.3)(3.3,1.634)(4,1.634)(4,0.3)  	
+    	\polyline(4.5,0.3)(4.5,3.3)(4.9,3.3)(4.9,0.3)  	
     	\thinlines
-    	\polygon(3.3,0.3)(3.15,0.15)(3.45,0.15)\polygon(4,0.3)(3.85,0.15)(4.15,0.15)
-    	\multiput(0.5,0.6)(0,0.5){5}{\vector(1,0){0.5}}
-    	\multiput(9.6,0.6)(0,0.5){5}{\vector(1,0){0.5}}
+    	\polygon(4.5,0.3)(4.4,0.2)(4.6,0.2)\polygon(4.9,0.3)(4.8,0.2)(5,0.2)
     	
-    	{\scriptsize \put(-0.15,2.9){$0.4$}\put(-0.15,1.53){$0.2$}
+    	{\scriptsize \put(0,3.1){$2$}
     		\put(0.05,0.05){$0$}
-    		\put(3.05,-0.14){$0.45$}\put(3.77,-0.14){$0.55$}\put(10.12,-0.14){$1.5$}}
+    		\put(4.4,-0.1){$3$}\put(4.8,-0.1){$3.25$}
+    		\put(4.2,1.7){$a$}\put(5.0,1.7){$b$}}
     	\end{picture}
-    	\caption{Sketch of the ``Bending Tower'' example. An rectangular obstacle is put into a channel and flow is driven from the left side towords the right side where it leaves the fluid domain. The tower-like obstacle is represented by the structure mesh, the channel by the fluid mesh.}
-    	\label{fig:testH}
+    	\caption{Sketch of the ``Bending Tower'' example. The rectangular structure has simply supported boundary conditions at its bottom edge. On the nodes at edges $a$ and $b$ forces from the fluid solver dummy are applied, letting the tower lean forth and back during the simulation.}
+    	\label{fig:testHa0}
     \end{figure}
     \begin{itemize}
      \item \textbf{Mesh dimensions}\\
-     Tower height $h_t = 0.2$\\
-     Tower length $l_t = 0.1$\\
-     Tower thickness $t = 0.01$\\
-     Channel height $h_c = 0.4$\\
-     Channel length $l_c = 1.5$  	
+     Tower height $h_t = 2$\\
+     Tower length $l_t = 0.25$\\
+     Tower thickness $t = 0.01$  	
       	
      \item \textbf{Material properties}\\
-     Young's Modulus $E = 1.0 \times 10^4$\\
+     Young's Modulus $E = 1.0 \times 10^8$\\
      Poisson's ratio $\nu = 0.3$
       	
      \item \textbf{Boundary conditions}\\
@@ -768,20 +769,28 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
      Simulation time $time = 4.0$\\
      Time steps $\tau_{max} = 400$\\
      preCICE coupling-scheme: serial-implicit\\
-     preCICE 
+     preCICE mapping-scheme: Nearest-Neighbor
     \end{itemize}
-    \paragraph{Results:} The coupling functionality 
-      \begin{table}[htbp]
-      	\centering
-      	\begin{tabular}{C{2.3cm}|C{2.7cm}|C{1.8cm}}
-      		\small\textbf{Displacement} & \small\textbf{Results from program} & \small\textbf{Difference (\%)}\\\hline\hline
-      	\end{tabular}
-      	\caption{Displacements and deviations for Test H}
-      	\label{tab:testH}
-      \end{table}
+    \paragraph{Results:} The coupling finished successfully after 400 simulated time steps without errors. The analysis of the calculated displacements during the simulation showed the intended behavior, as can be seen in Figure \ref{fig:testHa1} for the exemplary displacement $w$ in z-direction. In Figure \ref{fig:testHa2} the deformed mesh at different time steps are presented, visualizing the bending of the tower. Although this test was performed with a non-physical fluid solver, the coupling itself between two different and independent solvers via preCICE was successful.
+
+	\begin{figure}[htbp]
+	 \centering
+	 \includegraphics[width=1.0\linewidth]{figures/i-beam_w}
+     \caption{The relative displacements in z-direction for the topmost node of the left edge is plot over time. The smooth oscillating behavior of the tower that was intended in the test can be clearly seen.}
+	 \label{fig:testHa1}
+	\end{figure}    
+
+    \begin{landscape}
+     \begin{figure}[htbp]
+      \centering
+      \includegraphics[width=1.0\linewidth]{figures/frames}
+      \caption{Single time steps of the bending tower test. A rainbow color gradient shows the delta displacements in z-direction, with red being maximal positive, green equals zero and blue being maximal negative. At time step 106, the tip of the structure is moving towards the negative x-axis, while at time step 209, the tower is moving into the other direction. Time step 298 shows the reversal point (no movement) and a s-shape of the mesh due to the different forces at both sides. Time step 377 shows another reversal point and simultaneously the maximum stretching of the tower during the simulation.}
+      \label{fig:testHa2}
+     \end{figure}
+    \end{landscape}
   
- \subsection{Test H: Coupled ``Bending Tower''}\label{sec:valid-Hb}
-  The developed program is tested in a fluid-structure interaction. In the simulation the program gets coupled with a fluid solver developed with OpenFOAM, an open-source software for computational fluid dynamics \cite{openfoam-url}. As example problem a simple channel flow around a tower-like obstacle is simulated. The geometry configuration can be seen in Figure \ref{fig:testHb}. The fluid solver simulates the flow coming from the left side of the channel and moving towards the right side. The tower is placed at the bottom side of the channel and has a simply supported boundary condition at this edge. It is simulated by the thesis' program. When the flow reaches the left side of the tower, it will bend to the right side due to the force steadily increasing by the flow. The coupling interface region in this test is the left, top and right edge of the tower.
+ \subsection{Test I: Coupled ``Bending Tower'' with real-world fluid solver}\label{sec:valid-I}
+  The developed program is tested in a fluid-structure interaction. In the simulation the program gets coupled with a fluid solver developed with OpenFOAM, an open-source software for computational fluid dynamics \cite{openfoam-url}. As example problem a simple channel flow around a tower-like obstacle is simulated. The geometry configuration can be seen in Figure \ref{fig:testI0}. The fluid solver simulates the flow coming from the left side of the channel and moving towards the right side. The tower is placed at the bottom side of the channel and has a simply supported boundary condition at this edge. It is simulated by the thesis' program. When the flow reaches the left side of the tower, it will bend to the right side due to the force steadily increasing by the flow. The coupling interface region in this test is the left, top and right edge of the tower.
   
   \begin{figure}[htbp]
   	\centering
@@ -804,7 +813,7 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
   		\put(3.05,-0.14){$3$}\put(3.77,-0.14){$4$}\put(10.12,-0.14){$10$}}
   	\end{picture}
   	\caption{Sketch of the ``Bending Tower'' example. An rectangular obstacle is put into a channel and flow is driven from the left side towords the right side where it leaves the fluid domain. The tower-like obstacle is represented by the structure mesh, the channel by the fluid mesh.}
-  	\label{fig:testHb}
+  	\label{fig:testI0}
   \end{figure}
   \begin{itemize}
   	\item \textbf{Mesh dimensions}\\
@@ -823,12 +832,4 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
   \end{itemize}
   
   \paragraph{Results:} 
-  \begin{table}[htbp]
-  	\centering
-  	\begin{tabular}{C{2.3cm}|C{2.7cm}|C{1.8cm}}
-  		\small\textbf{Displacement} & \small\textbf{Results from program} & \small\textbf{Difference (\%)}\\\hline\hline
-  	\end{tabular}
-  	\caption{Displacements and deviations for Test H}
-  	\label{tab:testHb}
-  \end{table}
 \newpage

@@ -399,7 +399,7 @@ void contribRHS(const Elem **elem, DenseVector<Real> &Fe, std::unordered_set<uns
    
    
   \subsubsection{Solving the system}\label{sec:Impl-Details-Solving}
-  The system's solving is done in libMesh with only one call: %TODO texttt leerzeichen überprüfen
+  The system's solving is done in libMesh with only one call:
   \texttt{equation\_systems.\,\!solve()}. This function performs two actions: It calls the user-defined assembly function that constructs the system matrix and right-hand side and after that it starts the solver. The rest is handled by libMesh or libraries like PETSc, respectively, though the user has some options to control the solver's behavior. Listing \ref{lst:solve_system} shows the code section responsible for the system's solving.
 \begin{lstlisting}[caption=Solve the system and build solution,label=lst:solve_system,keepspaces=true]
 // optionally set solver parameters:
@@ -456,8 +456,7 @@ void writeOutput(Mesh &mesh, EquationSystems &es)
  
  
   \subsubsection{libMesh build time requirements}\label{sec:Impl-Parallel-Requirements}
-   Although MPI is used internally throughout the libMesh library as soon as the program runs in MPI-mode, not everything will work as expected. If one tries to run a theoretically fully MPI-compatible libMesh program and tries to solve a system like the linear implicit system in this case, wrong solutions will result. The problem occurs, when libMesh is built and configured without PETSc support. Then, libMesh will use an Eigen sparse solver \cite{eigen-url}; either a version installed in the user's environment or a built-in version from libMesh itself. These solvers are only serial and cannot be used with MPI, referring to an answer on the libMesh-mailing list from Dr.\ John Peterson, one of the libMesh developers. The solution would be to install PETSc and build libMesh against it. The usage of PETSc when libMesh is executed in parallel is a strong recommendation from the developers of libMesh.
-   %TODO citen
+   Although MPI is used internally throughout the libMesh library as soon as the program runs in MPI-mode, not everything will work as expected. If one tries to run a theoretically fully MPI-compatible libMesh program and tries to solve a system like the linear implicit system in this case, wrong solutions will result. The problem occurs, when libMesh is built and configured without PETSc support. Then, libMesh will use an Eigen sparse solver \cite{eigen-url}; either a version installed in the user's environment or a built-in version from libMesh itself. These solvers are only serial and cannot be used with MPI, referring to an answer on the libMesh-mailing list from Dr.\ John Peterson, one of the libMesh developers. The solution would be to install PETSc and build libMesh against it. The usage of PETSc when libMesh is executed in parallel is a strong recommendation from the developers of libMesh \cite{libmeshMailList}.
  
  
  
@@ -467,7 +466,7 @@ void writeOutput(Mesh &mesh, EquationSystems &es)
    	\item \texttt{LinearPartitioner}: The linear partitioning algorithm is the simplest of all available partitioners. It takes the element list and splits it into equally-sized parts and assigns them to each processor.
    	\item \texttt{CentroidPartitioner}: The centroid partitioner partitions simply based on the locations of element centroids. It must be defined how to sort the element centroids, i.e. the distance in the x, y or z-direction or the radial distance.
    	\item \texttt{MetisPartitioner}: This partitioner uses the METIS graph partitioner to partition the elements. This partitioner will be used by libMesh at default if no other partitioner is specified.
-   	\item \texttt{ParmetisPartitioner}: Here, the ParMETIS graph partitioner will be used to partition the elements. %TODO auf metis webseite schauen, was unterschied zw. metis und parmetis ist
+   	\item \texttt{ParmetisPartitioner}: Here, the ParMETIS graph partitioner will be used to partition the elements. ParMETIS is an MPI-based parallel library and extends the functionality provided by METIS.
    	\item \texttt{HilbertSFCPartitioner}: The Hilbert SFC partitioner uses a Hilbert space filling curve to partition the elements.
    	\item \texttt{MortonSFCPartitioner}: Same as before but with a Morton space filling curve to partition the elements.
    \end{itemize}
