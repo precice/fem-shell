@@ -47,8 +47,6 @@ double *forces;
 DenseMatrix<Real> Dp, Dm;
 std::unordered_map<dof_id_type, int> id_map;
 
-ExodusII_IO *exo_io;
-
 // function prototypes:
 void read_parameters(int argc, char **argv);
 

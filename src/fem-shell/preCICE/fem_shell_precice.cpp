@@ -25,12 +25,6 @@ int main (int argc, char** argv)
     mesh.allow_renumbering(false);
     mesh.read(in_filename);
 
-    if (isOutfileSet)
-    {
-        exo_io = new ExodusII_IO(mesh);
-        exo_io->append(true);
-    }
-
     // Print information about the mesh to the screen.
     mesh.print_info();
 
@@ -265,7 +259,7 @@ int main (int argc, char** argv)
                     //preSols[6*id+2] = sols[6*id+2];
                 }
                 if (debug)
-                    std::cout << "displacements [" << displ[i*2] << ", " << displ[i*2+1] << "] at grid position [" << grid[i*2] << ", " << grid[i*2+1] << "\n";
+                    std::cout << "displacements [" << displ[i*2] << ", " << displ[i*2+1] << "]\n";
             }
         }
 
@@ -356,11 +350,7 @@ int main (int argc, char** argv)
     std::cout << "Exiting StructureSolver" << std::endl;
     // libMesh END
 
-    if (exo_io != NULL)
-        delete exo_io;
-    exo_io = NULL;
-
-    std::cout << "All done ;)\n";
+    std::cout << "All done :)\n";
 
     return 0;
 }
@@ -1373,12 +1363,15 @@ void writeOutput(Mesh &mesh, EquationSystems &es, int timestep)
               << std::setfill('0')
               << std::right
               << timestep
-              //<< ".e";
-              << ".pvtu";
+              << ".e";
+    ExodusII_IO (mesh).write_equation_systems(file_name.str(), es);
 
-    VTKIO (mesh).write_equation_systems(file_name.str(), es);
-    //ExodusII_IO exo_io(mesh);//.write_equation_systems(file_name.str(), es);
-    //if (timestep > 0)
-    //    exo_io.append(true);
-    //exo_io.write_timestep(file_name.str(), es, timestep, timestep/(float)220.0);
+    std::ostringstream file_name2;
+    file_name2 << out_filename << "_"
+              << std::setw(3)
+              << std::setfill('0')
+              << std::right
+              << timestep
+              << ".pvtu";
+    VTKIO (mesh).write_equation_systems(file_name2.str(), es);
 }

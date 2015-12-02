@@ -43,9 +43,9 @@ int main (int argc, char **argv)
         if (size == 1)
             N = 43;
         else
-            N = 11;
+            N = 21;
     else
-        N = 14;
+        N = 22;
 
     std::cout << "N: " << N << std::endl;
 
@@ -113,23 +113,23 @@ int main (int argc, char **argv)
     {
         if (rank == 0)
         {
-            for (int k = 0; k < 11; k++)
+            for (int k = 0; k < 21; k++)
             {
                 grid[k*dimensions]   = 3.0;
-                grid[k*dimensions+1] = k*0.02;
+                grid[k*dimensions+1] = k*0.1;
             }
         }
         else
         {
-            for (int k = 0; k < 11; k++)
+            for (int k = 0; k < 21; k++)
             {
-                grid[k*dimensions]   = 0.55;
-                grid[k*dimensions+1] = k*0.02;
+                grid[k*dimensions]   = 3.25;
+                grid[k*dimensions+1] = k*0.1;
             }
-            for (int k = 11; k < 14; k++)
+            for (int k = 21; k < 22; k++)
             {
-                grid[k*dimensions]   = 0.475 + (k-11.0)*0.025;
-                grid[k*dimensions+1] = 0.2;
+                grid[k*dimensions]   = 3.125;
+                grid[k*dimensions+1] = 2.0;
             }
         }
     }
@@ -173,32 +173,32 @@ int main (int argc, char **argv)
         {
             for (int i = 0; i < 21; i++)
             {
-                f[i*dimensions] = 0.1 + sin(t/25.01);//(1.65+cos(t/25.01))*i*0.05;
-                f[i*dimensions+1] = 0.0;//0.2-i*0.01;
+                f[i*dimensions] = 1.0 + sin(t/25.01);//*i*0.05;
+                //f[i*dimensions+1] = 0.0;//0.2-i*0.01;
             }
-            for (int i = 21; i < 42; i++)
+            /*for (int i = 21; i < 42; i++)
             {
                 f[i*dimensions] = 0.0;//(-1.5+sin(t/25.01))*(1.0-0.006*(i-34)*(i-34));
                 f[i*dimensions+1] = 0.0;//-(i-21)*0.01;
-            }
+            }*/
         }
         else
         {
             if (rank == 0)
             {
-                for (int i = 0; i < 11; i++)
+                for (int i = 0; i < 21; i++)
                 {
                     f[i*dimensions] = 1.0+sin(t/25.01);
                 }
 
             }
-            else
+            /*else
             {
                 for (int i = 0; i < 11; i++)
                 {
                     f[i*dimensions] = -1.0;
                 }
-            }
+            }*/
         }
 
         interface.writeBlockVectorData(fID, N, vertexIDs, f);

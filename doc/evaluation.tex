@@ -60,10 +60,9 @@ Part of the thesis was to analyze several frameworks which ease the work with th
   \subsection{Conclusion}
   LibMesh was chosen to be the most suitable framework for this thesis. Its seamlessly integration of MPI reduces the effort of parallelization for the user, the required finite element types are supported and a range of many more are available for future expansions of the program's code. Complex geometries can be defined in several different mesh formats as well as in a simple libMesh particular format. The integration of external libraries like PETSc gives a high flexibility for users to change solvers and/or preconditioners at runtime. The library's classes and functions are well documented and a large collection of example codes are available. It is actively maintained by fixing bugs and adding more features. Although the structure and components of the framework are intuitive to understand guided by the documentation, support by the developers is provided via mailing-lists.
   
-  %\begin{landscape}
-   \begin{table}[htbp]
-    \centering
-	\begin{tabular}{r|c|c|c|c|c}
+  \begin{table}[htbp]
+   \centering
+   \begin{tabular}{r|c|c|c|c|c}
                     & Feel++ & OOFEM & GetFEM++ & MFEM & libMesh \\\hline\hline
 	Parallelism     & + & o & o & + & + \\\hline
 	Finite Elemente & o & + & + & o & + \\\hline
@@ -73,11 +72,8 @@ Part of the thesis was to analyze several frameworks which ease the work with th
 	Actuality       & + & -o& + & + & + \\\hline
 	Usage           & o & - & o & + & o \\\hline
 	Learning curve  & ? & ? & ? & o & + \\\hline
-    \end{tabular}
-  	\caption{Comparison of the different FEM frameworks. The qualification of the framework for the corresponding requirement is denoted by symbols, where ``--'' means less suitable, ``o'' means acceptable and ``+'' means well suitable.}
+   \end{tabular}
+   \caption{Comparison of the different FEM frameworks. The qualification of the framework for the corresponding requirement is denoted by symbols, where ``--'' means less suitable, ``o'' means acceptable and ``+'' means well suitable.}
   \end{table}
-  %\end{landscape}
-  
-  
-% \subsection{Comparison}
+  %TODO schlüsse aus der tabelle ziehen
 \newpage
