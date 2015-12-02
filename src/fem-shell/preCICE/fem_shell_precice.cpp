@@ -237,30 +237,30 @@ int main (int argc, char** argv)
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    displ[i*3+j]   = sols[6*id+j]-preSols[6*id+j];
-                    preSols[6*id+j] = sols[6*id+j];
+                    displ[i*3+j] = sols[6*id+j];//-preSols[6*id+j];
+                    //preSols[6*id+j] = sols[6*id+j];
                 }
             }
             else
             {
                 if (ignoredAxis == 'z')
                 {
-                    displ[i*2]   = sols[6*id]-preSols[6*id];
-                    displ[i*2+1] = sols[6*id+1]-preSols[6*id+1];
+                    displ[i*2]   = sols[6*id];//-preSols[6*id];
+                    displ[i*2+1] = sols[6*id+1];//-preSols[6*id+1];
                     //preSols[6*id] = sols[6*id];
                     //preSols[6*id+1] = sols[6*id+1];
                 }
                 else if (ignoredAxis == 'y')
                 {
-                    displ[i*2]   = sols[6*id]-preSols[6*id];
-                    displ[i*2+1] = sols[6*id+2]-preSols[6*id+1];
+                    displ[i*2]   = sols[6*id];//-preSols[6*id];
+                    displ[i*2+1] = sols[6*id+2];//-preSols[6*id+1];
                     //preSols[6*id] = sols[6*id];
                     //preSols[6*id+1] = sols[6*id+1];
                 }
                 else
                 {
-                    displ[i*2]   = sols[6*id+1]-preSols[6*id+1];
-                    displ[i*2+1] = sols[6*id+2]-preSols[6*id+2];
+                    displ[i*2]   = sols[6*id+1];//-preSols[6*id+1];
+                    displ[i*2+1] = sols[6*id+2];//-preSols[6*id+2];
                     //preSols[6*id+1] = sols[6*id+1];
                     //preSols[6*id+2] = sols[6*id+2];
                 }
