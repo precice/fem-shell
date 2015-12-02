@@ -209,6 +209,7 @@ int main (int argc, char** argv)
     //equation_systems.parameters.set<unsigned int>("linear solver maximum iterations") = maxits*3;
     //equation_systems.parameters.set<Real>        ("linear solver tolerance") = tol/1000.0;
     std::vector<Number> preSols(mesh.n_nodes()*6, 0.0);
+    std::vector<Number> oldPos(mesh.n_nodes()*3);
     while ( interface.isCouplingOngoing() )
     {
         // When an implicit coupling scheme is used, checkpointing is required
@@ -282,21 +283,22 @@ int main (int argc, char** argv)
             std::cout << "Advancing in time, finished timestep: " << t << std::endl;
             t++;
 
-
             if (global_processor_id() == 0)
             {
                 MeshBase::const_node_iterator           no = mesh.nodes_begin();
                 const MeshBase::const_node_iterator end_no = mesh.nodes_end();
+                int it = 0;
                 for (; no != end_no; ++no)
                 {
                     Node* nd = *no;
                     int id = nd->id();
-                    Real displ_x = sols[6*id];
-                    Real displ_y = sols[6*id+1];
-                    Real displ_z = sols[6*id+2];
-                    (*nd)(0) += displ_x;
-                    (*nd)(1) += displ_y;
-                    (*nd)(2) += displ_z;
+                    oldPos[it]   = (*nd)(0);
+                    oldPos[it+1] = (*nd)(1);
+                    oldPos[it+2] = (*nd)(2);
+                    (*nd)(0) = oldPos[it]   + sols[6*id];
+                    (*nd)(1) = oldPos[it+1] + sols[6*id+1];
+                    (*nd)(2) = oldPos[it+2] + sols[6*id+2];
+                    it += 3;
                 }
             }
             writeOutput(mesh, equation_systems, t);
@@ -305,16 +307,14 @@ int main (int argc, char** argv)
             {
                 MeshBase::const_node_iterator           no = mesh.nodes_begin();
                 const MeshBase::const_node_iterator end_no = mesh.nodes_end();
+                int it = 0;
                 for (; no != end_no; ++no)
                 {
                     Node* nd = *no;
-                    int id = nd->id();
-                    Real displ_x = sols[6*id];
-                    Real displ_y = sols[6*id+1];
-                    Real displ_z = sols[6*id+2];
-                    (*nd)(0) -= displ_x;
-                    (*nd)(1) -= displ_y;
-                    (*nd)(2) -= displ_z;
+                    (*nd)(0) = oldPos[it];
+                    (*nd)(1) = oldPos[it+1];
+                    (*nd)(2) = oldPos[it+2];
+                    it += 3;
                 }
             }
         }
