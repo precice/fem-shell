@@ -208,6 +208,7 @@ int main (int argc, char** argv)
     //const unsigned int maxits = equation_systems.parameters.get<unsigned int>("linear solver maximum iterations");
     //equation_systems.parameters.set<unsigned int>("linear solver maximum iterations") = maxits*3;
     //equation_systems.parameters.set<Real>        ("linear solver tolerance") = tol/1000.0;
+    std::vector<Number> preSols(mesh.n_nodes()*6, 0.0);
     while ( interface.isCouplingOngoing() )
     {
         // When an implicit coupling scheme is used, checkpointing is required
@@ -233,26 +234,34 @@ int main (int argc, char** argv)
             int id = (*iter)->id();
             if (dimensions == 3)
             {
-                displ[i*3]   = sols[6*id];
-                displ[i*3+1] = sols[6*id+1];
-                displ[i*3+2] = sols[6*id+2];
+                for (int j = 0; j < 3; j++)
+                {
+                    displ[i*3+j]   = sols[6*id+j]-preSols[6*id+j];
+                    preSols[6*id+j] = sols[6*id+j];
+                }
             }
             else
             {
                 if (ignoredAxis == 'z')
                 {
-                    displ[i*2]   = sols[6*id];
-                    displ[i*2+1] = sols[6*id+1];
+                    displ[i*2]   = sols[6*id]-preSols[6*id];
+                    displ[i*2+1] = sols[6*id+1]-preSols[6*id+1];
+                    preSols[6*id] = sols[6*id];
+                    preSols[6*id+1] = sols[6*id+1];
                 }
                 else if (ignoredAxis == 'y')
                 {
-                    displ[i*2]   = sols[6*id];
-                    displ[i*2+1] = sols[6*id+2];
+                    displ[i*2]   = sols[6*id]-preSols[6*id];
+                    displ[i*2+1] = sols[6*id+2]-preSols[6*id+1];
+                    preSols[6*id] = sols[6*id];
+                    preSols[6*id+1] = sols[6*id+1];
                 }
                 else
                 {
-                    displ[i*2]   = sols[6*id+1];
-                    displ[i*2+1] = sols[6*id+2];
+                    displ[i*2]   = sols[6*id+1]-preSols[6*id+1];
+                    displ[i*2+1] = sols[6*id+2]-preSols[6*id+2];
+                    preSols[6*id+1] = sols[6*id+1];
+                    preSols[6*id+2] = sols[6*id+2];
                 }
                 if (debug)
                     std::cout << "displacements [" << displ[i*2] << ", " << displ[i*2+1] << "] at grid position [" << grid[i*2] << ", " << grid[i*2+1] << "\n";
@@ -273,6 +282,7 @@ int main (int argc, char** argv)
             std::cout << "Advancing in time, finished timestep: " << t << std::endl;
             t++;
 
+
             if (global_processor_id() == 0)
             {
                 MeshBase::const_node_iterator           no = mesh.nodes_begin();
@@ -290,6 +300,23 @@ int main (int argc, char** argv)
                 }
             }
             writeOutput(mesh, equation_systems, t);
+
+            if (global_processor_id() == 0)
+            {
+                MeshBase::const_node_iterator           no = mesh.nodes_begin();
+                const MeshBase::const_node_iterator end_no = mesh.nodes_end();
+                for (; no != end_no; ++no)
+                {
+                    Node* nd = *no;
+                    int id = nd->id();
+                    Real displ_x = sols[6*id];
+                    Real displ_y = sols[6*id+1];
+                    Real displ_z = sols[6*id+2];
+                    (*nd)(0) -= displ_x;
+                    (*nd)(1) -= displ_y;
+                    (*nd)(2) -= displ_z;
+                }
+            }
         }
     }
 

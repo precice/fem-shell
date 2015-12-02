@@ -173,13 +173,13 @@ int main (int argc, char **argv)
         {
             for (int i = 0; i < 21; i++)
             {
-                f[i*dimensions] = (1.65+cos(t/25.01))*i*0.05;
-                f[i*dimensions+1] = 0.2-i*0.01;
+                f[i*dimensions] = 0.1 + sin(t/25.01);//(1.65+cos(t/25.01))*i*0.05;
+                f[i*dimensions+1] = 0.0;//0.2-i*0.01;
             }
             for (int i = 21; i < 42; i++)
             {
-                f[i*dimensions] = (-1.5+sin(t/25.01))*(1.0-0.006*(i-34)*(i-34));
-                f[i*dimensions+1] = -(i-21)*0.01;
+                f[i*dimensions] = 0.0;//(-1.5+sin(t/25.01))*(1.0-0.006*(i-34)*(i-34));
+                f[i*dimensions+1] = 0.0;//-(i-21)*0.01;
             }
         }
         else
