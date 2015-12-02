@@ -247,22 +247,22 @@ int main (int argc, char** argv)
                 {
                     displ[i*2]   = sols[6*id]-preSols[6*id];
                     displ[i*2+1] = sols[6*id+1]-preSols[6*id+1];
-                    preSols[6*id] = sols[6*id];
-                    preSols[6*id+1] = sols[6*id+1];
+                    //preSols[6*id] = sols[6*id];
+                    //preSols[6*id+1] = sols[6*id+1];
                 }
                 else if (ignoredAxis == 'y')
                 {
                     displ[i*2]   = sols[6*id]-preSols[6*id];
                     displ[i*2+1] = sols[6*id+2]-preSols[6*id+1];
-                    preSols[6*id] = sols[6*id];
-                    preSols[6*id+1] = sols[6*id+1];
+                    //preSols[6*id] = sols[6*id];
+                    //preSols[6*id+1] = sols[6*id+1];
                 }
                 else
                 {
                     displ[i*2]   = sols[6*id+1]-preSols[6*id+1];
                     displ[i*2+1] = sols[6*id+2]-preSols[6*id+2];
-                    preSols[6*id+1] = sols[6*id+1];
-                    preSols[6*id+2] = sols[6*id+2];
+                    //preSols[6*id+1] = sols[6*id+1];
+                    //preSols[6*id+2] = sols[6*id+2];
                 }
                 if (debug)
                     std::cout << "displacements [" << displ[i*2] << ", " << displ[i*2+1] << "] at grid position [" << grid[i*2] << ", " << grid[i*2+1] << "\n";
@@ -282,6 +282,37 @@ int main (int argc, char** argv)
         {
             std::cout << "Advancing in time, finished timestep: " << t << std::endl;
             t++;
+
+            iter = preCICEnodes.begin();
+            for (int i = 0 ; iter != preCICEnodes.end(); ++iter,++i)
+            {
+                int id = (*iter)->id();
+                if (dimensions == 3)
+                {
+                    for (int j = 0; j < 3; j++)
+                        preSols[6*id+j] = sols[6*id+j];
+                }
+                else
+                {
+                    if (ignoredAxis == 'z')
+                    {
+                        preSols[6*id] = sols[6*id];
+                        preSols[6*id+1] = sols[6*id+1];
+                    }
+                    else if (ignoredAxis == 'y')
+                    {
+                        preSols[6*id] = sols[6*id];
+                        preSols[6*id+1] = sols[6*id+1];
+                    }
+                    else
+                    {
+                        preSols[6*id+1] = sols[6*id+1];
+                        preSols[6*id+2] = sols[6*id+2];
+                    }
+                    if (debug)
+                        std::cout << "TIMESTEP displacements [" << displ[i*2] << ", " << displ[i*2+1] << "]\n";
+                }
+            }
 
             if (global_processor_id() == 0)
             {
