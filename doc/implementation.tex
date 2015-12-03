@@ -245,7 +245,7 @@ for (; el != end_el; ++el)
    	\item Apply possible forces to the element in form of contributing to the local RHS (line 29).
    	\item Constrain the local element's stiffness matrix and RHS according to the set boundary conditions (line 31): LibMesh provides a function that automatically constrains the system matrix and right-hand side vector due to the boundary condition definitions in the initialization step.
     \item Add the element's stiffness matrix to the global system matrix (line 33): The final element's stiffness matrix is added to the overall system matrix through the function provided by libMesh. The vector storing the mappings of the degrees of freedom ensures that the matrix is added at the correct position in the system matrix.
-    \item Add the element's RHS to the global RHS (line 34): Same as before but now for the right-hand side vector.
+    \item Add the element's RHS to the global RHS (line 34): Same as before, but now for the right-hand side vector.
    \end{itemize}
    In the following, some of the steps stated above are discussed in more detail, namely the coordinate transformation, the construction of the shell element stiffness matrix and the contribution to the right-hand side vector.
    
