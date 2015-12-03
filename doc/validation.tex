@@ -717,13 +717,16 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
    	\label{fig:overall-times}
    \end{figure}
  \subsection{Test H: Coupled ``Bending Tower'' with fluid solver dummy}\label{sec:valid-H}
-  In order to validate the coupling functionality, the developed program was tested in a coupled simulation. A fluid-structure interaction simulation with a real-world fluid solver is still in progress at the time this thesis was completed. For this validation, a fluid solver dummy was used. Its pressure values resulted from simple algebraic and trigonometric functions applied to the different mesh nodes. The example is based on a ``bending tower'' problem, i.e. a simple channel flow around a tower-like obstacle is simulated. The setting of the test is displayed in Figure \ref{fig:testHa0}. The mesh is composed of Tri-3 elements with $\boxslash$-orientation and 2 divided square elements in x-direction and 20 divided square elements in z-direction. The coupling interface between the two solvers are the left, top and right boundary of the tower structure, i.e. 43 nodes; 21 at every long side and one at the tip of the tower. At edge \textbf{a} the fluid solver dummy produces forces $\vec{f}_{a_i}$ as follows:
+  In order to validate the coupling functionality, the developed program was tested in a coupled simulation. A fluid-structure interaction simulation with a real-world fluid solver is still in progress at the time this thesis was completed. For this validation, a fluid solver dummy was used. Its pressure values resulted from simple algebraic and trigonometric functions applied to the different mesh nodes. The example is based on a ``bending tower'' problem, i.e. a simple channel flow around a tower-like obstacle is simulated. The setting of the test is displayed in Figure \ref{fig:testHa0}. The mesh is composed of Tri-3 elements with $\boxslash$-orientation and 2 divided square elements in x-direction and 20 divided square elements in z-direction. The coupling interface between the two solvers are the left, top and right border of the tower structure, i.e. 43 nodes (21 at every long side and one at the tip of the tower). At edge \textbf{a} the fluid solver dummy produces forces $\vec{f}_{a_i}$ as follows:
   \begin{equation*}
   \vec{f}_{a_i} = \begin{pmatrix}
-  1.0 + \cos\left(\frac{\tau}{25}\right) \\ 0
+  f_x \\ f_z
+  \end{pmatrix} =
+  \begin{pmatrix}
+  1 + \cos\left(\frac{\tau}{25}\right) \\ 0
   \end{pmatrix}
   \end{equation*}
-  for $0 \leq i \leq 20$. The forces are applied to the 10 nodes of the edge in positive z-direction starting at $z=0$. At the top and right edge no forces are applied to their nodes.
+  for $0 \leq i \leq 20$. The $\tau$-parameter denotes the current time step: $0 \leq \tau \leq 399)$. Since this example is reduced to two dimensions, only forces in x- and z-direction are present, as well as resulting displacements $u$ and $w$. The forces are applied to the 10 nodes of edge \textbf{a} in positive z-direction starting at $z=0$. At the top and right edge no forces are applied to their nodes.
   
   \begin{figure}[htbp]
     	\centering
@@ -740,7 +743,7 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
     	{\scriptsize \put(0,3.1){$2$}
     		\put(0.05,0.05){$0$}
     		\put(4.4,-0.1){$3$}\put(4.8,-0.1){$3.25$}
-    		\put(4.2,1.7){$a$}
+    		\put(4.2,1.7){$a$}}
     	\end{picture}
     	\caption{Sketch of the ``Bending Tower'' example. The rectangular structure has simply supported boundary conditions at its bottom edge. On the nodes at edge $a$ forces from the fluid solver dummy are applied, letting the tower lean forth and back during the simulation.}
     	\label{fig:testHa0}
@@ -770,21 +773,21 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
 	\begin{figure}[htbp]
 	 \centering
 	 \includegraphics[width=1.0\linewidth]{figures/i-beam_w}
-     \caption{The relative displacements in z-direction for the topmost node of the left edge is plot over time. The smooth oscillating behavior of the tower that was intended in the test can is clearly visible.}
+     \caption{The displacements $u$ in x- and $w$ in z-direction for the topmost node of the left edge is plotted over time. The smooth oscillating behavior of the tower that was intended in the test is clearly visible. The motion in x-direction is larger due to the forces facing the same direction.}
 	 \label{fig:testHa1}
 	\end{figure}    
 
     \begin{landscape}
      \begin{figure}[htbp]
       \centering
-      \includegraphics[width=1.0\linewidth]{figures/frames}
-      \caption{Single time steps of the bending tower test. A rainbow color gradient shows the delta displacements in z-direction, with red being maximal positive, green equals zero and blue being maximal negative. At time step XXX, the tip of the structure is moving towards the negative x-axis, while at time step XXX, the tower is moving into the other direction. Time step XXX shows the reversal point (no movement) at the right side and time step XXX shows the other reversal point of the tower during the simulation.}
+      \includegraphics[width=0.8\linewidth]{figures/frames}
+      \caption{Single time steps of the bending tower test. A rainbow color gradient shows the absolute displacements in z-direction, with red being maximal positive, green equals zero and blue being maximal negative. At time step 1, the tip of the structure is already moving towards the positive x-axis, since the initial force applied to the left side is $1$. Time step 118 shows the reversal point (no force) at the left side and time step 197 shows the other reversal point of the tower during the simulation where the force is maximal with a value of $2$.}
       \label{fig:testHa2}
      \end{figure}
     \end{landscape}
   
  \subsection{Test I: Coupled ``Bending Tower'' with real-world fluid solver}\label{sec:valid-I}
-  The developed program is tested in a fluid-structure interaction. In the simulation the program gets coupled with a fluid solver developed with OpenFOAM, an open-source software for computational fluid dynamics \cite{openfoam-url}. As example problem, a simple channel flow around a tower-like obstacle is simulated. The geometry configuration can be seen in Figure \ref{fig:testI0}. The fluid solver simulates the flow coming in from the left side of the channel and moving towards the right side, where it leaves the fluid domain. The tower is placed at the bottom side of the channel and has simply supported boundary conditions at this edge. The tower structure is simulated by the thesis' program. The coupling interface region in this test is the left, top and right edge of the tower. When the flow reaches the left side of the tower, it will bend to the right side due to the force steadily increasing by the flow. After some time the tower will not bend further to the right, when an equilibrium between the stiffness of the tower and the flow force is reached.
+  The developed program is tested in a fluid-structure interaction. In the simulation the program gets coupled with a fluid solver developed with OpenFOAM, an open-source software for computational fluid dynamics \cite{openfoam-url}. As example problem, a simple channel flow around a tower-like obstacle is simulated. The geometry configuration can be seen in Figure \ref{fig:testI0}. The fluid solver simulates the flow coming in from the left edge of the channel and moving towards the right edge, where the flow leaves the fluid domain. The tower is placed at the bottom side of the channel and has simply supported boundary conditions at its bottom edge. The tower structure is simulated by the thesis' program. The coupling interface region in this test is the left, top and right border of the tower. When the flow reaches the left side of the tower, it will bend to the right side due to the forces steadily increasing by the flow. After some time the tower will not bend further to the right, when an equilibrium of forces between the tower and the flow is reached.
   
   \begin{figure}[htbp]
   	\centering
@@ -802,13 +805,16 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
   	\multiput(0.5,0.6)(0,0.5){5}{\vector(1,0){0.5}}
   	\multiput(9.6,0.6)(0,0.5){5}{\vector(1,0){0.5}}
   	
-  	{\scriptsize \put(-0.15,2.9){$4$}\put(-0.15,1.53){$2$}
+  	{\scriptsize \put(0,2.9){$4$}\put(0,1.53){$2$}
   		\put(0.05,0.05){$0$}
-  		\put(3.05,-0.14){$3$}\put(3.77,-0.14){$4$}\put(10.12,-0.14){$10$}}
+  		\put(3.2,-0.14){$3$}\put(3.92,-0.14){$4$}\put(10.12,-0.14){$10$}}
   	\end{picture}
   	\caption{Sketch of the ``Bending Tower'' example. An rectangular obstacle is put into a channel and flow is driven from the left side towords the right side where it leaves the fluid domain. The tower-like obstacle is represented by the structure mesh, the channel by the fluid mesh.}
   	\label{fig:testI0}
   \end{figure}
+  
+  %TODO discretization of the tower mesh + fluid mesh
+  
   \begin{itemize}
   	\item \textbf{Mesh dimensions}\\
   	Tower height $h_t = 2$\\
@@ -817,13 +823,21 @@ $\boxbackslash$ & $w_{c_{144}}$ & $1.15169$ & $1.163$ & $0.72\%$\\\hline
   	Channel height $h_c = 4$\\
   	Channel length $l_c = 10$  	
   	
-  	\item \textbf{Material properties}\\
+  	\item \textbf{Material properties}\\ %TODO check properties
   	Young's Modulus $E = 1.0 \times 10^8$\\
   	Poisson's ratio $\nu = 0.3$
+  	
+  	%TODO add preCICE information
+  	
+  	%TODO add FOAM-FSI information
+  	% - inlet speed
   	
   	\item \textbf{Boundary conditions}\\
   	The bottom side of the tower is simply supported.
   \end{itemize}
   
-  \paragraph{Results:} 
-\newpage
+  \paragraph{Results:} %TODO
+  
+  %TODO bild von verschiedenen timesteps
+  
+  %TODO bild von u/v over time plotted

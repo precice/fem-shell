@@ -35,6 +35,13 @@ PG~Bergan and CA~Felippa.
 \newblock {\em Computer Methods in Applied Mechanics and Engineering},
   50(1):25--69, 1985.
 
+\bibitem[BLG{\etalchar{+}}15]{bungartz2015fully}
+Hans-Joachim Bungartz, Florian Lindner, Bernhard Gatzhammer, Miriam Mehl,
+  Klaudius Scheufele, Alexander Shukaev, and Benjamin Ueckermann.
+\newblock pre{CICE} - a fully parallel library for multi-physics surface
+  coupling.
+\newblock {\em JOURNAL FEHLT}, VOL FEHLT(NB FEHLT):0--0, 2015.
+
 \bibitem[BLSS]{echempp}
 Martin Bogdan, Kai Ludwig, Elena Sapozhnikova, and Bernd Speiser.
 \newblock Echem++ - a problem solving environment for electrochemistry.
@@ -52,9 +59,6 @@ Jean-Louis Batoz and Mabrouk~Ben Tahar.
 \newblock Evaluation of a new quadrilateral thin plate bending element.
 \newblock {\em International Journal for Numerical Methods in Engineering},
   18(11):1655--1677, 1982.
-
-\bibitem[bun]{bungartz2015fully}
-pre{CICE} - a fully parallel library for multi-physics surface coupling.
 
 \bibitem[CMPW02]{cook2002concepts}
 Robert~D. Cook, David~S. Malkus, Michael~E. Plesha, and Robert~J. Witt.
@@ -86,6 +90,12 @@ Bernhard Gatzhammer.
 \bibitem[gms]{gmsh-manual}
 Gmsh manual.
 \newblock \url{http://geuz.org/gmsh/doc/texinfo/gmsh.html}.
+
+\bibitem[HPA{\etalchar{+}}14]{libmeshMailList}
+Stephan Herb, John Peterson, Julian Andrej, Antonio Cervone, and Roy Stogner,
+  2014-Sep-14.
+\newblock
+  \url{http://sourceforge.net/p/libmesh/mailman/libmesh-users/thread/55F6976D.8040004%40stud.uni-stuttgart.de/#msg34457298}.
 
 \bibitem[Jar]{icetools}
 Alexander~H. Jarosch.

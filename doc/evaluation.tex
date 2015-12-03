@@ -14,11 +14,11 @@ Part of the thesis was to analyze several frameworks which ease the work with th
  
   \item Mesh file import: Since the program should be able to work with complex geometries, the definition of such a mesh cannot be done in source code. Therefore, the library should provide the possibility to import meshes from file. The file must contain definitions of the node positions as well as the topology of the elements. Additionally, boundary conditions must be definable through identifiers at nodes or edges. No specific mesh file format is prescribed, as long as it supports the addressed requirements. A framework proprietary format would also be possible if it is simply reproducible.
   
-  \item Linked to the previous aspect is the variety of different finite element types the library has to provide. The current program version uses triangles and quadrilaterals with three and four nodes, respectively. To be able to expand the program's functionality in the future, the library should support elements like six node triangles, nine node quadrilaterals or three dimensional elements like tetrahedra and hexahedra.
+  \item Linked to the previous aspect is the variety of different finite element types the library has to provide. The current program version uses triangles and quadrilaterals with three and four nodes, respectively. To be able to expand the program's functionality in the future, the library should support elements like six-node triangles, nine-node quadrilaterals or three dimensional elements like tetrahedra and hexahedra.
   
   \item Built-in solvers: The framework must provide a variety of different iterative solvers that can be interchanged at runtime by the user, or at least easily in the source code. Thus, the user has a higher flexibility when optimizing a problem or comparing different solvers in order to find the best for his or her problem. In the context of a structure solver for linear elastic problems the focus is especially on the group of linear iterative solvers.
  
-  \item Accessible and detailed documentation: In order to guarantee maintainability and expandability, the framework has to offer a good documentation. This includes a complete documentation of every class and function that is actively growing with the library itself. Additional documented example codes help the developer learning how to use the library correctly and efficiently. If problems with the framework occur, the developer should be able to get in contact with the framework developers via mailing-lists or forums.
+  \item Accessible and detailed documentation: In order to guarantee maintainability and expandability, the framework has to offer a good documentation. This includes a complete documentation of every class and function that is actively growing with the library itself. Additional documented example codes help the developer learning how to use the library correctly and efficiently. If problems with the framework occur, the developer should be able to get in contact with the framework developers via mailing lists or forums.
  
   \item Up-to-date: The framework should be well maintained and actively supported by its developers to ensure a long term compatibility with new features of the program code.
  
@@ -57,23 +57,26 @@ Part of the thesis was to analyze several frameworks which ease the work with th
   \subsubsection{libMesh}
   The libMesh library provides a framework for the numerical simulation of partial differential equations using arbitrary unstructured discretizations on serial and parallel platforms. A major goal of the library is to provide support for adaptive mesh refinement (AMR) computations in parallel while allowing research scientists to focus on the physics they are modeling. It makes use of existing software whenever possible. PETSc can be used for the solution of linear systems on both serial and parallel platforms, and LASPack \cite{laspack2015url} is included with the library to provide linear solver support on serial machines, for instance. LibMesh supports a variety of 1D, 2D, and 3D geometric and finite element types and seamlessly integrates parallel functionality with MPI throughout the whole library \cite{kirk2006libmesh}. The framework is actively developed with daily commits and the latest release is dated from February, 2015. It is part of many publications \cite{libmeshPubs}.
   
-  \subsection{Conclusion}
-  LibMesh was chosen to be the most suitable framework for this thesis. Its seamlessly integration of MPI reduces the effort of parallelization for the user, the required finite element types are supported and a range of many more are available for future expansions of the program's code. Complex geometries can be defined in several different mesh formats as well as in a simple libMesh particular format. The integration of external libraries like PETSc gives a high flexibility for users to change solvers and/or preconditioners at runtime. The library's classes and functions are well documented and a large collection of example codes are available. It is actively maintained by fixing bugs and adding more features. Although the structure and components of the framework are intuitive to understand guided by the documentation, support by the developers is provided via mailing-lists.
   
+  
+  \subsection{Conclusion}
+  In Table \ref{tab:frameworks} the evaluation of the frameworks is summarized. All analyzed libraries had C++ as programming language and an open-source code in common. The differences are denoted by the rating symbols in the table. 
   \begin{table}[htbp]
    \centering
    \begin{tabular}{r|c|c|c|c|c}
-                    & Feel++ & OOFEM & GetFEM++ & MFEM & libMesh \\\hline\hline
-	Parallelism     & + & o & o & + & + \\\hline
-	Finite Elemente & o & + & + & o & + \\\hline
-	Mesh-Import     & o & o & o & + & + \\\hline
-	Solver          & + & + & + & + & + \\\hline
-	Documentation   & + & o & + & o & + \\\hline
-	Actuality       & + & -o& + & + & + \\\hline
-	Usage           & o & - & o & + & o \\\hline
-	Learning curve  & ? & ? & ? & o & + \\\hline
+	   & Feel++ & OOFEM & GetFEM++ & MFEM & libMesh \\\hline\hline
+    Parallelism     & o+& o & o & + & + \\\hline
+    Finite Elements & o & + & + & o & + \\\hline
+    Mesh Import     & o & - & o & + & + \\\hline
+    Solver          & + & + & + & + & + \\\hline
+    Documentation   & o+& o & o & o+& + \\\hline
+    Actuality       & + & -o& + & + & + \\\hline
+    Usage           & o & - & o & + & o \\\hline
+    Learning curve  & / & / & / & o & + \\\hline
    \end{tabular}
-   \caption{Comparison of the different FEM frameworks. The qualification of the framework for the corresponding requirement is denoted by symbols, where ``--'' means less suitable, ``o'' means acceptable and ``+'' means well suitable.}
+   \caption{Comparison of the different FEM frameworks. The qualification of the framework for the corresponding requirement is denoted by symbols, at which ``--'' means not suitable, ``o'' means limited suitable and ``+'' means well suitable. The ``/'' symbol denotes that this requirement was not tested with the according framework.}
+   \label{tab:frameworks}
   \end{table}
-  %TODO schlüsse aus der tabelle ziehen
-\newpage
+  All libraries provide parallelism, but especially MFEM and libMesh seem to have MPI integrated into themselves stronger than the other tested frameworks. Regarding the variety of finite element models, all frameworks provides at least the three-node triangular and four-node quadrilateral element. The libMesh and GetFEM++ library offers a larger collection of elements than the others, which is better for future extensions of the thesis' program. The range of mesh file formats is high across the libraries: libMesh provides more than ten different formats for import and export while OOFEM only supports a proprietary format for input (to the authors knowledge), although there exist converters to bring specific external formats into OOFEM format. All FEM frameworks offer the required linear implicit solver type and all provide a variety of other solvers around it. All libraries provides a documentation of their classes and functions. LibMesh and MFEM offers a large collection of example codes and tutorials, which helps getting into the work with the framework. Except for OOFEM, all frameworks have relatively recent major releases and all are still actively developed. This includes bug-fixing, maintaining the documentation and adding new features. The ongoing usage of the single frameworks can hardly be examined as most of the frameworks are used in theses and other publications, where it is not observable if it is still in use in the particular projects. Feel++ is currently used in projects hosted by the Center for Modeling and Simulation in Strasbourg (Cemosis), while MFEM  is currently used in projects from the Lawrence Livermore National Laboratory in Livermore, California. The last aspect -- the learning curve -- could only be tested by working with the libraries. Due to the evaluation results of the other aspects, two libraries were selected to be examined further: MFEM and libMesh.
+  
+  LibMesh was chosen to be the most suitable framework for this thesis. Its seamlessly integration of MPI reduces the effort of parallelization for the user, the required finite element types are supported and a range of many more are available for future expansions of the program's code. Complex geometries can be defined in several different mesh formats as well as in a simple libMesh particular format. The integration of external libraries like PETSc gives a high flexibility for users to change solvers and/or preconditioners at runtime. The library's classes and functions are well documented and a large collection of example codes are available. It is actively maintained by fixing bugs and adding more features. Although the structure and components of the framework are intuitive to understand guided by the documentation, support by the developers is provided via mailing lists.

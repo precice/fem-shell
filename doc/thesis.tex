@@ -51,37 +51,46 @@
 	% G.1.8: Partial Differential Equations --> Finite Element Methods
 	% G.4: Mathematical Software
 	% I.6: Simulation and Modeling
-	language=german
+	language=german %TODO cover und erklärung auf englisch oder deutsch
+	%language=english
 	]{uni-stuttgart-cs-cover}
 
 \begin{document}
 \Coverpage
 
 \include{abstract} %TODO Abstract auch auf deutsch?
+\cleardoublepage
 
 \tableofcontents
-\newpage
+\cleardoublepage
 
 \include{intro}
+\cleardoublepage
 
 \include{evaluation}
+\cleardoublepage
 
 \include{shellelements}
+\cleardoublepage
 
 \include{implementation}
+\cleardoublepage
 
 \include{coupling}
+\cleardoublepage
 
-\include{validation} %TODO coupling-test fehlt
+\include{validation}
+\cleardoublepage
 
 \include{conclusion}
 
 %\bibliographystyle{ieeetr}
 \bibliographystyle{alpha}
-\bibliography{thesis}
+\bibliography{thesis} %TODO preCICE paper eintrag vervollständigen
 %\printbibliography
 
 All URLs were lastly checked at December 8, 2015.
+\cleardoublepage
 
 \Affirmation
 \end{document}
