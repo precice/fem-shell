@@ -35,12 +35,11 @@ PG~Bergan and CA~Felippa.
 \newblock {\em Computer Methods in Applied Mechanics and Engineering},
   50(1):25--69, 1985.
 
-\bibitem[BLG{\etalchar{+}}15]{bungartz2015fully}
+\bibitem[BLG{\etalchar{+}}]{bungartz2015fully}
 Hans-Joachim Bungartz, Florian Lindner, Bernhard Gatzhammer, Miriam Mehl,
   Klaudius Scheufele, Alexander Shukaev, and Benjamin Ueckermann.
 \newblock pre{CICE} - a fully parallel library for multi-physics surface
   coupling.
-\newblock {\em JOURNAL FEHLT}, VOL FEHLT(NB FEHLT):0--0, 2015.
 
 \bibitem[BLSS]{echempp}
 Martin Bogdan, Kai Ludwig, Elena Sapozhnikova, and Bernd Speiser.
@@ -60,6 +59,13 @@ Jean-Louis Batoz and Mabrouk~Ben Tahar.
 \newblock {\em International Journal for Numerical Methods in Engineering},
   18(11):1655--1677, 1982.
 
+\bibitem[BvZB15]{blom2015multi}
+DS~Blom, AH~van Zuijlen, and H~Bijl.
+\newblock Multi-level acceleration with manifold mapping of strongly coupled
+  partitioned fluid--structure interaction.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  296:211--231, 2015.
+
 \bibitem[CMPW02]{cook2002concepts}
 Robert~D. Cook, David~S. Malkus, Michael~E. Plesha, and Robert~J. Witt.
 \newblock {\em Concepts and Applications of Finite Element Analysis}.
@@ -70,16 +76,14 @@ Feel++ Consortium.
 \newblock Feel++ - finite element embedded library in c++.
 \newblock \url{http://www.feelpp.org}.
 
-\bibitem[eig]{eigen-url}
+\bibitem[Eig]{eigen-url}
 Eigen -- a c++ template library for linear algebra: matrices, vectors,
   numerical solvers, and related algorithms.
 \newblock \url{http://eigen.tuxfamily.org}.
 
-\bibitem[Fou]{openfoam-url}
-Open{FOAM} Foundation.
-\newblock Open{FOAM}{\textregistered} | open source {CFD} | the open{FOAM}
-  foundation.
-\newblock \url{http://www.openfoam.org}.
+\bibitem[FOA]{foamextend-url}
+The openfoam extend project.
+\newblock \url{http://www.extend-project.de/}.
 
 \bibitem[Gat15]{gatzhammer2015efficient}
 Bernhard Gatzhammer.
@@ -87,7 +91,7 @@ Bernhard Gatzhammer.
   interactions}.
 \newblock Verlag Dr. Hut, 2015.
 
-\bibitem[gms]{gmsh-manual}
+\bibitem[GMS]{gmsh-manual}
 Gmsh manual.
 \newblock \url{http://geuz.org/gmsh/doc/texinfo/gmsh.html}.
 
@@ -145,7 +149,7 @@ B.~S. Kirk, J.~W. Peterson, R.~H. Stogner, and G.~F. Carey.
 \newblock {\em Engineering with Computers}, 22(3--4):237--254, 2006.
 \newblock \url{http://dx.doi.org/10.1007/s00366-006-0049-3}.
 
-\bibitem[las]{laspack2015url}
+\bibitem[{LAS}]{laspack2015url}
 {LAS}pack download page.
 \newblock \url{http://www.netlib.org/linalg/}.
 
@@ -167,13 +171,13 @@ Gerhard Link, M~Kaltenbacher, Michael Breuer, and M~D{\"o}llinger.
 \newblock {\em Computer Methods in Applied Mechanics and Engineering},
   198(41):3321--3334, 2009.
 
-\bibitem[mfea]{mfemPubs}
-{MFEM} - finite element discretization library.
-\newblock \url{http://mfem.org/publications/}.
-
-\bibitem[mfeb]{mfem}
+\bibitem[{MFE}a]{mfem}
 {MFEM}: Modular finite element methods.
 \newblock \url{http://www.mfem.org}.
+
+\bibitem[{MFE}b]{mfemPubs}
+{MFEM} -- publications.
+\newblock \url{http://mfem.org/publications/}.
 
 \bibitem[MH85]{macneal1985proposed}
 Richard~H Macneal and Robert~L Harder.
@@ -208,8 +212,8 @@ Julien Pommier and Yves Renard.
 \newblock Getfem++ - an open source library based on collaborative development.
 \newblock \url{http://download.gna.org/getfem/html/homepage/index.html}.
 
-\bibitem[sap00]{sap-2000}
-{\em {SAP}2000 - Integrated Finite Element Analysis and Design of Structures},
+\bibitem[{SAP}00]{sap-2000}
+{\em {SAP}2000 -- Integrated Finite Element Analysis and Design of Structures},
   2000.
 
 \bibitem[SMU{\etalchar{+}}10]{schafer2010fluid}
