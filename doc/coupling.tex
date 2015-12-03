@@ -117,7 +117,7 @@ When a physical problem becomes too complex, one often split it into smaller pie
    The communication by TCP/IP increases compatibility to closed-source software that might be restricted to some MPI implementations \cite{bungartz2015fully}. To abstract from platform dependent socket interfaces like Pthreads or Winsock, the \texttt{Boost.Asio} (asynchronous network and low-level input/output) library was used for implementing the socket communication in preCICE \cite{gatzhammer2015efficient}. The sending and receiving of data is managed by the transfer control protocol (TCP) which is designed for failsafe data transfer and synchronization between sender and receiver. Communication via TCP is not typical for multi-physics simulations that often run on supercomputers, because it involves a synchronization step and additional communication overhead compared to MPI. Other difficulties are that ports used for socket communication may be blocked by default and each supercomputer node might have a different network address which requires automated checks on a low-level socket layer \cite{gatzhammer2015efficient}.
 
 
- \subsection{Implementation}\label{sec:Coupl-Impl}
+ \subsection{Integration of preCICE}\label{sec:Coupl-Impl}
   The program developed within the scope of this thesis is to be coupled with a fluid solver in a fluid-structure interaction simulation. The coupling is done with the help of preCICE. This section contains the steps that were necessary to adapt the original code to preCICE, including a general preCICE integration example, the introduction of additional boundary conditions, the partitioning of the coupling surface and details on the actual API integration.
   
   
@@ -174,7 +174,7 @@ boundary_ids.insert(1);
 boundary_ids.insert(21); // NEW
 // (...)
 \end{lstlisting}
-  	
+
   \subsubsection{Partitioned Coupling Surface}\label{sec:Coupl-Impl-PartCplSurf}
    As stated in the section above, preCICE expects a coupling interface region on the solver's mesh. The definition of this region happens in the mesh file that is imported by the solver at the beginning of the simulation. The solver stores the mesh as an internal libMesh \texttt{\textbf{Mesh}}-object. For the interface region, an own grid-like structure needs to be defined that stores the vertex positions of the region nodes. Listing \ref{lst:partCplSurf} is an extract of the coupled program code. First, an advantage of libMesh and preCICE can be seen in line 3 and 4: The code is usable with and without MPI without any code modifications: With the usage of the prefix ``\texttt{local}'' for the node iterators, every MPI process only searches its own mesh partition for coupling interface nodes. If no MPI is used, local is equal to global and the only existing process goes through all mesh nodes. On the other hand does preCICE not distinguish between a serial or parallel in the solver programming code - although it handles parallel solvers different to serial solvers internally (see \cite{gatzhammer2015efficient}).
    
