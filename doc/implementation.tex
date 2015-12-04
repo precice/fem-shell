@@ -4,15 +4,15 @@
  
  
  \subsection{Introduction to libMesh}\label{sec:Impl-Intro}
- The libMesh finite element library was started as part of the Ph.D. thesis of Benjamin Kirk \cite{kirk2007adaptive}. It is a tool for numerical simulation of partial differential equations on serial and parallel platforms and uses the finite element method. A major goal is to provide data structures and algorithms for applications that need implicit numerical methods, parallel computing, adaptive mesh refinement techniques, or, a combination of them. Further, it simplifies many programming details for the user such as: Importing mesh structures, providing and initialize data structures for the equation systems, solving the discretized system and writing out the results \cite{kirk2013case}.
+ The libMesh finite element library was started by Benjamin Kirk~\cite{kirk2007adaptive}. It is a tool for numerical simulation of partial differential equations on serial and parallel platforms and uses the finite element method. A major goal is to provide data structures and algorithms for applications that need implicit numerical methods, parallel computing, adaptive mesh refinement techniques, or, a combination of them. Further, it simplifies many programming details for the user such as: Importing mesh structures, providing and initialize data structures for the equation systems, solving the discretized system and writing out the results~\cite{kirk2013case}.
  
  LibMesh allows discretization of one, two and three dimensional problems using several geometric element types, including: Edges, rectangles, triangles, tetrahedra, hexahedra, pyramids, prisms and some infinite elements of quadrilaterals or hexahedra. Finite elements include traditional first and second order Lagrange, as well as arbitrary order hierarchical bases, and N\'{e}d\'{e}lec elements of first type.
  
- Mesh partitioning is available in libMesh through interfaces to several external packages, but also some internal partitioning algorithms are provided: Linear and centroid partitioner as examples of internal algorithms, Metis and ParMetis \cite{karypis1998fast} as examples for external libraries. In addition to these two, libMesh includes interfaces to solver libraries such as PETSc \cite{petsc-web-page} and LASPack \cite{laspack2015url}. Thus, libMesh offers several linear equation solvers such as GMRES, CG, Bi-CGSTAB, QMR, and preconditioners like Jacobi, incomplete LU factorization and incomplete Cholesky factorization. The choice of an appropriate solver and preconditioner can be made by the user at runtime or directly coded into the program.
+ Mesh partitioning is available in libMesh through interfaces to several external packages, but also some internal partitioning algorithms are provided: Linear and centroid partitioner as examples of internal algorithms, Metis and ParMetis~\cite{karypis1998fast} as examples for external libraries. In addition to these two, libMesh includes interfaces to solver libraries such as PETSc~\cite{petsc-web-page} and LASPack~\cite{laspack2015url}. Thus, libMesh offers several linear equation solvers such as GMRES, CG, Bi-CGSTAB, QMR, and preconditioners like Jacobi, incomplete LU factorization and incomplete Cholesky factorization. The choice of an appropriate solver and preconditioner can be made by the user at runtime or directly coded into the program.
  
- A wide variety of mesh formats are supported by libMesh to facilitate the handling of complex geometries. The following is an incomplete list of supported input and output formats: Nemesis, TetGen, I-deas Universal UNV, AVS's ASCII UCD, Visualization Toolkit VTK, libMesh formats XDR/XDA, ExodusII, GMSH, LANL's General Mesh Viewer GMV, GnuPlot (only output), Matlab (only input) \cite{kirk2013case}.
+ A wide variety of mesh formats are supported by libMesh to facilitate the handling of complex geometries. The following is an incomplete list of supported input and output formats: Nemesis, TetGen, I-deas Universal UNV, AVS's ASCII UCD, Visualization Toolkit VTK, libMesh formats XDR/XDA, ExodusII, GMSH, LANL's General Mesh Viewer GMV, GnuPlot (only output), Matlab (only input)~\cite{kirk2013case}.
  
- An example program using the libMesh library would look like Listing \ref{lst:example-libmesh}.
+ An example program using the libMesh library would look like Listing~\ref{lst:example-libmesh}.
  \begin{lstlisting}[caption=Example libMesh program,label=lst:example-libmesh]
 #include "libmesh/libmesh.h"
 // include additional libmesh components
@@ -47,7 +47,7 @@ int main (int argc, char** argv)
 	return 0;
 }
  \end{lstlisting}
- In fact, this is the base construction of a usual libMesh program. It starts with including libMesh (\textit{libmesh.h}) and all its components that are needed by the program, e.g. \textit{mesh.h, equation\_systems.h, fe.h}. Then, the library needs to be initialized (line 10). This is necessary because it may depend on a number of other external applications like MPI or PETSc that require initialization before use. Furthermore, if the \texttt{\textbf{LibMeshInit}} object goes out of scope, the other libraries are finalized automatically by libMesh. Next, a \texttt{\textbf{Mesh}} object is created (lines 12-14) on the default MPI communicator even if the program is executed single-threaded. The mesh can either be read from file or created by internal mesh generation tools. In line 16 an \texttt{\textbf{EquationSystems}} object is created. It can contain multiple different systems and manage them. Here, only one linear implicit system is added to the object (line 16). Any \texttt{\textbf{...System}} object can contain multiple variables of different approximation orders (see lines 20/21). Many systems require a user-defined function that will assemble the (linear) system (lines 6 and 23). Now, the data structures for the equation system must be initialized which is done in line 25. The solving of all or just some of the systems added to the equation systems object is done in line 27 of the code. This single line of code calls the assemble function defined earlier and invokes the default numerical solver. If the external library PETSc is installed, the solver's properties can be controlled from the command line by the user (cf. \ref{sec:Impl-Details-Init}). After solving the system, the solution can be written to file; here, for example, the results are written to a VTK-formatted plot file (line 29).
+ In fact, this is the base construction of a usual libMesh program. It starts with including libMesh (\textit{libmesh.h}) and all its components that are needed by the program, e.g. \textit{mesh.h, equation\_systems.h, fe.h}. Then, the library needs to be initialized (line 10). This is necessary because it may depend on a number of other external applications like MPI or PETSc that require initialization before use. Furthermore, if the \texttt{\textbf{LibMeshInit}} object goes out of scope, the other libraries are finalized automatically by libMesh. Next, a \texttt{\textbf{Mesh}} object is created (lines 12-14) on the default MPI communicator even if the program is executed single-threaded. The mesh can either be read from file or created by internal mesh generation tools. In line 16 an \texttt{\textbf{EquationSystems}} object is created. It can contain multiple different systems and manage them. Here, only one linear implicit system is added to the object (line 16). Any \texttt{\textbf{...System}} object can contain multiple variables of different approximation orders (see lines 20/21). Many systems require a user-defined function that will assemble the (linear) system (lines 6 and 23). Now, the data structures for the equation system must be initialized which is done in line 25. The solving of all or just some of the systems added to the equation systems object is done in line 27 of the code. This single line of code calls the assemble function defined earlier and invokes the default numerical solver. If the external library PETSc is installed, the solver's properties can be controlled from the command line by the user (cf.~\ref{sec:Impl-Details-Init}). After solving the system, the solution can be written to file; here, for example, the results are written to a VTK-formatted plot file (line 29).
  
  \subsection{Implementation Details}\label{sec:Impl-Details}
   This section contains details about the program's implementation supported by libMesh. Different parts of the code like the initialization, loading of the mesh or the system's matrix assembly are described. The focus is put on the interaction between the libMesh library and the user's code. Requirements regarding mesh formats and user arguments are pointed out as well.
@@ -62,10 +62,10 @@ int main (int argc, char** argv)
   	\item \textbf{-d}: This argument is mostly used for the debugging process. If set to ``1'' additional messages regarding transformation matrix entries, strain-displacement matrices, force load vectors and other internal mathematic structures are put out on the console. This parameter is optional, as it only gives the user more information in case of detecting errors. Since it slows down the calculation, it should only be set if needed. To turn the messages off, it can simply be left out or set to ``0''.
   	\item \textbf{-mesh}: The mesh file to import. A required parameter, because no default mesh is provided by the program to be used. The relative path to the file (+ extension) must be specified. Allowed file formats are: libMesh format \textit{xda} (ASCII) and \textit{xdr} (binary) as well as GMSH format \textit{msh}. For more details, see the following section.
   	\item \textbf{-out}: The relative path and filename (\textit{without} extension) for the output of the resulting mesh. This parameter is optional. If not set, no output file will be created. The path to the filename must exist, otherwise no file can be created and libMesh will terminate the program with an error message.
-  	\item \textbf{-dt}: The constant time step length value. This parameter is only available in the preCICE-version of the program and is explained further in Section \ref{sec:Coupl-Impl-Integration}.
+  	\item \textbf{-dt}: The constant time step length value. This parameter is only available in the preCICE-version of the program and is explained further in Section~\ref{sec:Coupl-Impl-Integration}.
   \end{itemize}
   
-  If the external library PETSc is installed and libMesh is configured to use it, the user can set additional optional command line arguments \cite{petsc-user-ref}. In fact, if one uses PETSc, it will look through all parameters to find those it can process by itself. The following list is therefore limited to parameters that directly coincide with the need of this program. For more PETSc command line arguments see \cite{petsc-user-ref}.
+  If the external library PETSc is installed and libMesh is configured to use it, the user can set additional optional command line arguments~\cite{petsc-user-ref}. In fact, if one uses PETSc, it will look through all parameters to find those it can process by itself. The following list is therefore limited to parameters that directly coincide with the need of this program. For more PETSc command line arguments see~\cite{petsc-user-ref}.
   \begin{itemize}
   	\item \textbf{-ksp\_type}: Specifies the Krylov subspace method. Options are: \texttt{richardson}, \texttt{chebyshev}, \texttt{cg}, \texttt{gmres}, \texttt{tcqmr}, \texttt{bcgs}, \texttt{cgs}, \texttt{tfqmr}, \texttt{cr}, \texttt{lsqr}, \texttt{bicg}, \texttt{preonly}.
   	\item \textbf{-pc\_type}: To employ a particular preconditioning method used with the Krylov space method, the user can select one using this argument. Options are: \texttt{none}, \texttt{jacobi}, \texttt{bjacobi}, \texttt{sor}, \texttt{eisenstat}, \texttt{icc}, \texttt{ilu}, \texttt{asm}, \texttt{gasm}, \texttt{gamg}, \texttt{bddc}, \texttt{ksp}, \texttt{composite}, \texttt{lu}, \texttt{cholesky}, \texttt{shell}. 
@@ -80,7 +80,7 @@ int main (int argc, char** argv)
    	\item A list of elements the mesh consists of. The elements are normally defined by their type, for example a three-node triangle or a four-node quadrilateral, and a list of vertex identifiers representing the element's nodes.
    	\item A list of boundary conditions. The program provides two different types of boundary conditions. The type (or ID) has to be specified in form of identifiers on element's nodes or edges. In the latter case the boundary condition is used on both nodes defining the edge.
    \end{itemize}
-   Listing \ref{lst:xda} shows a short example of a mesh defined in the xda-format. It displays the unit square with its center at the global origin, composed of two three-node triangles. It has different boundary conditions on the bottom and top edge.
+   Listing~\ref{lst:xda} shows a short example of a mesh defined in the xda-format. It displays the unit square with its center at the global origin, composed of two three-node triangles. It has different boundary conditions on the bottom and top edge.
 \begin{lstlisting}[caption=Example xda mesh file,label=lst:xda,language=bash,keepspaces=true]
 libMesh-0.7.0+
 2       # number of elements
@@ -100,29 +100,30 @@ n/a     # p-level specification file
 0 0 1            # 0 -> element 0, 0 -> edge 0 (between vertex 0 and 1), bc-type 1
 1 1 0            # 1 -> element 1, 1 -> edge 1 (between vertex 3 and 2), bc-type 0
 \end{lstlisting}
-   Listing \ref{lst:msh} shows the same example mesh but in the GMSH format. Here, libMesh has some requirements on how the GMSH mesh file has to be structured: Every line defined in the \texttt{\$Elements}-section contains severals numbers, ordered as follows: Element index, element type, number of tags, physical entity number, geometrical entity, additional list of tags, list of node indices \cite{gmsh-manual}. LibMesh requires the number of tags to be at least two. The first tag (physical entity) will be used by libMesh to identify the boundary condition ID; the second tag will be ignored - at least the author could not find where libMesh uses this value. LibMesh also treats the element type in different ways: The highest dimensional element types, for example 2D elements, like triangle and quadrilaterals, will act as the mesh defining elements. Every element that has lower dimension, (e.g. nodes or edges), will be seen as boundary condition definitions by libMesh. See Listing \ref{lst:msh} for clarification: There are six elements defined. Two triangles and four single nodes. The mesh only exists of the two triangles. The four nodes will be used by libMesh to set boundary conditions at the corresponding nodes of the mesh. In this case node 1 and 2 gets boundary conditions with ID 0, node 3 and 4 with ID 1. This behavior of libMesh must be kept in mind when dealing with GMSH mesh files.
-\begin{lstlisting}[caption=Example GMSH mesh file,label=lst:msh,language=bash,keepspaces=true]
-$MeshFormat
-2.2 0 8
-$EndMeshFormat
-$Nodes
-4
-1 -1.0 -1.0  0.0
-2  1.0 -1.0  0.0
-3 -1.0  1.0  0.0
-4  1.0  1.0  0.0
-$EndNodes
-$Elements
-6
-1 2 2 0 0 1 2 3
-2 2 2 0 0 2 4 3
-3 15 2 0 0 1
-4 15 2 0 0 2
-5 15 2 1 0 3
-5 15 2 1 0 4
-$EndElements
-\end{lstlisting}
-
+   Listing~\ref{lst:msh} shows the same example mesh but in the GMSH format. Here, libMesh has some requirements on how the GMSH mesh file has to be structured: Every line defined in the \texttt{\$Elements}-section contains severals numbers, ordered as follows: Element index, element type, number of tags, physical entity number, geometrical entity, additional list of tags, list of node indices~\cite{gmsh-manual}. LibMesh requires the number of tags to be at least two. The first tag (physical entity) will be used by libMesh to identify the boundary condition ID; the second tag will be ignored - at least the author could not find where libMesh uses this value. LibMesh also treats the element type in different ways: The highest dimensional element types, for example 2D elements, like triangle and quadrilaterals, will act as the mesh defining elements. Every element that has lower dimension, (e.g. nodes or edges), will be seen as boundary condition definitions by libMesh. See Listing~\ref{lst:msh} for clarification.
+   \begin{lstlisting}[caption=Example GMSH mesh file,label=lst:msh,language=bash,keepspaces=true]
+   $MeshFormat
+   2.2 0 8
+   $EndMeshFormat
+   $Nodes
+   4
+   1 -1.0 -1.0  0.0
+   2  1.0 -1.0  0.0
+   3 -1.0  1.0  0.0
+   4  1.0  1.0  0.0
+   $EndNodes
+   $Elements
+   6
+   1 2 2 0 0 1 2 3
+   2 2 2 0 0 2 4 3
+   3 15 2 0 0 1
+   4 15 2 0 0 2
+   5 15 2 1 0 3
+   5 15 2 1 0 4
+   $EndElements
+   \end{lstlisting}
+   There are six elements defined. Two triangles and four single nodes. The mesh only exists of the two triangles. The four nodes will be used by libMesh to set boundary conditions at the corresponding nodes of the mesh. In this case node 1 and 2 gets boundary conditions with ID 0, node 3 and 4 with ID 1. This behavior of libMesh must be kept in mind when dealing with GMSH mesh files.
+   
    The program features two different types of boundary conditions whose identifiers must be set in the mesh file:
    \begin{itemize}
    	\item Simply supported boundaries are of type ``\texttt{0}''. The boundary cannot be moved but is free to rotate and have no moment resistance. In mathematical notation:
@@ -134,7 +135,7 @@ $EndElements
    	u = v = w = 0, \theta_x = \theta_y = 0
    	\end{equation*}
    \end{itemize}
-   In the stand-alone version of the program no coupled fluid solver provides it with pressures/forces and moments at the nodes. Therefore, these values must be imported via file, too. The data is stored in an extra file that requires the following naming convention: For a mesh file named ``mesh.xda'', the corresponding force file must be named ``mesh\_f'' (without any extension). Therefore no additional command line argument is necessary and the force file is independent from the format the mesh file has. The structure of a force file is simple: Listing \ref{lst:example_f} shows an example corresponding to the mesh of Listing \ref{lst:xda}. The first line defines the number $n$ of nodes/vertices the mesh has (in this case $n=4$). The second line holds a floating point number representing a global factor that is multiplied by every force/moment component defined below. A value of $1.0$ has no effect on the load values. Lines 3 to $n+2$ are the $xyz$-components of the single forces put on the corresponding mesh nodes followed by three values for the moments $M_x, M_y, M_z$. The ordering is the same as for the vertices in the mesh file. The $xyz$-coordinates must also be specified in the global coordinate system. In the example a load is applied on the first and third node. The first load is directed along the negative z-axis, the second load along the positive y-axis. The other two nodes have no forces and all nodes have no moments applied.
+   In the stand-alone version of the program no coupled fluid solver provides it with pressures/forces and moments at the nodes. Therefore, these values must be imported via file, too. The data is stored in an extra file that requires the following naming convention: For a mesh file named ``mesh.xda'', the corresponding force file must be named ``mesh\_f'' (without any extension). Therefore no additional command line argument is necessary and the force file is independent from the format the mesh file has. The structure of a force file is simple: Listing~\ref{lst:example_f} shows an example corresponding to the mesh of Listing~\ref{lst:xda}. The first line defines the number $n$ of nodes/vertices the mesh has (in this case $n=4$). The second line holds a floating point number representing a global factor that is multiplied by every force/moment component defined below. A value of $1.0$ has no effect on the load values. Lines 3 to $n+2$ are the $xyz$-components of the single forces put on the corresponding mesh nodes followed by three values for the moments $M_x, M_y, M_z$. The ordering is the same as for the vertices in the mesh file. The $xyz$-coordinates must also be specified in the global coordinate system. In the example a load is applied on the first and third node. The first load is directed along the negative z-axis, the second load along the positive y-axis. The other two nodes have no forces and all nodes have no moments applied.
 \begin{lstlisting}[caption=Example force file,label=lst:example_f,language=bash,keepspaces=true]
 4
 1.0
@@ -144,18 +145,16 @@ $EndElements
 0.0  0.0   0.0   0.0  0.0  0.0
 \end{lstlisting}
    
-   The implementation's code to import a mesh file is rather short (Listing \ref{lst:load_mesh}).
+   The implementation's code to import a mesh file is rather short (Listing~\ref{lst:load_mesh}). The first line creates a 2D mesh distributed across the default MPI communicator (gathered by the \texttt{LibMeshInit}-object). The mesh is read in line 3 from the file located at the place defined by \texttt{in\_filename}. In line 4 information about the mesh is printed to the console. A special detail is line 2: It is not guaranteed that the ordering of the nodes defined in the mesh file is the same after libMesh has imported the mesh file. Since the program uses the additional force file to apply the loads onto the mesh nodes, this mapping could be destroyed. Therefore the function call in line 2 forbids libMesh to automatically renumber the nodes of the mesh and let the ordering be as defined in the mesh file.
 \begin{lstlisting}[caption=Loading mesh and prepare for use,label=lst:load_mesh,keepspaces=true]
 Mesh mesh(init.comm(), 2);
 mesh.allow_renumbering(false);
 mesh.read(in_filename);	
 mesh.print_info();
-\end{lstlisting}   
-   The first line creates a 2D mesh distributed across the default MPI communicator (gathered by the \texttt{LibMeshInit}-object). The mesh is read in line 3 from the file located at the place defined by \texttt{in\_filename}. In line 4 information about the mesh is printed to the console. A special detail is line 2: It is not guaranteed that the ordering of the nodes defined in the mesh file is the same after libMesh has imported the mesh file. Since the program uses the additional force file to apply the loads onto the mesh nodes, this mapping could be destroyed. Therefore the function call in line 2 forbids libMesh to automatically renumber the nodes of the mesh and let the ordering be as defined in the mesh file.
-
+\end{lstlisting}
 
   \subsubsection{System setup}\label{sec:Impl-Details-SystemSetup}
-  After libMesh and possible external libraries are initialized and the mesh was created and initialized, too, the equation system must be set up. Listing \ref{lst:setup_system} shows the relevant part of the implementation.
+  After libMesh and possible external libraries are initialized and the mesh was created and initialized, too, the equation system must be set up. Listing~\ref{lst:setup_system} shows the relevant part of the implementation.
 \begin{lstlisting}[caption=Setting up the equation system,label=lst:setup_system,keepspaces=true]
 EquationSystems equation_systems (mesh);
 LinearImplicitSystem& system = equation_systems.add_system<LinearImplicitSystem> ("Elasticity");
@@ -191,12 +190,12 @@ system.get_dof_map().add_dirichlet_boundary(dirichlet_bc2);
 equation_systems.init();
 equation_systems.print_info();
 \end{lstlisting}
-   In line 1 an \texttt{\textbf{EquationSystems}}-object is created. It contains and controls all equation systems defined for a mesh, that is passed as parameter in its constructor. It can have multiple systems or just one like in this case. Here, a linear implicit system is to be used. LibMesh offers exactly such a system (\texttt{\textbf{LinearImplicitSystem}}). In line 2 the system is created named ``Elasticity'' and added to the equation systems object. As discussed in Section \ref{sec:Shell-Shell}, the system has six variables, namely: $u, v, w, \theta_x, \theta_y, \theta_z$. These variables are added to the system in line 4 to 9. All of them are of first polynomial order and members of the Lagrange finite element family. The \texttt{add\_variable}-function returns a unique number identifying the variable just added. In order to assemble the system matrix and the right-hand side, a user-defined function must be attached to the system. This is done in line 11. The assemble function will be discussed in Section \ref{sec:Impl-Details-Assembly}. The only part missing is the definition of the different boundary conditions. This is done between the lines 13 and 30. As stated in the previous section, the program features two types of boundary conditions: Simply supported and clamped with the ID ``0'' and ``1'', respectively. Because libMesh allows multiple IDs representing the same boundary condition type, in line 13 a \texttt{set} is created and filled with the 0-ID in the next line. After that, a vector containing the IDs of the system's variables must be created. In the case of a simply supported boundary only the three displacement variables $u,v,w$ are affected (lines 15-18). Before creating the \texttt{\textbf{DirichletBoundary}}-object, a function supplying the Dirichlet value must be defined. In this case the value must be zero at the boundary. A \texttt{ConstFunction} initialized with the value zero is therefore created in line 19. The constructor for the Dirichlet object takes the ID-set, the variables-vector and the value-function as parameters and copies their content into the boundary object. The set and vector will be reused for the second boundary type. Now the 1-ID is inserted in the cleared set in line 23 and the twist variables $\theta_x, \theta_y, \theta_z$ are added to the existing variables in the vector (lines 24ff.). Another \texttt{DirichletBoundary} object is created with the new initialization parameters. Finally, the two boundary types are added to the system in line 29f. When the preparation steps are finished, the system can finally be initialized and information about the system can be printed to the console.
+   In line 1 an \texttt{\textbf{EquationSystems}}-object is created. It contains and controls all equation systems defined for a mesh, that is passed as parameter in its constructor. It can have multiple systems or just one like in this case. Here, a linear implicit system is to be used. LibMesh offers exactly such a system (\texttt{\textbf{LinearImplicitSystem}}). In line 2 the system is created named ``Elasticity'' and added to the equation systems object. As discussed in Section~\ref{sec:Shell-Shell}, the system has six variables, namely: $u, v, w, \theta_x, \theta_y, \theta_z$. These variables are added to the system in line 4 to 9. All of them are of first polynomial order and members of the Lagrange finite element family. The \texttt{add\_variable}-function returns a unique number identifying the variable just added. In order to assemble the system matrix and the right-hand side, a user-defined function must be attached to the system. This is done in line 11. The assemble function will be discussed in Section~\ref{sec:Impl-Details-Assembly}. The only part missing is the definition of the different boundary conditions. This is done between the lines 13 and 30. As stated in the previous section, the program features two types of boundary conditions: Simply supported and clamped with the ID ``0'' and ``1'', respectively. Because libMesh allows multiple IDs representing the same boundary condition type, in line 13 a \texttt{set} is created and filled with the 0-ID in the next line. After that, a vector containing the IDs of the system's variables must be created. In the case of a simply supported boundary only the three displacement variables $u,v,w$ are affected (lines 15-18). Before creating the \texttt{\textbf{DirichletBoundary}}-object, a function supplying the Dirichlet value must be defined. In this case the value must be zero at the boundary. A \texttt{ConstFunction} initialized with the value zero is therefore created in line 19. The constructor for the Dirichlet object takes the ID-set, the variables-vector and the value-function as parameters and copies their content into the boundary object. The set and vector will be reused for the second boundary type. Now the 1-ID is inserted in the cleared set in line 23 and the twist variables $\theta_x, \theta_y, \theta_z$ are added to the existing variables in the vector (lines 24ff.). Another \texttt{DirichletBoundary} object is created with the new initialization parameters. Finally, the two boundary types are added to the system in line 29f. When the preparation steps are finished, the system can finally be initialized and information about the system can be printed to the console.
      
 
    
   \subsubsection{Matrix and vector assembly}\label{sec:Impl-Details-Assembly}
-  As stated in Section \ref{sec:Impl-Intro}, libMesh tries to do as many programming tasks as possible on its own and let the user concentrate on the mathematical/physical problems to model. The last sections showed that this is often true, since the user often only need to set parameters, create predefined objects or call libMesh functions. To solve the system, libMesh calls a user-defined assembly function. This function is the part where the user gets involved at most, because here the system matrix and the right-hand side (RHS) must be assembled. Nevertheless, libMesh helps the user with many auxiliary function as can be seen further down. The main part of the assembly function is described in Listing \ref{lst:assemble}.
+  As stated in Section~\ref{sec:Impl-Intro}, libMesh tries to do as many programming tasks as possible on its own and let the user concentrate on the mathematical/physical problems to model. The last sections showed that this is often true, since the user often only need to set parameters, create predefined objects or call libMesh functions. To solve the system, libMesh calls a user-defined assembly function. This function is the part where the user gets involved at most, because here the system matrix and the right-hand side (RHS) must be assembled. Nevertheless, libMesh helps the user with many auxiliary function as can be seen further down. The main part of the assembly function is described in Listing~\ref{lst:assemble}.
 \begin{lstlisting}[caption=Assemble System Matrix and RHS,label=lst:assemble,float]
 LinearImplicitSystem& system = es.get_system<LinearImplicitSystem>("Elasticity");
 const DofMap& dof_map = system.get_dof_map();
@@ -249,7 +248,7 @@ for (; el != end_el; ++el)
    \end{itemize}
    In the following, some of the steps stated above are discussed in more detail, namely the coordinate transformation, the construction of the shell element stiffness matrix and the contribution to the right-hand side vector.
    
-   The transformation from global to local coordinates is described in Section \ref{sec:Shell-CoTrafo}. Let $\tilde{A} = \begin{pmatrix}
+   The transformation from global to local coordinates is described in Section~\ref{sec:Shell-CoTrafo}. Let $\tilde{A} = \begin{pmatrix}
    x_1=0 & y_1=0
    \end{pmatrix}^T, \tilde{B} = \begin{pmatrix}
    x_2 & y_2=0
@@ -263,7 +262,7 @@ for (; el != end_el; ++el)
    \end{align*}
    For a transformed quadrilateral the derivatives are straightforward: $x_{ij} = x_i - x_j, y_{ij} = y_i - y_j$, because no implicit positions can be assumed for the transformed nodes.
    
-   The area of a triangle can easily be calculated during the creation of the transformation matrix. The cross product between the spanning vectors $\vec{u}$ and $\vec{v}$ (cf. Section \ref{sec:Shell-CoTrafo}) is 2 times the area of the triangle. Thus, the area is:
+   The area of a triangle can easily be calculated during the creation of the transformation matrix. The cross product between the spanning vectors $\vec{u}$ and $\vec{v}$ (cf. Section~\ref{sec:Shell-CoTrafo}) is 2 times the area of the triangle. Thus, the area is:
    \begin{equation*}
    A_\triangle = \frac{1}{2} \left|\vec{u} \times \vec{v}\right|
    \end{equation*}
@@ -276,7 +275,7 @@ for (; el != end_el; ++el)
    \end{equation*}
    where ``\%'' denotes the modulo-operator.
    
-   After the assembly of the plane stiffness part described in Section \ref{sec:Shell-Plane-Tri} for triangular elements and in \ref{sec:Shell-Plane-Quad} for quadrilateral elements, a matrix $K_m$ with $2n\!\times\! 2n$ entries results, $n$ being the number of nodes the element has:
+   After the assembly of the plane stiffness part described in Section~\ref{sec:Shell-Plane-Tri} for triangular elements and in~\ref{sec:Shell-Plane-Quad} for quadrilateral elements, a matrix $K_m$ with $2n\!\times\! 2n$ entries results, $n$ being the number of nodes the element has:
    \begin{equation*}
    K_m = \begin{gmatrix}[p]
    m_{1,1} & m_{1,2} & m_{1,3} & \cdots & m_{1,n-1} & m_{1,n} \\
@@ -301,7 +300,7 @@ for (; el != end_el; ++el)
    \mult{5}{v_n}
    \end{gmatrix}
    \end{equation*}
-   The same holds for the plate stiffness part described in Sections \ref{sec:Shell-Plate-Tri} and \ref{sec:Shell-Plate-Quad}. Here, the matrix has $3n\!\times\! 3n$ entries, $n$ also the number of elements nodes:
+   The same holds for the plate stiffness part described in Sections~\ref{sec:Shell-Plate-Tri} and~\ref{sec:Shell-Plate-Quad}. Here, the matrix has $3n\!\times\! 3n$ entries, $n$ also the number of elements nodes:
    \begin{equation*}
    K_p = \begin{gmatrix}[p]
    p_{1,1} & p_{1,2} & p_{1,3} & p_{1,4} & \cdots & p_{1,n-1} & p_{1,n} \\
@@ -330,7 +329,7 @@ for (; el != end_el; ++el)
    \end{gmatrix}
    \end{equation*}
    
-   In Section \ref{sec:Shell-Shell}, it is described that the two stiffness matrices from plane and plate can be superimposed to the shell element's stiffness matrix. This results in a matrix $K$ that consists of $n\!\times\! n$ submatrices ($6n\!\times\! 6n$ entries per submatrix):
+   In Section~\ref{sec:Shell-Shell}, it is described that the two stiffness matrices from plane and plate can be superimposed to the shell element's stiffness matrix. This results in a matrix $K$ that consists of $n\!\times\! n$ submatrices ($6n\!\times\! 6n$ entries per submatrix):
    \begin{equation*}
    K = \begin{pmatrix}
    K_{11} & K_{12} & \cdots & K_{1n}\\
@@ -350,17 +349,17 @@ for (; el != end_el; ++el)
    0           & 0             & 0           & 0             & 0             & d_{ij}
    \end{pmatrix}
    \end{equation*}
-   where $d_{ij}$ is a thousandth of the maximum of the diagonal entries of $K_{ij}$ (cf. Section \ref{sec:Shell-Shell}):
+   where $d_{ij}$ is a thousandth of the maximum of the diagonal entries of $K_{ij}$ (cf. Section~\ref{sec:Shell-Shell}):
    \begin{equation*}
    d_{ij} = \frac{1}{1000}\max \left\lbrace m_{2i,2j}, m_{2i+1,2j+1}, p_{3i,3j}, p_{3i+1,3j+1}, p_{3i+2,3j+2} \right\rbrace 
    \end{equation*}
-   After this step, the local stiffness matrix for the shell element is finally constructed. Before it can be added to the overall system stiffness matrix, it must be transformed back to the global coordinate system as discussed in Section \ref{sec:Shell-CoTrafo}.
+   After this step, the local stiffness matrix for the shell element is finally constructed. Before it can be added to the overall system stiffness matrix, it must be transformed back to the global coordinate system as discussed in Section~\ref{sec:Shell-CoTrafo}.
    For this purpose let $\tilde{T}$ be the $6\!\times\! 6$ transformation matrix from equation \eqref{eq:trafoTtilde}. Now, every submatrix $K_{ij}$ from $K$ must be transformed in the following way (Eq. \eqref{eq:Kij=Tt Kij T}):
    \begin{equation*}
    \bar{K}_{ij} = \tilde{T}^T K_{ij} \tilde{T}
    \end{equation*}
    for $1 \leq i,j \leq n$.\\
-   The resulting global coordinate matrix $\bar{K}_{ij}$ has the same structure as its local ancestor. In order to add it to the system matrix, one has to modify its structure. Until now, the ordering of columns and rows were as follows: All variables for node 1, followed by all variables for node 2, etc. ($u_1, v_1, w_1, \ldots, \theta_{y_n}, \theta_{z_n}$). LibMesh requires the system matrix to be in another format: The first variable for all nodes, then the second variable for all nodes, etc. ($u_1, u_2, \ldots, u_n, v_1, v_2, \ldots, \theta_{z_n}$). This change in format is achieved by the following code (Listing \ref{lst:formatChange}):
+   The resulting global coordinate matrix $\bar{K}_{ij}$ has the same structure as its local ancestor. In order to add it to the system matrix, one has to modify its structure. Until now, the ordering of columns and rows were as follows: All variables for node 1, followed by all variables for node 2, etc. ($u_1, v_1, w_1, \ldots, \theta_{y_n}, \theta_{z_n}$). LibMesh requires the system matrix to be in another format: The first variable for all nodes, then the second variable for all nodes, etc. ($u_1, u_2, \ldots, u_n, v_1, v_2, \ldots, \theta_{z_n}$). This change in format is achieved by the following code (Listing~\ref{lst:formatChange}):
 \begin{lstlisting}[caption=Bring stiffness matrix into libMesh conform format,label=lst:formatChange,mathescape,numbers=none]
 for ($\alpha$ = 0..5)
 	for ($\beta$ = 0..5)
@@ -369,7 +368,7 @@ for ($\alpha$ = 0..5)
 				$K_{libmesh}(\alpha$n+i,$\beta$n+j$) = \bar{K}($6i+$\alpha$,6j+$\beta)$;
 \end{lstlisting}
 
-  The right-hand side of the shell element is constructed in the function described in Listing \ref{lst:contribRHS}.
+  The right-hand side of the shell element is constructed in the function described in Listing~\ref{lst:contribRHS}.
 \begin{lstlisting}[caption=Contribute RHS function,label=lst:contribRHS]
 void contribRHS(const Elem **elem, DenseVector<Real> &Fe, std::unordered_set<unsigned int> *processedNodes)
 {
@@ -393,7 +392,7 @@ void contribRHS(const Elem **elem, DenseVector<Real> &Fe, std::unordered_set<uns
 	}
 }
 \end{lstlisting}
-   The local vector storing the forces and moments has $6n$ entries: Three forces and three moments for each of the $n$ nodes ($n=3$ for the triangular element, $n=4$ for the quadrilateral). The values are stored in a global vector that was filled at the beginning of the program with the entries of the force file. At first (line 3 and 4) the number of sides of the element is get (equals the number of element's nodes $n$) and the RHS-vector is resized accordingly. Then, one has to iterate over the sides/nodes of the element. Here, a problem occurs due to the iteration of the assembly function over all mesh elements: The majority of mesh nodes belongs to more than one element. In order to keep the global RHS data consistent such a node must be processed only once. In Listing \ref{lst:assemble} in line 12 an \texttt{unordered\_set} structure was created. This set keeps record of the IDs of already processed nodes. In line 12 of the RHS contribution function it is checked if the current element node's ID is already existing in that set. If so, the node is skipped and the function continues with the next one. If not, that node's ID is inserted into the set and the corresponding force/moment entries from the global vector is written to the local RHS-vector.
+   The local vector storing the forces and moments has $6n$ entries: Three forces and three moments for each of the $n$ nodes ($n=3$ for the triangular element, $n=4$ for the quadrilateral). The values are stored in a global vector that was filled at the beginning of the program with the entries of the force file. At first (line 3 and 4) the number of sides of the element is get (equals the number of element's nodes $n$) and the RHS-vector is resized accordingly. Then, one has to iterate over the sides/nodes of the element. Here, a problem occurs due to the iteration of the assembly function over all mesh elements: The majority of mesh nodes belongs to more than one element. In order to keep the global RHS data consistent such a node must be processed only once. In Listing~\ref{lst:assemble} in line 12 an \texttt{unordered\_set} structure was created. This set keeps record of the IDs of already processed nodes. In line 12 of the RHS contribution function it is checked if the current element node's ID is already existing in that set. If so, the node is skipped and the function continues with the next one. If not, that node's ID is inserted into the set and the corresponding force/moment entries from the global vector is written to the local RHS-vector.
 
 
 
@@ -401,7 +400,7 @@ void contribRHS(const Elem **elem, DenseVector<Real> &Fe, std::unordered_set<uns
    
   \subsubsection{Solving the system}\label{sec:Impl-Details-Solving}
   The system's solving is done in libMesh with only one call:
-  \texttt{equation\_systems.\,\!solve()}. This function performs two actions: It calls the user-defined assembly function that constructs the system matrix and right-hand side and after that it starts the solver. The rest is handled by libMesh or libraries like PETSc, respectively, though the user has some options to control the solver's behavior. Listing \ref{lst:solve_system} shows the code section responsible for the system's solving.
+  \texttt{equation\_systems.\,\!solve()}. This function performs two actions: It calls the user-defined assembly function that constructs the system matrix and right-hand side and after that it starts the solver. The rest is handled by libMesh or libraries like PETSc, respectively, though the user has some options to control the solver's behavior. Listing~\ref{lst:solve_system} shows the code section responsible for the system's solving.
 \begin{lstlisting}[caption=Solve the system and build solution,label=lst:solve_system,keepspaces=true]
 // optionally set solver parameters:
 const unsigned int max_iter  = equation_systems.parameters.get<unsigned int>("linear solver maximum iterations");
@@ -436,7 +435,7 @@ for (; no != end_no; ++no)
    
    
   \subsubsection{Output}\label{sec:Impl-Details-Output}
-   When the system is solved and the results are applied to the mesh, the program can write the displaced mesh with its additional data to a file. Listing \ref{lst:output} shows the relevant function. First, the function checks if the user does wish any output to be made. If so, an output stream is created with the filename specified by the user as command line argument plus the ExodusII extension ``.e''. Finally, the mesh with all additional data (for example the relative displacements) is written to the specified file.
+   When the system is solved and the results are applied to the mesh, the program can write the displaced mesh with its additional data to a file. Listing~\ref{lst:output} shows the relevant function. First, the function checks if the user does wish any output to be made. If so, an output stream is created with the filename specified by the user as command line argument plus the ExodusII extension ``.e''. Finally, the mesh with all additional data (for example the relative displacements) is written to the specified file.
 \begin{lstlisting}[caption=Store results in mesh file,label=lst:output,keepspaces=true]
 void writeOutput(Mesh &mesh, EquationSystems &es)
 {
@@ -457,7 +456,7 @@ void writeOutput(Mesh &mesh, EquationSystems &es)
  
  
   \subsubsection{libMesh build time requirements}\label{sec:Impl-Parallel-Requirements}
-   Although MPI is used internally throughout the libMesh library as soon as the program runs in MPI-mode, not everything will work as expected. If one tries to run a theoretically fully MPI-compatible libMesh program and tries to solve a system like the linear implicit system in this case, wrong solutions will result. The problem occurs, when libMesh is built and configured without PETSc support. Then, libMesh will use an Eigen sparse solver \cite{eigen-url}; either a version installed in the user's environment or a built-in version from libMesh itself. These solvers are only serial and cannot be used with MPI, referring to an answer on the libMesh-mailing list from Dr.\ John Peterson, one of the libMesh developers. The solution would be to install PETSc and build libMesh against it. The usage of PETSc when libMesh is executed in parallel is a strong recommendation from the developers of libMesh \cite{libmeshMailList}.
+   Although MPI is used internally throughout the libMesh library as soon as the program runs in MPI-mode, not everything will work as expected. If one tries to run a theoretically fully MPI-compatible libMesh program and tries to solve a system like the linear implicit system in this case, wrong solutions will result. The problem occurs, when libMesh is built and configured without PETSc support. Then, libMesh will use an Eigen sparse solver~\cite{eigen-url}; either a version installed in the user's environment or a built-in version from libMesh itself. These solvers are only serial and cannot be used with MPI, referring to an answer on the libMesh-mailing list from Dr.\ John Peterson, one of the libMesh developers. The solution would be to install PETSc and build libMesh against it. The usage of PETSc when libMesh is executed in parallel is a strong recommendation from the developers of libMesh~\cite{libmeshMailList}.
  
  
  
@@ -471,7 +470,7 @@ void writeOutput(Mesh &mesh, EquationSystems &es)
    	\item \texttt{HilbertSFCPartitioner}: The Hilbert SFC partitioner uses a Hilbert space filling curve to partition the elements.
    	\item \texttt{MortonSFCPartitioner}: Same as before but with a Morton space filling curve to partition the elements.
    \end{itemize}
-   It is easy to use any of these partitioners in code. Listing \ref{lst:partitioners} shows an example of the ParMETIS partitioner. Instead of this partitioner, every other listed class can be placed at line 7 with the corresponding header file included (line 1).
+   It is easy to use any of these partitioners in code. Listing~\ref{lst:partitioners} shows an example of the ParMETIS partitioner. Instead of this partitioner, every other listed class can be placed at line 7 with the corresponding header file included (line 1).
 \begin{lstlisting}[caption=Mesh partitioning example,label=lst:partitioners,keepspaces=true]
 #include "libmesh/partmetis_partitionier.h"
 // (...)
@@ -486,17 +485,19 @@ partitioner.partition(mesh);
   
   
   \subsubsection{Local elements}\label{sec:Impl-Parallel-Local}
-   LibMesh uses a collection of different iterator-types to go through the mesh elements and nodes. This collection can be split into two groups: Local and global iterators. In the serial case there is no difference between the two, since all elements and nodes exist on the same process. If the program is run with multiple processes on a partitioned mesh, it gets important to use local iterators. Thus, the single processes only iterate over their ``own'' elements and nodes without risking to interfere with the neighboring processes. This behavior gets especially important in the assembly function (cf. Section \ref{sec:Impl-Details-Assembly}). Listing \ref{lst:local-elements} shows a short code part of this function. Here, the for-loop header is shown that will iterate over the mesh elements in order to assemble the element's stiffness matrix and right-hand side and add them to the global system matrix and right-hand side, respectively. Note that it will be iterated over \texttt{active\_local\_elements}. In the serial case it is also possible to use \texttt{active\_elements}, which allows iterating over all mesh elements. ``active'' in this case means, that only non-deactivated elements from the mesh will be processed. Since the deactivation of mesh parts is not used in this implementation, one can ignore this term.
-\begin{lstlisting}[caption=Local elements iterator,label=lst:local-elements,keepspaces=true]
-// (...)
-MeshBase::const_element_iterator       el     = mesh.active_local_elements_begin();
-const MeshBase::const_element_iterator end_el = mesh.active_local_elements_end();
-for (; el != end_el; ++el)
-{
-	// (...)
-}
-\end{lstlisting}
-   An example where global iterators are still possible and useful is after the solving step (see Section \ref{sec:Impl-Details-Solving}. Listing \ref{lst:global-elements} shows parts of the code after the system gets solved.
+   LibMesh uses a collection of different iterator-types to go through the mesh elements and nodes. This collection can be split into two groups: Local and global iterators. In the serial case there is no difference between the two, since all elements and nodes exist on the same process. If the program is run with multiple processes on a partitioned mesh, it gets important to use local iterators. Thus, the single processes only iterate over their ``own'' elements and nodes without risking to interfere with the neighboring processes. This behavior gets especially important in the assembly function (cf. Section~\ref{sec:Impl-Details-Assembly}). Listing~\ref{lst:local-elements} shows a short code part of this function.
+   \begin{lstlisting}[caption=Local elements iterator,label=lst:local-elements,keepspaces=true]
+   // (...)
+   MeshBase::const_element_iterator       el     = mesh.active_local_elements_begin();
+   const MeshBase::const_element_iterator end_el = mesh.active_local_elements_end();
+   for (; el != end_el; ++el)
+   {
+   // (...)
+   }
+   \end{lstlisting}
+   Here, the for-loop header is shown that will iterate over the mesh elements in order to assemble the element's stiffness matrix and right-hand side and add them to the global system matrix and right-hand side, respectively. Note that it will be iterated over \texttt{active\_local\_elements}. In the serial case it is also possible to use \texttt{active\_elements}, which allows iterating over all mesh elements. ``active'' in this case means, that only non-deactivated elements from the mesh will be processed. Since the deactivation of mesh parts is not used in this implementation, one can ignore this term.
+
+   An example where global iterators are still possible and useful is after the solving step (see Section~\ref{sec:Impl-Details-Solving}. Listing~\ref{lst:global-elements} shows parts of the code after the system gets solved.
 \begin{lstlisting}[caption=Global nodes iterator,label=lst:global-elements,keepspaces=true]
 // (...)
 std::vector<Number> sols;
@@ -519,7 +520,7 @@ if (global_processor_id() == 0)
   
   
   \subsubsection{Assembly changes}\label{sec:Impl-Parallel-Assembly}
-   In Section \ref{sec:Impl-Details-Assembly} it was stated that a problem occurs at the creation of the local right-hand side's vector: Since nodes can be part of multiple elements, they can be processed multiple times and contribute more than one time to the RHS. This was prevented by creating an \texttt{unordered\_set} that stores the ID of already processed nodes. In the serial case this solves the problem. In case of parallel execution, every process generates such a set for itself without knowing what the other processes have already stored in theirs. This way, it cannot be decided if a node that is situated on the boundary between two mesh partitions was already processed by one of these processes. One solution would be to communicate the processed node IDs between the processes such that the information is consistent throughout the mesh. But that would produce a lot of communication overhead and would slow down the program down. With the help of libMesh this problem can be solved without any inter-process communication at all. Listing \ref{lst:rhs-mpi} contains extracts from the assembly function and the auxiliary function to create the local right-hand side.
+   In Section~\ref{sec:Impl-Details-Assembly} it was stated that a problem occurs at the creation of the local right-hand side's vector: Since nodes can be part of multiple elements, they can be processed multiple times and contribute more than one time to the RHS. This was prevented by creating an \texttt{unordered\_set} that stores the ID of already processed nodes. In the serial case this solves the problem. In case of parallel execution, every process generates such a set for itself without knowing what the other processes have already stored in theirs. This way, it cannot be decided if a node that is situated on the boundary between two mesh partitions was already processed by one of these processes. One solution would be to communicate the processed node IDs between the processes such that the information is consistent throughout the mesh. But that would produce a lot of communication overhead and would slow down the program down. With the help of libMesh this problem can be solved without any inter-process communication at all. Listing~\ref{lst:rhs-mpi} contains extracts from the assembly function and the auxiliary function to create the local right-hand side.
 \begin{lstlisting}[caption=Process local nodes only,label=lst:rhs-mpi,keepspaces=true]
 // in the assemble_elasticity function:
 std::unordered_set<dof_id_type> processedNodes;

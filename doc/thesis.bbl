@@ -85,6 +85,11 @@ Eigen -- a c++ template library for linear algebra: matrices, vectors,
 The openfoam extend project.
 \newblock \url{http://www.extend-project.de/}.
 
+\bibitem[FY02]{falgout2002hypre}
+Robert Falgout and Ulrike Yang.
+\newblock hypre: A library of high performance preconditioners.
+\newblock {\em Computational Science—ICCS 2002}, pages 632--641, 2002.
+
 \bibitem[Gat15]{gatzhammer2015efficient}
 Bernhard Gatzhammer.
 \newblock {\em Efficient and flexible partitioned simulation of fluid-structure
@@ -94,12 +99,6 @@ Bernhard Gatzhammer.
 \bibitem[GMS]{gmsh-manual}
 Gmsh manual.
 \newblock \url{http://geuz.org/gmsh/doc/texinfo/gmsh.html}.
-
-\bibitem[HPA{\etalchar{+}}14]{libmeshMailList}
-Stephan Herb, John Peterson, Julian Andrej, Antonio Cervone, and Roy Stogner,
-  2014-Sep-14.
-\newblock
-  \url{http://sourceforge.net/p/libmesh/mailman/libmesh-users/thread/55F6976D.8040004%40stud.uni-stuttgart.de/#msg34457298}.
 
 \bibitem[Jar]{icetools}
 Alexander~H. Jarosch.
@@ -211,6 +210,12 @@ Christophe Prud’Homme, Vincent Chabannes, Vincent Doyeux, Mourad Ismail,
 Julien Pommier and Yves Renard.
 \newblock Getfem++ - an open source library based on collaborative development.
 \newblock \url{http://download.gna.org/getfem/html/homepage/index.html}.
+
+\bibitem[PSA{\etalchar{+}}14]{libmeshMailList}
+John Peterson, Roy Stogner, Julian Andrej, Antonio Cervone, and Stephan Herb,
+  2015-Sep-14.
+\newblock
+  \url{http://sourceforge.net/p/libmesh/mailman/libmesh-users/thread/55F6976D.8040004%40stud.uni-stuttgart.de/#msg34457298}.
 
 \bibitem[{SAP}00]{sap-2000}
 {\em {SAP}2000 -- Integrated Finite Element Analysis and Design of Structures},
