@@ -6,7 +6,7 @@ vars = Variables(None, ARGUMENTS)
 env = Environment(variables = vars, ENV = os.environ)
 conf = Configure(env)
 
-# ====== precice ======
+# ====== preCICE ======
 preciceRoot = os.getenv ('PRECICE_ROOT')
 if (preciceRoot == None):
    print 'ERROR: Environment variable PRECICE_ROOT not defined!'
@@ -21,6 +21,7 @@ env.Append(CPPDEFINES = ['PRECICE_USE_MPI'])
 conf.CheckLib("precice")
 conf.CheckLib("python2.7")
 
+# ====== libMesh ======
 libmeshRoot = os.getenv('LIBMESH_ROOT')
 if (libmeshRoot == None):
    print 'ERROR: Environment variable LIBMESH_ROOT not defined!'
@@ -28,8 +29,14 @@ if (libmeshRoot == None):
 else:
    print 'Using environment variable LIBMESH_ROOT =', libmeshRoot
 
-# ====== petsc ======
-PETSC_DIR = env["ENV"]["PETSC_DIR"]
+env.Append(CPPPATH = [os.path.join(libmeshRoot, 'include'),
+                      "/usr/include/vtk-5.8"]) #############################
+env.Append(LIBPATH = [os.path.join(libmeshRoot, ".libs")]) #######################
+
+conf.CheckLib("mesh_opt")
+
+# ====== PETSc ======
+PETSC_DIR  = env["ENV"]["PETSC_DIR"]
 PETSC_ARCH = env["ENV"]["PETSC_ARCH"]
 
 env.Append(CPPPATH = [os.path.join( PETSC_DIR, "include"),
@@ -37,11 +44,7 @@ env.Append(CPPPATH = [os.path.join( PETSC_DIR, "include"),
 env.Append(LIBPATH = [os.path.join( PETSC_DIR, PETSC_ARCH, "lib")])
 conf.CheckLib("petsc")
 
-env.Append(CPPPATH = [os.path.join(libmeshRoot, 'include'),
-                      "/usr/include/vtk-5.8"])
-env.Append(LIBPATH = [os.path.join(libmeshRoot, ".libs")])
 
-conf.CheckLib("mesh_opt")
 
 env["CXX"] = 'mpicxx'
 env.Append(CCFLAGS = ["-g3", "-O3", "-Wall", "-std=c++11", '-fopenmp', "-lboost_system"])
@@ -53,5 +56,5 @@ conf.CheckLib("boost_filesystem")
 
 env = conf.Finish()
 
-env.Program('FluidSolver', ['fluid_solver.cpp'])
-env.Program('fem-shell-precice', ['fem_shell_precice.cpp'])
+env.Program('FluidSolver', ['fluid_solver.cpp']) ###############################
+env.Program('FEM-shell-precice', ['fem-shell_precice.cpp'])

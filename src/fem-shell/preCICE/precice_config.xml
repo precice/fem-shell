@@ -56,14 +56,14 @@
 
       <coupling-scheme:serial-implicit>
          <participants first="FLUID" second="STRUCTURE"/>
-         <max-time value="2.0"/>
+         <max-time value="4.0"/>
          <timestep-length value="0.01" valid-digits="8"/>
          <!--<checkpoint timestep-interval="10"/> -->
-         <max-iterations value="20"/>
+         <max-iterations value="40"/>
          <exchange data="Stresses"        mesh="Structure_Nodes" from="FLUID" to="STRUCTURE"/>
          <exchange data="Displacements" mesh="Structure_Nodes" from="STRUCTURE" to="FLUID" initialize="true"/>
 <!--         <relative-convergence-measure data="Stresses"        mesh="Structure_Nodes" limit="1e-7"/> -->
-         <relative-convergence-measure data="Displacements" mesh="Structure_Nodes" limit="1e-4"/>
+         <relative-convergence-measure data="Displacements" mesh="Structure_Nodes" limit="1e-5"/>
          <post-processing:IQN-ILS> 
 	    <!-- PostProc always done on the second solver -->
             <data name="Displacements" mesh="Structure_Nodes">

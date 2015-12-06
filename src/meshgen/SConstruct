@@ -1,0 +1,11 @@
+import os
+
+vars = Variables(None, ARGUMENTS)
+env = Environment(variables = vars, ENV = os.environ)
+conf = Configure(env)
+
+env["CXX"] = 'g++'
+env.Append(CCFLAGS = ["-O3", "-Wall", "-std=c++11"])
+env = conf.Finish()
+
+env.Program('meshGen', ['main_all.cpp'])

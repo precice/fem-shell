@@ -1,23 +1,25 @@
+/********************************************\
+*  Fluid-Solver-Dummy for use with preCICE   *
+*  by Stephan Herb                           *
+*                                            *
+* Note: This code is not intended to be      *
+*       flexible for every imaginable        *
+*       scenario to simulate. The coupling   *
+*       of the structure solver through pre- *
+*       CICE was developed together with     *
+*       solver dummy.                        *
+\********************************************/
+
 #include <iostream>
 #include <stdlib.h>
+
 #include <math.h>
 #include <mpi.h>
-#include "precice/SolverInterface.hpp"
 
-using std::cout;
-using std::endl;
+#include "precice/SolverInterface.hpp"
 
 using namespace precice;
 using namespace precice::constants;
-
-void printData (const std::vector<double>& data)
-{
-  std::cout << "Received data = " << data[0];
-  for (size_t i=1; i < data.size(); i++){
-    std::cout << ", " << data[i];
-  }
-  std::cout << std::endl;
-}
 
 int main (int argc, char **argv)
 {
@@ -26,19 +28,20 @@ int main (int argc, char **argv)
     MPI_Init (&argc, &argv);	/* starts MPI */
     MPI_Comm_rank (MPI_COMM_WORLD, &rank);	/* get current process id */
     MPI_Comm_size (MPI_COMM_WORLD, &size);	/* get number of processes */
-    cout << "Starting Fluid Solver Dummy (" << rank << "/" << size << ")..." << endl;
+    std::cout << "Starting Fluid Solver Dummy (MPI " << (rank+1) << "/" << size << ")..." << std::endl;
 
-    if ( argc != 2 )
+    if ( argc < 2 )
     {
-        cout << endl;
-        cout << "Usage: " << argv[0] <<  " configurationFileName" << endl;
-        cout << endl;
-        cout << "configurationFileName: preCICE XML-configuration file" << endl;
+        std::cout << "Usage: " << argv[0] <<  " configurationFileName N" << std::endl;
+        std::cout << "configurationFileName: preCICE XML-configuration file" << std::endl;
+        std::cout << "N: Number of coupling interface nodes" << std::endl;
         return -1;
     }
 
     std::string configFileName(argv[1]);
-    int N        = 0;
+    int N = atoi(argv[2]);
+    // WARNING: totally adapted to a special test scenario. If this code should be used
+    //          further, this has to be modified!
     if (rank == 0)
         if (size == 1)
             N = 43;
@@ -51,16 +54,15 @@ int main (int argc, char **argv)
 
     std::string solverName = "FLUID";
 
-    cout << "Configure preCICE..." << endl;
-    // Initialize the solver interface with our name, our process index (like rank) and the total number of processes.
+    std::cout << "Configure preCICE..." << std::endl;
+    // Initialize the solver interface with our name, our process index (rank) and the total number of processes (size).
     SolverInterface interface(solverName, rank, size);
-    // Provide the configuration file to precice. After configuration a usuable state of that SolverInterface is reached.
+    // Provide the configuration file to preCICE. After configuration a usable state of that SolverInterface is reached.
     // Reads the XML file and contacts the server, if used.
     interface.configure(configFileName);
-    cout << "preCICE configured..." << endl;
+    std::cout << "preCICE configured..." << std::endl;
 
     // init data
-    int i;
     double *f, *f_n, *d, *d_n;
     int dimensions = interface.getDimensions();
 
@@ -69,16 +71,17 @@ int main (int argc, char **argv)
     d     = new double[N*dimensions]; // Displacements
     d_n   = new double[N*dimensions];
 
-    //precice stuff
+    //preCICE stuff
     int meshID = interface.getMeshID("Fluid_Nodes");
-    int dID = interface.getDataID("Displacements", meshID);
-    int fID = interface.getDataID("Stresses", meshID);
+    int dID    = interface.getDataID("Displacements", meshID);
+    int fID    = interface.getDataID("Stresses", meshID);
     int *vertexIDs;
     vertexIDs = new int[N];
     double *grid;
     grid = new double[dimensions*N];
 
-    for (i = 0; i < N; i++)
+    // initalize data fields:
+    for (int i = 0; i < N; i++)
     {
         for (int dim = 0; dim < dimensions; dim++)
         {
@@ -89,47 +92,60 @@ int main (int argc, char **argv)
         }
     }
 
-    if (size == 1)
+    if (size == 1) // initialze grid for single-threaded run
     {
-        for (int k = 0; k < 21; k++)
+        for (int k = 0; k < 21; k++) // left edge of tower
         {
             grid[k*dimensions]   = 3.0;
             grid[k*dimensions+1] = k*0.1;
+            if (dimensions == 3)
+                grid[k*dimensions+2] = 0.0;
         }
-        for (int k = 21; k < 42; k++)
+        for (int k = 21; k < 42; k++) // right edge of tower
         {
             grid[k*dimensions]   = 3.25;
             grid[k*dimensions+1] = (k-21.0)*0.1;
+            if (dimensions == 3)
+                grid[k*dimensions+2] = 0.0;
         }
-        for (int k = 42; k < 43; k++)
+        for (int k = 42; k < 43; k++) // top edge of tower
         {
             grid[k*dimensions]   = 3.125;
             grid[k*dimensions+1] = 2.0;
+            if (dimensions == 3)
+                grid[k*dimensions+2] = 0.0;
         }
+        // debug output
         for (int k = 0; k < 43; k++)
-            cout << "grid [" << grid[k*2] << ", " << grid[k*2+1] << "]\n";
+            std::cout << "grid [" << grid[k*2] << ", " << grid[k*2+1] << "]" << std::endl;
     }
-    else
+    else // for multi-threaded run
     {
         if (rank == 0)
         {
-            for (int k = 0; k < 21; k++)
+            for (int k = 0; k < 21; k++) // left edge of tower
             {
                 grid[k*dimensions]   = 3.0;
                 grid[k*dimensions+1] = k*0.1;
+                if (dimensions == 3)
+                    grid[k*dimensions+2] = 0.0;
             }
         }
         else
         {
-            for (int k = 0; k < 21; k++)
+            for (int k = 0; k < 21; k++) // right edge of tower
             {
                 grid[k*dimensions]   = 3.25;
                 grid[k*dimensions+1] = k*0.1;
+                if (dimensions == 3)
+                    grid[k*dimensions+2] = 0.0;
             }
-            for (int k = 21; k < 22; k++)
+            for (int k = 21; k < 22; k++) // top edge of tower
             {
                 grid[k*dimensions]   = 3.125;
                 grid[k*dimensions+1] = 2.0;
+                if (dimensions == 3)
+                    grid[k*dimensions+2] = 0.0;
             }
         }
     }
@@ -138,20 +154,19 @@ int main (int argc, char **argv)
 
     interface.setMeshVertices(meshID, N, grid, vertexIDs);
 
-    cout << "Fluid: init precice..." << endl;
+    std::cout << "Fluid: init precice..." << std::endl;
     interface.initialize();
 
 
     if (interface.isActionRequired(actionWriteInitialData()))
     {
         interface.writeBlockVectorData(fID, N, vertexIDs, f);
-        //interface.initializeData();
         interface.fulfilledAction(actionWriteInitialData());
     }
 
     for (int i = 0; i < N; i++)
     {
-        cout << "vertexIDs[" << i << "] = " << vertexIDs[i] << " at grid position (" << grid[2*i] << ", " << grid[2*i+1] << "\n";
+        std::cout << "vertexIDs[" << i << "] = " << vertexIDs[i] << " at grid position (" << grid[2*i] << ", " << grid[2*i+1] << ")" << std::endl;
     }
 
     interface.initializeData();
@@ -171,12 +186,14 @@ int main (int argc, char **argv)
 
         if (size == 1)
         {
-            for (int i = 0; i < 21; i++)
+            // create "magic" forces:
+            for (int i = 0; i < 21; i++) //left edge of tower
             {
-                f[i*dimensions] = 1.0 + sin(t/25.01);//*i*0.05;
-                //f[i*dimensions+1] = 0.0;//0.2-i*0.01;
+                f[i*dimensions] = 1.0 + sin(t/25.01);
+                if (dimensions == 3)
+                    f[i*dimensions+1] = 0.0;//0.1 + sin(t/25.01)/10.0;
             }
-            /*for (int i = 21; i < 42; i++)
+            /*for (int i = 21; i < 42; i++) // right edge of tower
             {
                 f[i*dimensions] = 0.0;//(-1.5+sin(t/25.01))*(1.0-0.006*(i-34)*(i-34));
                 f[i*dimensions+1] = 0.0;//-(i-21)*0.01;
@@ -186,19 +203,14 @@ int main (int argc, char **argv)
         {
             if (rank == 0)
             {
-                for (int i = 0; i < 21; i++)
+                for (int i = 0; i < 21; i++) //left edge of tower
                 {
                     f[i*dimensions] = 1.0+sin(t/25.01);
+                    if (dimensions == 3)
+                        f[i*dimensions+1] = 0.1 + sin(t/25.01)/10.0;
                 }
 
             }
-            /*else
-            {
-                for (int i = 0; i < 11; i++)
-                {
-                    f[i*dimensions] = -1.0;
-                }
-            }*/
         }
 
         interface.writeBlockVectorData(fID, N, vertexIDs, f);
@@ -206,16 +218,16 @@ int main (int argc, char **argv)
         interface.readBlockVectorData(dID, N, vertexIDs, d);
 
         if (interface.isActionRequired(actionReadIterationCheckpoint()))
-        { // i.e. not yet converged
-            cout << "Iterate" << endl;
+        {   // i.e. not yet converged
+            std::cout << "Iterate" << std::endl;
             interface.fulfilledAction(actionReadIterationCheckpoint());
         }
         else
         {
-            cout << "Fluid: Advancing in time, finished timestep: " << t << endl;
+            std::cout << "Fluid: Advancing in time, finished timestep: " << t << std::endl;
             t++;
 
-            for ( i = 0; i < N; i++)
+            for (int i = 0; i < N; i++)
             {
                 for (int dim = 0; dim < dimensions; dim++)
                 {
@@ -227,7 +239,7 @@ int main (int argc, char **argv)
     }
 
     interface.finalize();
-    cout << "Exiting FluidSolver" << endl;
+    std::cout << "Exiting FluidSolver" << std::endl;
 
     MPI_Finalize();
 

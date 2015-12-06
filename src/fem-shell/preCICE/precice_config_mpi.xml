@@ -4,10 +4,10 @@
   
   <log-filter target="debug" component="precice" switch="off" />
   <log-filter target="info"  component="" switch="on"/>
-  <log-filter target="debug" component="precice::cplscheme::impl::IQNILSPostProcessing" switch="on" />
-  <log-filter target="debug" component="precice::cplscheme::impl::BaseQNPostProcessing" switch="on" />
-  <log-filter target="debug" component="precice::cplscheme::impl::MMPostProcessing" switch="on" />
-  <log-filter target="debug" component="precice::cplscheme::ImplicitCouplingScheme" switch="on" />
+  <!--<log-filter target="debug" component="precice::cplscheme::impl::IQNILSPostProcessing" switch="on" />-->
+  <!--<log-filter target="debug" component="precice::cplscheme::impl::BaseQNPostProcessing" switch="on" />-->
+  <!--<log-filter target="debug" component="precice::cplscheme::impl::MMPostProcessing" switch="on" />-->
+  <!--<log-filter target="debug" component="precice::cplscheme::ImplicitCouplingScheme" switch="on" />-->
   
   <solver-interface dimensions="2">
     

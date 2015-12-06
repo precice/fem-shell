@@ -1,21 +1,31 @@
 # Set environment variable LIBMESH_ROOT or execute scons like that: scons LIBMESH_ROOT=$HOME/software/libmesh scons  
 
-import os
+import os,sys
 
 vars = Variables(None, ARGUMENTS)
 env = Environment(variables = vars, ENV = os.environ)
 conf = Configure(env)
 
+# ====== libMesh ======
 libmeshRoot = os.getenv('LIBMESH_ROOT')
+if (libmeshRoot == None):
+   print 'ERROR: Environment variable LIBMESH_ROOT not defined!'
+   sys.exit(1)
+else:
+   print 'Using environment variable LIBMESH_ROOT =', libmeshRoot
 
-env.Append(CPPPATH = [os.path.join(libmeshRoot, 'include')])
-env.Append(LIBPATH = [os.path.join(libmeshRoot, ".libs")])
+env.Append(CPPPATH = [os.path.join(libmeshRoot, 'include'),
+                      "/usr/include/vtk-5.8"]) #############################
+env.Append(LIBPATH = [os.path.join(libmeshRoot, ".libs")]) #######################
 
 conf.CheckLib("mesh_opt")
 
-env["CXX"] = 'mpicxx'
-env.Append(CCFLAGS = ["-g3", "-O0", "-Wall", "-std=c++11", '-fopenmp'])
 
+
+env["CXX"] = 'mpicxx'
+env.Append(CCFLAGS = ["-g3", "-O3", "-Wall", "-std=c++11", '-fopenmp'])
 env.Append(LINKFLAGS = ['-Wl,-rpath,' + os.path.join(libmeshRoot, "lib")])
 
-env.Program('fem-shell', ['fem-shell.cpp'])
+env = conf.Finish()
+
+env.Program('FEM-shell', ['fem-shell.cpp'])
