@@ -31,7 +31,7 @@ else:
 
 env.Append(CPPPATH = [os.path.join(libmeshRoot, 'include'),
                       "/usr/include/vtk-5.8"]) #modify to own version of vtk
-env.Append(LIBPATH = [os.path.join(libmeshRoot, "libs")])
+env.Append(LIBPATH = [os.path.join(libmeshRoot, "lib")])
 
 conf.CheckLib("mesh_opt")
 
