@@ -30,8 +30,8 @@ else:
    print 'Using environment variable LIBMESH_ROOT =', libmeshRoot
 
 env.Append(CPPPATH = [os.path.join(libmeshRoot, 'include'),
-                      "/usr/include/vtk-5.8"]) #############################
-env.Append(LIBPATH = [os.path.join(libmeshRoot, ".libs")]) #######################
+                      "/usr/include/vtk-5.8"]) #modify to own version of vtk
+env.Append(LIBPATH = [os.path.join(libmeshRoot, "libs")])
 
 conf.CheckLib("mesh_opt")
 
@@ -56,5 +56,5 @@ conf.CheckLib("boost_filesystem")
 
 env = conf.Finish()
 
-env.Program('FluidSolver', ['fluid_solver.cpp']) ###############################
+env.Program('FluidSolver', ['fluid_solver.cpp']) #remove if not needed (anymore)
 env.Program('FEM-shell-precice', ['fem-shell_precice.cpp'])
