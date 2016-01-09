@@ -1,4 +1,12 @@
 # The following files are ignored by Git
+*.log
+*.nav
+*.out
+*.snm
+*.synctex.gz
+*.vrb
+*.blg
+*.aux
 *.[oa]
 *~
 *.exe
