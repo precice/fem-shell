@@ -48,8 +48,7 @@ int main (int argc, char** argv)
      *   preCICE Initialization   *
      ******************************/
     std::string solverName = "STRUCTURE";
-    SolverInterface interface(solverName, global_processor_id(), global_n_processors());
-    interface.configure(config_filename);
+    SolverInterface interface(solverName, config_filename, global_processor_id(), global_n_processors());
     std::cout << "preCICE configured..." << std::endl;
 
     // init coupling data
